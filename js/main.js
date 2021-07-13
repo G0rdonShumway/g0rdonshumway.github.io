@@ -1,4 +1,3 @@
-
 // let selected = document.querySelector("#numberSelect select");
 
 
@@ -26,9 +25,9 @@ function calculation(parent) {
     return sum;
 }
 
-// function changeValue(input) {
-//     document.querySelector("#chipsValue").textContent = input.value;
-// }
+function changeValue(input) {
+    document.querySelector("label[for=numberOfPictures] span").textContent = input.value;
+}
 
 
 function getRandomIntInclusive(min, max) {
@@ -39,7 +38,6 @@ function getRandomIntInclusive(min, max) {
 
 function randomizer(parent) {
     var bet = Array.from(parent.querySelectorAll('.bet'));
-    // var numberOfChips = document.querySelector("#chipsValue").textContent;
     var numberOfChips = getRandomIntInclusive(1,5) * 10;
 
     var sum = 0;
@@ -53,24 +51,6 @@ function randomizer(parent) {
     }
 
 }
-
-// function getRandomChips() {
-//     document.querySelector("#numberOfChips input").value = getRandomIntInclusive(1,10) * 10;
-//     document.querySelector("#chipsValue").textContent = document.querySelector("#numberOfChips input").value;
-// }
-
-function startCount() {
-    document.querySelector("#rouletteStart").style.display = "none";
-
-
-    setTimeout(timerInput, 1000);
-}
-
-
-// function showOverlay() {
-//     document.querySelector('#check-button').classList.add('check-pause');
-//     document.querySelector('#overlay').style.display = 'block';
-// }
 
 var digit = Array.from(document.querySelectorAll('.digit'));
 var input = document.querySelector('#answer-input');
@@ -129,13 +109,19 @@ let layout = document.querySelector('#layout');
 let rouletteResult = document.querySelector('#rouletteResult table tbody');
 
 function fetchData() {
+    document.querySelector("#rouletteStart").style.display = "none";
+
+
+    setTimeout(timerInput, 1000);
     console.log('Getting pictures...');
     let xhr = new XMLHttpRequest();
     xhr.open("GET", "/js/pictures.json", true);
     xhr.onload = function () {
-        let data = JSON.parse(xhr.response)
+        let data = JSON.parse(xhr.response);
 
-        for(let i = 0; i < 10; i++){
+        numberOfPictures = document.querySelector("label[for=numberOfPictures] span").textContent;
+
+        for(let i = 0; i < numberOfPictures; i++){
             let newPicture = document.createElement('div');
             newPicture.innerHTML = data[getRandomIntInclusive(0,4)];
 
@@ -157,42 +143,6 @@ function fetchData() {
     xhr.send();
 }
 
-fetchData();
-
-
-
-// const modalCheck = document.querySelector('#check-modal');
-
-// function checkAnswer() {
-//     var wrong = document.createElement('span');
-//     wrong.classList.add('wrong-span');
-//     wrong.textContent = 'CHECK AGAIN!';
-
-
-//     if (input.value == calculation()) {
-//         modalCheck.classList.add('correct');
-
-//         modalCheck.querySelector('.correct-span').textContent = 'Your time: ' + timer.value;
-
-//         input.value = '';
-
-//     } else {
-//         if (!modalCheck.classList.contains('wrong')) {
-//             modalCheck.appendChild(wrong);
-//             modalCheck.classList.add('wrong');
-//             setTimeout(function () {
-//                 document.querySelector('#check-button').classList.remove('check-pause');
-//                 document.querySelector('#overlay').style.display = 'none';
-//                 modalCheck.removeChild(wrong);
-//                 modalCheck.classList.remove('wrong');
-//                 input.value = '';
-//             }, 1000)
-//         }
-//     }
-// }
-
-
-// //////////////////////////////////////////
 
 let decisecond = 0;
 let second = 0;
@@ -218,17 +168,3 @@ function tick() {
 function timerInput() {
     setInterval(tick, 10);
 }
-
-
-
-// function returnToPicture() {
-//     modalCheck.classList.remove('correct');
-//     document.querySelector('#overlay').style.display = 'none';
-//     document.querySelector('#check-button').classList.remove('check-pause');
-//     decisecond = 0;
-//     second = 0;
-//     minute = 0;
-//     timerInput();
-// }
-// ////////////////////////////////////////////
-

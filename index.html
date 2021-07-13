@@ -10,7 +10,11 @@
   </head>
   <body>
     <div id="rouletteStart">
-      <button id="startRoulette" onclick="startCount()">Start</button>
+      <label for="numberOfPictures">Number of pictures <span>5</span>
+        <br><br>
+        <input id="numberOfPictures" type="range" min="5" max="25" oninput="changeValue(this)">
+      </label>
+      <button id="startRoulette" onclick="fetchData()">Start</button>
     </div>
     <header>
       <form name="MyForm">
