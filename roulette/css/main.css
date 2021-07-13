@@ -101,7 +101,7 @@ span#chipsValue {
 
 #layout {
   background: #fff;
-  padding: 30px 20px 0px 20px;
+  padding: 20px 0px 0px 0px;
   width: 80%;
   margin: 0 auto;
   height: 335px;
@@ -463,7 +463,7 @@ span.bet.mid-right-sixline {
 }
 
 #keyboard .digit {
-  height: 60px;
+  height: 50px;
 }
 #check-modal input[type="number"] {
   font-size: 30px;
@@ -488,7 +488,7 @@ span.wrong-span {
 }
 
 form[name="MyForm"] {
-  margin: 30px auto 0;
+  margin: 20px auto 0;
   text-align: center;
 }
 
