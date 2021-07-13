@@ -9,7 +9,7 @@
 
 body,
 html {
-  background-color: #ccc;
+  /* background-color: #ccc; */
   width: 100vw;
   margin: 0 auto;
   /*overflow: hidden;*/
@@ -92,9 +92,11 @@ span#chipsValue {
   padding: 30px 20px 20px 20px;
   width: 80%;
   margin: 0 auto;
+  height: 315px;
+  overflow: hidden;
 }
-#layout > div {
-  display: none;
+#layout div {
+  margin-bottom: 50px;
 }
 #layout table {
   border-collapse: collapse;
@@ -393,32 +395,21 @@ span.bet.mid-right-sixline {
   padding: 10px 40px;
   text-transform: uppercase;
 }
-
-#overlay {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(100, 100, 100, 0.9);
-  display: none;
-  z-index: 10;
-}
-div#check-modal {
-  width: 80vw;
-  height: 70vh;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+#answer-input {
+  display: block;
+  margin: 0 auto;
+  padding: 10px;
+  width: 150px;
+  font-size: 30px;
+  text-align: center;
+  font-weight: bold;
 }
 
 #keyboard {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(4, 1fr);
@@ -454,7 +445,13 @@ div#check-modal {
   grid-area: 3 / 3 / 4 / 4;
 }
 .div10 {
-  grid-area: 4 / 1 / 5 / 3;
+  grid-area: 4 / 1 / 5 / 2;
+}
+.div11 {
+  grid-area: 4 / 2 / 5 / 3;
+}
+.div12 {
+  grid-area: 4 / 3 / 5 / 4;
 }
 
 .digit,

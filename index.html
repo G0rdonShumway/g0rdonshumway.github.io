@@ -9,7 +9,7 @@
     <script src="js/main.js" defer></script>
   </head>
   <body>
-    <div id="rouletteStart">
+    <!-- <div id="rouletteStart">
       <div id="numberSelect">
         <p>Select the number</p>
         <select>
@@ -37,7 +37,7 @@
         <button id="randomValue" onclick="getRandomChips()">random</button>
       </div>
       <button id="startRoulette" onclick="startCount()">Start</button>
-    </div>
+    </div> -->
     <header>
       <form name="MyForm">
         <input
@@ -50,9 +50,9 @@
       </form>
     </header>
 
-    <div id="overlay">
-      <div id="check-modal">
-        <input id="answer-input" type="number" disabled />
+
+    <div id="layout"></div>
+    <input id="answer-input" type="number" disabled />
 
         <div id="keyboard">
           <button class="div1 digit" onclick="typeDigit(this)">7</button>
@@ -64,194 +64,11 @@
           <button class="div7 digit" onclick="typeDigit(this)">1</button>
           <button class="div8 digit" onclick="typeDigit(this)">2</button>
           <button class="div9 digit" onclick="typeDigit(this)">3</button>
-          <button class="div10 digit" onclick="typeDigit(this)">0</button>
-          <button class="div11 digit backspace" onclick="typeDigit(this)">
-            del
-          </button>
+          <button class="div10 digit backspace" onclick="typeDigit(this)">del</button>
+          <button class="div11 digit" onclick="typeDigit(this)">0</button>
+          <button class="div12 digit submit" onclick="typeDigit(this)">ok</button>
         </div>
 
-        <button id="inspect" onclick="checkAnswer()">check?</button>
 
-        <p class="correct-header">CHECK!</p>
-        <span class="correct-span"></span>
-        <button class="confirm-btn" onclick="location.reload()">
-          Try another one
-        </button>
-        <button class="returnBtn" onclick="returnToPicture()">
-          Give another dealer to try this one
-        </button>
-      </div>
-    </div>
-
-    <div id="layout">
-      <div id="zero">
-        <table>
-          <tbody>
-            <tr>
-              <td id="zero-straight" rowspan="3">
-                <span class="bet zero-straight" data-bet="straight"></span>
-                <span class="bet zero-top-split" data-bet="split"></span>
-                <span class="bet zero-mid-split" data-bet="split"></span>
-                <span class="bet zero-bottom-split" data-bet="split"></span>
-                <span class="bet zero-corner" data-bet="corner"></span>
-                <span class="bet zero-top-street" data-bet="street"></span>
-                <span class="bet zero-bottom-street" data-bet="street"></span>
-              </td>
-              <td style="border-top: 9px double"></td>
-              <td style="border-top: 9px double"></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div id="two">
-        <table>
-          <tbody>
-            <tr>
-              <td rowspan="3"></td>
-              <td style="border-top: 9px double"></td>
-              <td style="border-top: 9px double"></td>
-            </tr>
-            <tr>
-              <td id="two-straight">
-                <span class="bet two-straight" data-bet="straight"></span>
-                <span class="bet two-left-split" data-bet="split"></span>
-                <span class="bet two-top-split" data-bet="split"></span>
-                <span class="bet two-right-split" data-bet="split"></span>
-                <span class="bet two-bottom-split" data-bet="split"></span>
-                <span class="bet two-street" data-bet="street"></span>
-                <span class="bet two-top-street" data-bet="street"></span>
-                <span class="bet two-bottom-street" data-bet="street"></span>
-                <span class="bet two-firstfour" data-bet="corner"></span>
-                <span class="bet two-top-corner" data-bet="corner"></span>
-                <span class="bet two-bottom-corner" data-bet="corner"></span>
-                <span class="bet two-sixline" data-bet="sixline"></span>
-              </td>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div id="three">
-        <table>
-          <tbody>
-            <tr>
-              <td rowspan="3"></td>
-              <td id="three-straight" style="border-top: 9px double">
-                <span class="bet three-straight" data-bet="straight"></span>
-                <span class="bet three-left-split" data-bet="split"></span>
-                <span class="bet three-right-split" data-bet="split"></span>
-                <span class="bet three-bottom-split" data-bet="split"></span>
-                <span class="bet three-street" data-bet="street"></span>
-                <span class="bet three-bottom-street" data-bet="street"></span>
-                <span class="bet three-firstfour" data-bet="corner"></span>
-                <span class="bet three-bottom-corner" data-bet="corner"></span>
-                <span class="bet three-sixline" data-bet="sixline"></span>
-              </td>
-              <td style="border-top: 9px double"></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div id="side">
-        <table>
-          <tbody>
-            <tr>
-              <td style="border-top: 9px double"></td>
-              <td id="side-straight" style="border-top: 9px double">
-                <span class="bet side-straight" data-bet="straight"></span>
-                <span class="bet side-left-split" data-bet="split"></span>
-                <span class="bet side-right-split" data-bet="split"></span>
-                <span class="bet side-bottom-split" data-bet="split"></span>
-                <span class="bet side-street" data-bet="street"></span>
-                <span
-                  class="bet side-bottom-left-corner"
-                  data-bet="corner"
-                ></span>
-                <span
-                  class="bet side-bottom-right-corner"
-                  data-bet="corner"
-                ></span>
-                <span class="bet side-left-sixline" data-bet="sixline"></span>
-                <span class="bet side-right-sixline" data-bet="sixline"></span>
-              </td>
-              <td style="border-top: 9px double"></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div id="mid">
-        <table>
-          <tbody>
-            <tr>
-              <td style="border-top: 9px double"></td>
-              <td style="border-top: 9px double"></td>
-              <td style="border-top: 9px double"></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td id="mid-straight">
-                <span class="bet mid-straight" data-bet="straight"></span>
-                <span class="bet mid-top-split" data-bet="split"></span>
-                <span class="bet mid-left-split" data-bet="split"></span>
-                <span class="bet mid-right-split" data-bet="split"></span>
-                <span class="bet mid-bottom-split" data-bet="split"></span>
-                <span class="bet mid-street" data-bet="street"></span>
-                <span class="bet mid-top-left-corner" data-bet="corner"></span>
-                <span class="bet mid-top-right-corner" data-bet="corner"></span>
-                <span
-                  class="bet mid-bottom-left-corner"
-                  data-bet="corner"
-                ></span>
-                <span
-                  class="bet mid-bottom-right-corner"
-                  data-bet="corner"
-                ></span>
-                <span class="bet mid-left-sixline" data-bet="sixline"></span>
-                <span class="bet mid-right-sixline" data-bet="sixline"></span>
-              </td>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div id="answer">
-      <button id="check-button" onclick="showOverlay()">Check</button>
-    </div>
   </body>
 </html>
