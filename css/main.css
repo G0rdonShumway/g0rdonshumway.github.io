@@ -14,6 +14,15 @@ html {
   margin: 0 auto;
   /*overflow: hidden;*/
 }
+body {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  align-content: center;
+  justify-content: space-between;
+}
+
+
 
 h1 {
   font-size: 70px;
@@ -89,7 +98,7 @@ span#chipsValue {
 
 #layout {
   background: #fff;
-  padding: 30px 20px 20px 20px;
+  padding: 30px 20px 0px 20px;
   width: 80%;
   margin: 0 auto;
   height: 315px;
@@ -406,10 +415,10 @@ span.bet.mid-right-sixline {
 }
 
 #keyboard {
-  position: fixed;
+  /* position: fixed;
   bottom: 0;
   left: 0;
-  right: 0;
+  right: 0; */
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(4, 1fr);
@@ -495,7 +504,7 @@ span.wrong-span {
 }
 
 form[name="MyForm"] {
-  margin: 50px auto 20px;
+  margin: 30px auto 0;
   text-align: center;
 }
 
