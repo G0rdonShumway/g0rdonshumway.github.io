@@ -22,6 +22,7 @@ function calculation(parent) {
 
     parent.setAttribute('data-sum', sum);
 
+
     return sum;
 }
 
@@ -58,21 +59,12 @@ function randomizer(parent) {
 //     document.querySelector("#chipsValue").textContent = document.querySelector("#numberOfChips input").value;
 // }
 
-// function startCount() {
-//     document.querySelector("#rouletteStart").style.display = "none";
-//     var randomUnit = getRandomIntInclusive(1,5);
-//     if(selected.options[selected.selectedIndex].value === 'random'){
-//         document.querySelector("#" + selected.options[randomUnit].value).style.display = "block";
-//         document.querySelector("#" + selected.options[randomUnit].value).classList.add('activeChoice');
-//     } else {
-//         document.querySelector("#" + selected.options[selected.selectedIndex].value).style.display = "block";
-//         document.querySelector("#" + selected.options[selected.selectedIndex].value).classList.add('activeChoice');
-//     }
-//     randomizer();
-//     //hideEmpty();
-//     calculation();
-//     setTimeout(timerInput, 1000);
-// }
+function startCount() {
+    document.querySelector("#rouletteStart").style.display = "none";
+
+
+    setTimeout(timerInput, 1000);
+}
 
 
 // function showOverlay() {
@@ -84,6 +76,7 @@ var digit = Array.from(document.querySelectorAll('.digit'));
 var input = document.querySelector('#answer-input');
 var numberOfPictures;
 var pictureIndex = 0;
+var correctAnswers = 0;
 
 function typeDigit(n) {
     if (n.classList.contains('backspace')) {
@@ -97,14 +90,43 @@ function typeDigit(n) {
 
 function saveResult(){
     var activePicture = document.querySelectorAll('#layout > div')[pictureIndex];
+    var tableRow = document.querySelectorAll('#rouletteResult table tbody tr');
+    var tableCell = document.querySelectorAll('#rouletteResult table tbody td');
+
     activePicture.setAttribute('data-result', input.value);
+    tableCell.forEach(cell => {
+        if(cell.dataset.pictureAnswer == pictureIndex + 1){
+            cell.textContent = input.value;
+        }
+    })
+
     input.value = '';
     activePicture.style.display = 'none';
+
     pictureIndex++;
-    console.log(numberOfPictures);
+
+
+
+    if(pictureIndex == numberOfPictures){
+        layout.classList.add('stopTimer');
+
+        tableRow.forEach(row => {
+            console.dir(row);
+            if(row.children[1].textContent == row.children[2].textContent){
+                row.style.backgroundColor = '#3aee3a';
+                correctAnswers++;
+            } else {
+                row.style.backgroundColor = '#db3333';
+            }
+        })
+        document.querySelector('#correctPercent').textContent = correctAnswers * 100 / numberOfPictures + '%';
+        document.querySelector('#rouletteResult').style.display = 'block';
+        document.querySelector('#calculationTime').textContent = timer.value;
+    }
 }
 
 let layout = document.querySelector('#layout');
+let rouletteResult = document.querySelector('#rouletteResult table tbody');
 
 function fetchData() {
     console.log('Getting pictures...');
@@ -121,6 +143,11 @@ function fetchData() {
             randomizer(newPicture);
             calculation(newPicture);
 
+            let newTableRow = document.createElement('tr');
+            newTableRow.innerHTML = `<td>${i + 1}</td><td data-picture="${i + 1}">${calculation(newPicture)}</td><td data-picture-answer="${i + 1}"></td>`;
+            rouletteResult.appendChild(newTableRow);
+
+
         }
         numberOfPictures = Array.from(document.querySelectorAll('#layout > div')).length;
 
@@ -131,6 +158,9 @@ function fetchData() {
 }
 
 fetchData();
+
+
+
 // const modalCheck = document.querySelector('#check-modal');
 
 // function checkAnswer() {
@@ -164,30 +194,30 @@ fetchData();
 
 // //////////////////////////////////////////
 
-// let decisecond = 0;
-// let second = 0;
-// let minute = 0;
+let decisecond = 0;
+let second = 0;
+let minute = 0;
 
-// function tick() {
-//     if (!document.querySelector('#check-button').classList.contains('check-pause')) {
+function tick() {
+    if (!layout.classList.contains('stopTimer')) {
 
-//         var timer = document.querySelector('#timer');
-//         decisecond++;
-//         if (decisecond > 99) {
-//             second++;
-//             decisecond = 0;
-//         }
-//         if (second > 59) {
-//             minute++;
-//             second = 0;
-//         }
-//         timer.value = `${minute < 10 ? '0' + minute : minute}:${second < 10 ? '0' + second : second}.${decisecond < 10 ? '0' + decisecond : decisecond}`;
+        var timer = document.querySelector('#timer');
+        decisecond++;
+        if (decisecond > 99) {
+            second++;
+            decisecond = 0;
+        }
+        if (second > 59) {
+            minute++;
+            second = 0;
+        }
+        timer.value = `${minute < 10 ? '0' + minute : minute}:${second < 10 ? '0' + second : second}.${decisecond < 10 ? '0' + decisecond : decisecond}`;
 
-//     }
-// }
-// function timerInput() {
-//     setInterval(tick, 10);
-// }
+    }
+}
+function timerInput() {
+    setInterval(tick, 10);
+}
 
 
 

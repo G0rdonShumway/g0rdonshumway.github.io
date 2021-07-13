@@ -549,3 +549,32 @@ input[name="stopwatch"] {
 .correct #inspect {
   display: none;
 }
+
+div#rouletteResult {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  z-index: 10;
+  display: none;
+}
+
+div#rouletteResult table {
+  border-collapse: collapse;
+  width: 80%;
+  display: block;
+  margin: 20px auto;
+}
+div#rouletteResult table tr {
+  border-collapse: collapse;
+  width: 100%;
+  padding: 10px 15px;
+}
+div#rouletteResult table td {
+  border-collapse: collapse;
+  width: 20%;
+  padding: 10px 15px;
+  text-align: center;
+}

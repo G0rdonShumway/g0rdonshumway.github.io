@@ -9,35 +9,9 @@
     <script src="js/main.js" defer></script>
   </head>
   <body>
-    <!-- <div id="rouletteStart">
-      <div id="numberSelect">
-        <p>Select the number</p>
-        <select>
-          <option value="random" selected>Random</option>
-          <option value="zero">Zero</option>
-          <option value="two">Two</option>
-          <option value="three">Three</option>
-          <option value="side">Side column</option>
-          <option value="mid">Middle column</option>
-        </select>
-      </div>
-      <div id="numberOfChips">
-        <p>Select the number of chips</p>
-        <label>
-          <span id="chipsValue">10</span>
-          <input
-            type="range"
-            min="10"
-            max="100"
-            step="10"
-            value="10"
-            oninput="changeValue(this)"
-          />
-        </label>
-        <button id="randomValue" onclick="getRandomChips()">random</button>
-      </div>
+    <div id="rouletteStart">
       <button id="startRoulette" onclick="startCount()">Start</button>
-    </div> -->
+    </div>
     <header>
       <form name="MyForm">
         <input
@@ -50,25 +24,48 @@
       </form>
     </header>
 
-
     <div id="layout"></div>
     <input id="answer-input" type="number" disabled />
 
-        <div id="keyboard">
-          <button class="div1 digit" onclick="typeDigit(this)">7</button>
-          <button class="div2 digit" onclick="typeDigit(this)">8</button>
-          <button class="div3 digit" onclick="typeDigit(this)">9</button>
-          <button class="div4 digit" onclick="typeDigit(this)">4</button>
-          <button class="div5 digit" onclick="typeDigit(this)">5</button>
-          <button class="div6 digit" onclick="typeDigit(this)">6</button>
-          <button class="div7 digit" onclick="typeDigit(this)">1</button>
-          <button class="div8 digit" onclick="typeDigit(this)">2</button>
-          <button class="div9 digit" onclick="typeDigit(this)">3</button>
-          <button class="div10 digit backspace" onclick="typeDigit(this)">del</button>
-          <button class="div11 digit" onclick="typeDigit(this)">0</button>
-          <button class="div12 digit submit" onclick="typeDigit(this)">ok</button>
-        </div>
+    <div id="keyboard">
+      <button class="div1 digit" onclick="typeDigit(this)">7</button>
+      <button class="div2 digit" onclick="typeDigit(this)">8</button>
+      <button class="div3 digit" onclick="typeDigit(this)">9</button>
+      <button class="div4 digit" onclick="typeDigit(this)">4</button>
+      <button class="div5 digit" onclick="typeDigit(this)">5</button>
+      <button class="div6 digit" onclick="typeDigit(this)">6</button>
+      <button class="div7 digit" onclick="typeDigit(this)">1</button>
+      <button class="div8 digit" onclick="typeDigit(this)">2</button>
+      <button class="div9 digit" onclick="typeDigit(this)">3</button>
+      <button class="div10 digit backspace" onclick="typeDigit(this)">
+        del
+      </button>
+      <button class="div11 digit" onclick="typeDigit(this)">0</button>
+      <button class="div12 digit submit" onclick="typeDigit(this)">ok</button>
+    </div>
 
-
+    <div id="rouletteResult">
+      <table border="1">
+        <thead>
+          <tr>
+            <td>Time</td>
+            <td colspan="2" id="calculationTime"></td>
+          </tr>
+          <tr>
+            <td>Picture</td>
+            <td>Right answer</td>
+            <td>Your answer</td>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2">Correct answers</td>
+            <td id="correctPercent"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
   </body>
 </html>
