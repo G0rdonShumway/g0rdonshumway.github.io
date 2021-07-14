@@ -124,7 +124,7 @@ span#chipsValue {
 #layout table td {
   width: 145px;
   height: 50px;
-  border: 3px solid black;
+  border: 1px solid black;
   text-align: center;
 }
 #layout table tbody td:first-child {
@@ -543,7 +543,7 @@ input[name="stopwatch"] {
   display: none;
 }
 
-div#rouletteResult {
+div#bjResult {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -555,18 +555,18 @@ div#rouletteResult {
   overflow: scroll;
 }
 
-div#rouletteResult table {
+div#bjResult table {
   border-collapse: collapse;
   width: 80%;
   display: block;
   margin: 20px auto;
 }
-div#rouletteResult table tr {
+div#bjResult table tr {
   border-collapse: collapse;
   width: 100%;
   padding: 10px 15px;
 }
-div#rouletteResult table td {
+div#bjResult table td {
   border-collapse: collapse;
   width: 20%;
   padding: 10px 15px;
