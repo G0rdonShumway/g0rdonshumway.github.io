@@ -23,6 +23,8 @@ body {
   position: fixed;
   top: 0;
   bottom: 0;
+  background-color: rgb(209 218 227 / 59%);
+
 }
 
 
@@ -106,6 +108,8 @@ span#chipsValue {
   margin: 0 auto;
   height: 335px;
   overflow: hidden;
+  background-color: rgb(209 218 227 / 59%);
+
 }
 #layout div p {
   margin-bottom: 53px;
