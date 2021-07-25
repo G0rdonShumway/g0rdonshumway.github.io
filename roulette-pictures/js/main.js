@@ -136,13 +136,13 @@ function fetchRouletteData() {
             rouletteResult.appendChild(newTableRow);
 
             newPicture.querySelectorAll('.red').forEach(cell => {
-                cell.style.color = 'hsl(0deg 100% 48% / 60%)';
+                cell.style.color = 'hsl(0deg 100% 48% / 1)';
             })
             newPicture.querySelectorAll('.black').forEach(cell => {
-                cell.style.color = 'hsl(0deg 0% 0% / 60%)';
+                cell.style.color = 'hsl(0deg 0% 0% / 1)';
             })
             newPicture.querySelectorAll('.green').forEach(cell => {
-                cell.style.color = 'hsl(120deg 100% 25% / 60%)';
+                cell.style.color = 'hsl(120deg 100% 25% / 1)';
             })
 
         }
