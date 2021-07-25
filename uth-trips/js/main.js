@@ -70,16 +70,16 @@ function bjTotal() {
 let layout = document.querySelector('#layout');
 
 function fetchTripsData() {
-    document.querySelector("#rouletteStart").style.display = "none";
+    document.querySelector('#rouletteStart').style.display = 'none';
 
     let xhr = new XMLHttpRequest();
-    xhr.open("GET", "js/uth-trips.json", true);
+    xhr.open('GET', 'js/uth-trips.json', true);
     xhr.onload = function () {
 
         let data = JSON.parse(xhr.response);
 
         for (let i = 0; i < 10; i++) {
-            var newBet = document.createElement("div");
+            var newBet = document.createElement('div');
             var bet = getRandomIntInclusive(1, 49) * 10 + 5;
 
             var combination = getRandomIntInclusive(0, 5);

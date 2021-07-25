@@ -458,7 +458,7 @@ span.bet.mid-right-sixline {
 .div14 { grid-area: 5 / 3 / 6 / 4; }
 
 .digit,
-#check-modal input[type="number"],
+#check-modal input[type='number'],
 #inspect,
 #answer button {
   height: 50px;
@@ -475,7 +475,7 @@ span.bet.mid-right-sixline {
 #keyboard .digit {
   height: 50px;
 }
-#check-modal input[type="number"] {
+#check-modal input[type='number'] {
   font-size: 30px;
 }
 
@@ -497,12 +497,12 @@ span.wrong-span {
   color: red;
 }
 
-form[name="MyForm"] {
+form[name='MyForm'] {
   margin: 20px auto 0;
   text-align: center;
 }
 
-input[name="stopwatch"] {
+input[name='stopwatch'] {
   background: transparent;
   border: none;
   text-align: center;

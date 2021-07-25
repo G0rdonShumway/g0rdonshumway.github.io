@@ -119,7 +119,7 @@ span#chipsValue {
 #layout table td {
   width: 86px;
   height: 86px;
-  border: 3px solid black;
+  border: 1px solid rgb(255 193 7 / 40%);
 }
 .bet {
   border: 3px solid rgb(131, 30, 30);
@@ -448,7 +448,7 @@ span.bet.mid-right-sixline {
 .div14 { grid-area: 5 / 3 / 6 / 4; }
 
 .digit,
-#check-modal input[type="number"],
+#check-modal input[type='number'],
 #inspect,
 #answer button {
   height: 50px;
@@ -465,7 +465,7 @@ span.bet.mid-right-sixline {
 #keyboard .digit {
   height: 50px;
 }
-#check-modal input[type="number"] {
+#check-modal input[type='number'] {
   font-size: 30px;
 }
 
@@ -487,12 +487,12 @@ span.wrong-span {
   color: red;
 }
 
-form[name="MyForm"] {
+form[name='MyForm'] {
   margin: 20px auto 0;
   text-align: center;
 }
 
-input[name="stopwatch"] {
+input[name='stopwatch'] {
   background: transparent;
   border: none;
   text-align: center;
@@ -562,4 +562,18 @@ div#rouletteResult table td {
   width: 20%;
   padding: 10px 15px;
   text-align: center;
+}
+
+td {
+  position: relative;
+}
+span.number-label {
+  font-size: 40px;
+  position: absolute;
+  color: white;
+  font-weight: bold;
+  top: 50%;
+  left: 50%;
+  line-height: 1;
+  transform: rotate(270deg) translate(85%, -30%);
 }

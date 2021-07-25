@@ -70,10 +70,10 @@ function bjTotal() {
 let layout = document.querySelector('#layout');
 
 function fetchBlackjackData() {
-    document.querySelector("#rouletteStart").style.display = "none";
+    document.querySelector('#rouletteStart').style.display = 'none';
 
     for (let i = 0; i < 10; i++) {
-        var newBet = document.createElement("div");
+        var newBet = document.createElement('div');
         var bet = getRandomIntInclusive(1, 49) * 10 + 5;
         newBet.classList.add('bjNewBet');
         newBet.setAttribute('data-ranswer', bet * 1.5);

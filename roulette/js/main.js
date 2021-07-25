@@ -1,4 +1,4 @@
-// let selected = document.querySelector("#numberSelect select");
+// let selected = document.querySelector('#numberSelect select');
 
 
 function hideEmpty() {
@@ -12,11 +12,11 @@ function calculation(parent) {
     var bet = Array.from(parent.querySelectorAll('.bet'));
     var sum = 0;
     bet.forEach(bet => {
-        if (bet.dataset.bet === "sixline") { sum += bet.textContent * 5 }
-        if (bet.dataset.bet === "corner") { sum += bet.textContent * 8 }
-        if (bet.dataset.bet === "street") { sum += bet.textContent * 11 }
-        if (bet.dataset.bet === "split") { sum += bet.textContent * 17 }
-        if (bet.dataset.bet === "straight") { sum += bet.textContent * 35 }
+        if (bet.dataset.bet === 'sixline') { sum += bet.textContent * 5 }
+        if (bet.dataset.bet === 'corner') { sum += bet.textContent * 8 }
+        if (bet.dataset.bet === 'street') { sum += bet.textContent * 11 }
+        if (bet.dataset.bet === 'split') { sum += bet.textContent * 17 }
+        if (bet.dataset.bet === 'straight') { sum += bet.textContent * 35 }
     });
 
     parent.setAttribute('data-sum', sum);
@@ -26,7 +26,7 @@ function calculation(parent) {
 }
 
 function changeValue(input) {
-    document.querySelector("label[for=numberOfPictures] span").textContent = input.value;
+    document.querySelector('label[for=numberOfPictures] span').textContent = input.value;
 }
 
 
@@ -113,26 +113,26 @@ let layout = document.querySelector('#layout');
 let rouletteResult = document.querySelector('#rouletteResult table tbody');
 
 function fetchRouletteData() {
-    document.querySelector("#rouletteStart").style.display = "none";
+    document.querySelector('#rouletteStart').style.display = 'none';
 
 
     setTimeout(timerInput, 1000);
     console.log('Getting pictures...');
     let xhr = new XMLHttpRequest();
-    xhr.open("GET", "js/pictures.json", true);
+    xhr.open('GET', 'js/pictures.json', true);
     xhr.onload = function () {
         let data = JSON.parse(xhr.response);
 
         for(let i = 0; i < 20; i++){
             let newPicture = document.createElement('div');
-            newPicture.innerHTML = data[getRandomIntInclusive(0,4)] + `<p class="pictureLabel">Picture ${i + 1} of 20</p>`;
+            newPicture.innerHTML = data[getRandomIntInclusive(0,4)] + `<p class='pictureLabel'>Picture ${i + 1} of 20</p>`;
 
             layout.appendChild(newPicture);
             randomizer(newPicture);
             calculation(newPicture);
 
             let newTableRow = document.createElement('tr');
-            newTableRow.innerHTML = `<td>${i + 1}</td><td data-picture="${i + 1}">${calculation(newPicture)}</td><td data-picture-answer="${i + 1}"></td>`;
+            newTableRow.innerHTML = `<td>${i + 1}</td><td data-picture='${i + 1}'>${calculation(newPicture)}</td><td data-picture-answer='${i + 1}'></td>`;
             rouletteResult.appendChild(newTableRow);
 
 
