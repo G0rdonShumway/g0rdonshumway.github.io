@@ -136,13 +136,13 @@ function fetchRouletteData() {
             rouletteResult.appendChild(newTableRow);
 
             newPicture.querySelectorAll('.red').forEach(cell => {
-                cell.parentElement.style.backgroundColor = 'hsl(0deg 100% 48% / 80%)';
+                cell.parentElement.style.backgroundColor = 'hsl(0deg 100% 48% / 60%)';
             })
             newPicture.querySelectorAll('.black').forEach(cell => {
-                cell.parentElement.style.backgroundColor = 'hsl(0deg 0% 0% / 80%)';
+                cell.parentElement.style.backgroundColor = 'hsl(0deg 0% 0% / 60%)';
             })
             newPicture.querySelectorAll('.green').forEach(cell => {
-                cell.parentElement.style.backgroundColor = 'hsl(120deg 100% 25% / 80%)';
+                cell.parentElement.style.backgroundColor = 'hsl(120deg 100% 25% / 60%)';
             })
 
         }
