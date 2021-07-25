@@ -23,15 +23,16 @@ body {
   position: fixed;
   top: 0;
   bottom: 0;
+  background-color: #ccc;
 }
 
 
 
 h1 {
-  font-size: 70px;
+  font-size: 40px;
   text-transform: uppercase;
   text-align: center;
-  margin: 20px auto 50px;
+  margin: 20px auto 20px;
 }
 
 #rouletteStart {
@@ -100,7 +101,7 @@ span#chipsValue {
 }
 
 #layout {
-  background: #fff;
+  background: #ccc;
   padding: 20px 0px 0px 0px;
   width: 80%;
   margin: 0 auto;
@@ -575,4 +576,30 @@ div#bjResult table td {
 
 td.bjUserInput.activeInputCell {
   background: #ebf788;
+}
+
+.bjNewBet {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  border-radius: 5px;
+  position: relative;
+  box-shadow: inset 0 0 5px  #444;
+  display: none;
+}
+
+.bjNewBet.newBetActive {
+  display: block;
+}
+
+#layout .bjNewBet p {
+  margin: 0;
+  font-size: 40px;
+  font-weight: bold;
+  line-height: 1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
 }
