@@ -138,7 +138,7 @@ span#chipsValue {
 
 /*---ZERO---*/
 #layout table #zero-straight {
-  border: 3px solid;
+  border: 1px solid rgb(255 193 7 / 40%);
   position: relative;
   background-color: #9b9fd5;
 }
