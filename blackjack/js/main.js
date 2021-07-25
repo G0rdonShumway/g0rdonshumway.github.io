@@ -108,8 +108,8 @@ function tick() {
             minute++;
             second = 0;
         }
-        if (minute === 2) {
-            //bjTotal();
+        if (minute === 1) {
+            bjTotal();
         }
 
         timer.value = `${minute < 10 ? '0' + minute : minute}:${second < 10 ? '0' + second : second}.${decisecond < 10 ? '0' + decisecond : decisecond}`;

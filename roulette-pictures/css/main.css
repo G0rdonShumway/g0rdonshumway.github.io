@@ -23,16 +23,15 @@ body {
   position: fixed;
   top: 0;
   bottom: 0;
-  background-color: rgb(209 218 227 / 59%);
 }
 
 
 
 h1 {
-  font-size: 40px;
+  font-size: 70px;
   text-transform: uppercase;
   text-align: center;
-  margin: 20px auto 20px;
+  margin: 20px auto 50px;
 }
 
 #rouletteStart {
@@ -101,12 +100,12 @@ span#chipsValue {
 }
 
 #layout {
-  background-color: rgb(227 233 238);
+  background: #fff;
   padding: 20px 0px 0px 0px;
   width: 80%;
   margin: 0 auto;
-  height: 150px;
-  overflow: scroll;
+  height: 335px;
+  overflow: hidden;
 }
 #layout div p {
   margin-bottom: 53px;
@@ -117,19 +116,10 @@ span#chipsValue {
   border-collapse: collapse;
   margin: 0 auto;
 }
-#layout table thead{
-  font-size: 20px;
-  font-weight: bold;
-  background-color: #9b9fd5;
-}
 #layout table td {
-  width: 145px;
-  height: 50px;
-  border: 1px solid black;
-  text-align: center;
-}
-#layout table tbody td:first-child {
-  font-size: 20px;
+  width: 86px;
+  height: 86px;
+  border: 3px solid black;
 }
 .bet {
   border: 3px solid rgb(131, 30, 30);
@@ -544,7 +534,7 @@ input[name="stopwatch"] {
   display: none;
 }
 
-div#bjResult {
+div#rouletteResult {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -556,59 +546,20 @@ div#bjResult {
   overflow: scroll;
 }
 
-div#bjResult table {
+div#rouletteResult table {
   border-collapse: collapse;
   width: 80%;
   display: block;
   margin: 20px auto;
 }
-div#bjResult table tr {
+div#rouletteResult table tr {
   border-collapse: collapse;
   width: 100%;
   padding: 10px 15px;
 }
-div#bjResult table td {
+div#rouletteResult table td {
   border-collapse: collapse;
   width: 20%;
   padding: 10px 15px;
-  text-align: center;
-}
-
-td.bjUserInput.activeInputCell {
-  background: #ebf788;
-}
-
-.blindNewBet {
-  width: 100%;
-  height: 120px;
-  margin-bottom: 10px;
-  background-color: rgb(203 214 247);
-  border-radius: 5px;
-  position: relative;
-  border: 1px solid rgb(125 132 208);
-  
-  display: none;
-}
-
-.blindNewBet.newBetActive {
-  display: block;
-}
-#layout .blindNewBet h2 {
-  text-align: center;
-  margin: 10px;
-}
-#layout .blindNewBet p {
-  margin: 0;
-  font-size: 40px;
-  font-weight: bold;
-  line-height: 1;
-  position: absolute;
-  top: 70%;
-  left: 50%;
-  transform: translate(-50%,-50%);
-}
-
-div#numberOfBets {
-  margin-bottom: auto;
   text-align: center;
 }

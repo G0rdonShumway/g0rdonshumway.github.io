@@ -49,7 +49,7 @@ function bjTotal() {
 
         var newResultRow = document.createElement('tr');
 
-        newResultRow.innerHTML = `<td>${betCells[i].children[0].textContent}</td><td>${betCells[i].dataset.ranswer}</td><td>${betCells[i].dataset.uanswer}</td>`;
+        newResultRow.innerHTML = `<td>${betCells[i].children[0].textContent} ${betCells[i].children[1].textContent}</td><td>${betCells[i].dataset.ranswer}</td><td>${betCells[i].dataset.uanswer}</td>`;
 
         bjResultTable.appendChild(newResultRow);
 
@@ -69,23 +69,35 @@ function bjTotal() {
 
 let layout = document.querySelector('#layout');
 
-function fetchBlackjackData() {
+function fetchBlindData() {
     document.querySelector("#rouletteStart").style.display = "none";
 
-    for (let i = 0; i < 10; i++) {
-        var newBet = document.createElement("div");
-        var bet = getRandomIntInclusive(1, 49) * 10 + 5;
-        newBet.classList.add('bjNewBet');
-        newBet.setAttribute('data-ranswer', bet * 1.5);
-        newBet.innerHTML = `<p>${bet}</p>`
-        layout.appendChild(newBet);
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", "js/uth-blind.json", true);
+    xhr.onload = function () {
+
+        let data = JSON.parse(xhr.response);
+
+        for (let i = 0; i < 10; i++) {
+            var newBet = document.createElement("div");
+            var bet = getRandomIntInclusive(1, 49) * 10 + 5;
+
+            var combination = getRandomIntInclusive(0, 5);
+
+            newBet.classList.add('blindNewBet');
+            newBet.setAttribute('data-ranswer', bet * data[combination].coefficient);
+            newBet.innerHTML = `<h2>${data[combination].name[0].toUpperCase() + data[combination].name.substring(1)}</h2><p>${bet}</p>`;
+
+            layout.appendChild(newBet);
+        }
+
+        betCells = Array.from(document.querySelectorAll('.blindNewBet'));
+        console.log(betCells)
+    
+        betCells[0].classList.add('newBetActive');
+
     }
-
-    betCells = Array.from(document.querySelectorAll('.bjNewBet'));
-
-    betCells[0].classList.add('newBetActive');
-
-    console.log(betCells)
+    xhr.send();
 
     setTimeout(timerInput, 1000);
 }
@@ -109,7 +121,7 @@ function tick() {
             second = 0;
         }
         if (minute === 2) {
-            //bjTotal();
+            bjTotal();
         }
 
         timer.value = `${minute < 10 ? '0' + minute : minute}:${second < 10 ? '0' + second : second}.${decisecond < 10 ? '0' + decisecond : decisecond}`;
