@@ -1,0 +1,34 @@
+[
+    {
+        "name" : "two pairs",
+        "coefficient": 4
+    },
+    {
+        "name" : "three of a kind",
+        "coefficient": 6
+    },
+    {
+        "name" : "straight",
+        "coefficient": 8
+    },
+    {
+        "name" : "flush",
+        "coefficient": 10
+    },
+    {
+        "name" : "full-house",
+        "coefficient": 14
+    },
+    {
+        "name" : "four of a kind",
+        "coefficient": 40
+    },
+    {
+        "name" : "straight flush",
+        "coefficient": 100
+    },
+    {
+        "name" : "royal flush",
+        "coefficient": 200
+    }
+]
