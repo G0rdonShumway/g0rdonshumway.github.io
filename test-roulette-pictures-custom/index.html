@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <title>Check!</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="js/main.js" defer></script>
+  </head>
+  <body>
+    <div id="rouletteStart">
+      <div id="description">
+        <p><span>Game:</span> American Roulette</p>
+        <p><span>Bet:</span> Pictures (20)</p>
+        <p><span>Goal:</span> Calculate payout for given pictures</p>
+        <p><span>Time limit:</span> 10 min</p>
+      </div>
+      <button id="startRoulette" onclick="fetchRouletteData()">Start</button>
+    </div>
+    <header>
+      <form
+        name="MyForm"
+        style="
+          position: fixed;
+          top: 120px;
+          left: -20%;
+          transform: rotateZ(270deg);
+        "
+      >
+        <input
+          id="timer"
+          name="stopwatch"
+          value="00:00.00"
+          size="10"
+          disabled
+          style="color: #bbb"
+        />
+      </form>
+    </header>
+
+    <div id="layout" style="transform: scale(0.9); margin-bottom: auto;"></div>
+
+    <div id='keyboard'>
+      <input class='div1 digit' id='answer-input' type='number' disabled />
+      <button class='div2 digit backspace' onclick='typeDigit(this)'>del</button>
+      <button class='div3 digit' onclick='typeDigit(this)'>1</button>
+      <button class='div4 digit' onclick='typeDigit(this)'>2</button>
+      <button class='div5 digit' onclick='typeDigit(this)'>3</button>
+      <button class='div6 digit' onclick='typeDigit(this)'>4</button>
+      <button class='div7 digit' onclick='typeDigit(this)'>5</button>
+      <button class='div8 digit' onclick='typeDigit(this)'>6</button>
+      <button class='div9 digit' onclick='typeDigit(this)'>7</button>
+      <button class='div10 digit' onclick='typeDigit(this)'>8</button>
+      <button class='div11 digit' onclick='typeDigit(this)'>9</button>
+      <button class='div12 digit skip' disabled> </button>
+      <button class='div13 digit' onclick='typeDigit(this)'>0</button>
+      <button class='div14 digit submit' onclick='typeDigit(this)'>ok</button>
+    </div>
+
+    <!-- <div style="margin-bottom: auto">
+      <input
+        id="answer-input"
+        type="number"
+        style="
+          display: block;
+          margin: 0 auto;
+          text-align: center;
+          padding: 10px;
+          font-size: 20px;
+          font-weight: bold;
+          width: 100px;
+        "
+        onchange="saveResult()"
+      />
+    </div> -->
+
+    <div id="rouletteResult">
+      <table border="1">
+        <thead>
+          <tr>
+            <td>Time</td>
+            <td colspan="2" id="calculationTime"></td>
+          </tr>
+          <tr>
+            <td>Picture</td>
+            <td>Right answer</td>
+            <td>Your answer</td>
+          </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2">Correct answers</td>
+            <td id="correctPercent"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </body>
+</html>

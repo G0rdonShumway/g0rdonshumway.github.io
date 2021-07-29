@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
+    <meta http-equiv='Cache-Control' content='no-cache'>
+    <title>Blackjack!</title>
+    <link rel='stylesheet' href='css/main.css' />
+    <script src='js/main.js' defer></script>
+  </head>
+  <body>
+    <div id='rouletteStart'>
+      <div id="description">
+        <p><span>Game:</span> Blackjack</p>
+        <p><span>Bet:</span> Bet (10)</p>
+        <p><span>Goal:</span> Calculate payout for given bets</p>
+        <p><span>Time limit:</span> 1 min</p>
+      </div>
+      <button id='startRoulette' onclick='fetchBlackjackData()'>Start</button>
+    </div>
+    <header>
+      <form name='MyForm'>
+        <input
+          id='timer'
+          name='stopwatch'
+          value='00:00.00'
+          size='10'
+          disabled
+        />
+      </form>
+    </header>
+    <h1>Blackjack</h1>
+    <div id='layout'>
+     
+    </div>
+
+    <div id='numberOfBets'>
+      <p>Bet <span>1</span> of 10</p>
+    </div>
+
+    <div id='keyboard'>
+      <input class='div1 digit' id='answer-input' disabled />
+      <button class='div2 digit backspace' onclick='typeDigit(this)'>del</button>
+      <button class='div3 digit' onclick='typeDigit(this)'>1</button>
+      <button class='div4 digit' onclick='typeDigit(this)'>2</button>
+      <button class='div5 digit' onclick='typeDigit(this)'>3</button>
+      <button class='div6 digit' onclick='typeDigit(this)'>4</button>
+      <button class='div7 digit' onclick='typeDigit(this)'>5</button>
+      <button class='div8 digit' onclick='typeDigit(this)'>6</button>
+      <button class='div9 digit' onclick='typeDigit(this)'>7</button>
+      <button class='div10 digit' onclick='typeDigit(this)'>8</button>
+      <button class='div11 digit' onclick='typeDigit(this)'>9</button>
+      <button class='div12 digit dot' onclick='typeDigit(this)'>.</button>
+      <button class='div13 digit' onclick='typeDigit(this)'>0</button>
+      <button class='div14 digit submit' style='background: #7ed97e; color: #000;' onclick='typeDigit(this)'>ok</button>
+    </div>
+
+    <div id='bjResult'>
+      <table border='1'>
+        <thead>
+          <tr>
+            <td>Time</td>
+            <td colspan='2' id='calculationTime'></td>
+          </tr>
+          <tr>
+            <td>Bet</td>
+            <td>Right answer</td>
+            <td>Your answer</td>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan='2'>Correct answers</td>
+            <td id='correctPercent'></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </body>
+</html>
