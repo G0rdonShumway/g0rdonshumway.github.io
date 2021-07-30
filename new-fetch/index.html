@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <title>Check!</title>
+    <link rel="stylesheet" href="./css/main.css" />
+    <script src="js/main.js" defer></script>
+  </head>
+  <body>
+    <div id="linkList">
+      <a id="roulette-pictures" onclick="fetchData(this.id)" href="#">Roulette pictures</a>
+      <a id="roulette-series" href="#">Roulette series</a>
+      <a id="blackjack" href="#">Blackjack</a>
+      <a id="russian-poker" href="#">Russian poker</a>
+      <a id="russian-poker-bonus" href="#">Russian poker Bonus</a>
+      <a id="uth-blind" href="#">UTH blind bets</a>
+      <a id="uth-trips" href="#">UTH trips bets</a>
+      <a id="texas-holdem-bonus" href="#">Texas Hold'em bonus</a>
+    </div>
+
+    <div id="game-descr" style="display: none;">
+      <div id="description">
+        <p>
+          <span class="descr-label">Game:</span> <span id="game">Content</span>
+        </p>
+        <p>
+          <span class="descr-label">Bet:</span> <span id="bets">Content</span>
+        </p>
+        <p>
+          <span class="descr-label">Goal:</span> <span id="goal">Content</span>
+        </p>
+        <p>
+          <span class="descr-label">Time limit:</span>
+          <span id="timelimit">Content</span>
+        </p>
+      </div>
+      <button id="start-button" onclick="startGame()">Start</button>
+    </div>
+
+    <div id="game-content" style="display: none;">
+      <header>
+        <span id="back-btn">Back</span>
+        <h1>Header</h1>
+        <div id="app"></div>
+      </header>
+
+      <div id="layout" style="transform: scale(0.9)"></div>
+
+      <div id="keyboard">
+        <input class="div1 digit" id="answer-input" type="number" disabled />
+        <button class="div2 digit backspace" onclick="typeDigit(this)">
+          del
+        </button>
+        <button class="div3 digit" onclick="typeDigit(this)">1</button>
+        <button class="div4 digit" onclick="typeDigit(this)">2</button>
+        <button class="div5 digit" onclick="typeDigit(this)">3</button>
+        <button class="div6 digit" onclick="typeDigit(this)">4</button>
+        <button class="div7 digit" onclick="typeDigit(this)">5</button>
+        <button class="div8 digit" onclick="typeDigit(this)">6</button>
+        <button class="div9 digit" onclick="typeDigit(this)">7</button>
+        <button class="div10 digit" onclick="typeDigit(this)">8</button>
+        <button class="div11 digit" onclick="typeDigit(this)">9</button>
+        <button class="div12 digit skip" disabled></button>
+        <button class="div13 digit" onclick="typeDigit(this)">0</button>
+        <button class="div14 digit submit" onclick="typeDigit(this)">ok</button>
+      </div>
+    </div>
+
+    <div id="testResult" style="display: none;">
+      <table border="1">
+        <thead>
+          <tr>
+            <td>Time</td>
+            <td colspan="2" id="calculationTime"></td>
+          </tr>
+          <tr>
+            <td>Bet</td>
+            <td>Right answer</td>
+            <td>Your answer</td>
+          </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2">Correct answers</td>
+            <td id="correctPercent"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </body>
+</html>
