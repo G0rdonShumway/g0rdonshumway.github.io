@@ -675,7 +675,8 @@ div#linkList a {
   width: 90%;
 }
 
-#start-button {
+#start-button,
+#back-button {
   padding: 15px 50px;
   font-size: 24px;
   /* font-weight: bold; */
@@ -685,6 +686,8 @@ div#linkList a {
   border: 1px solid #355980;
   color: #fff;
   background-color: #355980;
+  margin: 20px auto;
+  display: block;
 }
 
 div#game-descr {
