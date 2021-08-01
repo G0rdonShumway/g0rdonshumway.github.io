@@ -2,7 +2,7 @@
   {
     "game": "American Roulette",
     "title": "Roulette pictures",
-    "time": 15,
+    "time": 600,
     "timelimit": "10 min",
     "goal": "Calculate payout for given pictures",
     "bet": "Pictures (20)",
