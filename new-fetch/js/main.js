@@ -1,12 +1,10 @@
 ///////////////////////////////////////////////////////////////
 
-// Credit: Mateusz Rybczonec
-
 const FULL_DASH_ARRAY = 283;
-const WARNING_THRESHOLD = 60;
-const ALERT_THRESHOLD = 30;
+let WARNING_THRESHOLD;
+let ALERT_THRESHOLD;
 
-const COLOR_CODES = {
+let COLOR_CODES = {
   info: {
     color: "green",
   },
@@ -20,7 +18,7 @@ const COLOR_CODES = {
   },
 };
 
-const TIME_LIMIT = 600;
+let TIME_LIMIT = 0;
 let timePassed = 0;
 let timeLeft = TIME_LIMIT;
 let timerInterval = null;
@@ -65,7 +63,7 @@ function startTimer() {
 
     if (timeLeft === 0) {
       // onTimesUp();
-      rouletteTotal();
+      testTotal();
     }
   }, 1000);
 }
@@ -82,7 +80,7 @@ function formatTime(time) {
 }
 
 function setRemainingPathColor(timeLeft) {
-  const { alert, warning, info } = COLOR_CODES;
+  let { alert, warning, info } = COLOR_CODES;
   if (timeLeft <= alert.threshold) {
     document
       .getElementById("base-timer-path-remaining")
@@ -174,8 +172,8 @@ function randomizer(parent) {
 
 var digit = Array.from(document.querySelectorAll(".digit"));
 var input = document.querySelector("#answer-input");
-var numberOfPictures;
-var pictureIndex = 0;
+var numberOfBets;
+var betIndex = 0;
 var correctAnswers = 0;
 
 function typeDigit(n) {
@@ -188,8 +186,8 @@ function typeDigit(n) {
   }
 }
 
-function rouletteTotal() {
-  var tableRow = document.querySelectorAll("#rouletteResult table tbody tr");
+function testTotal() {
+  var tableRow = document.querySelectorAll("#testResult table tbody tr");
   tableRow.forEach((row) => {
     if (row.children[1].textContent == row.children[2].textContent) {
       row.children[2].style.backgroundColor = "#3aee3a";
@@ -198,107 +196,139 @@ function rouletteTotal() {
       row.children[2].style.backgroundColor = "#db3333";
     }
   });
+
+  var timer = timePassed;
+
+  if (timer >= 60) {
+    timer = `${Math.floor(timer / 60)} min ${timer % 60} sec`;
+  } else {
+    timer = `${timer} sec`;
+  }
+
+  for (let i = 0; i < 10; i++) {
+    var newResultRow = document.createElement("tr");
+
+    if(betCells[i].dataset.uanswer == undefined) {betCells[i].dataset.uanswer = ''}
+
+    newResultRow.innerHTML = `
+      <td>${betCells[i].children[0].textContent} ${betCells[i].children[1].textContent}</td>
+      <td>${betCells[i].dataset.ranswer}</td>
+      <td>${betCells[i].dataset.uanswer}</td>`;
+
+    testResult.appendChild(newResultRow);
+
+    if (
+      newResultRow.children[1].textContent ===
+      newResultRow.children[2].textContent
+    ) {
+      newResultRow.style.backgroundColor = "#3aee3a";
+      correctAnswers++;
+    } else {
+      newResultRow.style.backgroundColor = "#db3333";
+    }
+  }
+
+  document.querySelector("#game-content").style.display = "none";
+
   document.querySelector("#correctPercent").textContent =
-    (correctAnswers * 100) / numberOfPictures + "%";
-  document.querySelector("#rouletteResult").style.display = "block";
-  document.querySelector("#calculationTime").textContent = timer.value;
+    (correctAnswers * 100) / numberOfBets + "%";
+  document.querySelector("#testResult").style.display = "block";
+  document.querySelector("#calculationTime").textContent = timer;
 }
 
+let gameName;
+
 function saveResult() {
-  var activePicture = document.querySelectorAll("#layout > div")[pictureIndex];
+  if (gameName === "roulette-pictures") {
+    var activePicture = document.querySelectorAll("#layout > div")[betIndex];
 
-  var tableCell = document.querySelectorAll("#rouletteResult table tbody td");
+    var tableCell = document.querySelectorAll("#testResult table tbody td");
 
-  activePicture.setAttribute("data-result", input.value);
-  tableCell.forEach((cell) => {
-    if (cell.dataset.pictureAnswer == pictureIndex + 1) {
-      cell.textContent = input.value;
+    activePicture?.setAttribute("data-result", input.value);
+    tableCell.forEach((cell) => {
+      if (cell.dataset.pictureAnswer == betIndex + 1) {
+        cell.textContent = input.value;
+      }
+    });
+
+    input.value = "";
+    activePicture.style.display = "none";
+
+    betIndex++;
+  } else if (gameName === "roulette-sector") {
+    var activeBet = document.querySelector(".newBetActive");
+
+    activeBet.setAttribute("data-uanswer", input.value);
+
+    activeBet.classList.remove("newBetActive");
+    if (activeBet.nextElementSibling) {
+      activeBet.nextElementSibling.classList.add("newBetActive");
+    } else {
+      onTimesUp();
+      testTotal();
     }
-  });
 
-  input.value = "";
-  activePicture.style.display = "none";
+    input.value = "";
+    numberOfBets.textContent = +numberOfBets.textContent + 1;
+    betIndex++;
+  } else {
+    var activeBet = document.querySelector(".newBetActive");
 
-  pictureIndex++;
+    activeBet.setAttribute("data-uanswer", input.value);
 
-  if (pictureIndex == numberOfPictures) {
-    layout.classList.add("stopTimer");
-    rouletteTotal();
+    activeBet.classList.remove("newBetActive");
+    if (activeBet.nextElementSibling) {
+      activeBet.nextElementSibling.classList.add("newBetActive");
+    } else {
+      onTimesUp();
+      testTotal();
+    }
+    input.value = "";
+    numberOfBets.textContent = +numberOfBets.textContent + 1;
   }
 }
 
 let layout = document.querySelector("#layout");
-let rouletteResult = document.querySelector("#testResult table tbody");
+let testResult = document.querySelector("#testResult table tbody");
 
-// function fetchRouletteData() {
-//   document.querySelector("#rouletteStart").style.display = "none";
-
-//   startTimer();
-
-//   let xhr = new XMLHttpRequest();
-//   xhr.open("GET", "js/pictures.json", true);
-//   xhr.onload = function () {
-//     let data = JSON.parse(xhr.response);
-
-//     for (let i = 0; i < 20; i++) {
-//       let newPicture = document.createElement("div");
-//       newPicture.innerHTML =
-//         data[getRandomIntInclusive(0, 4)] +
-//         `<p class='pictureLabel'>Picture ${i + 1} of 20</p>`;
-
-//       layout.appendChild(newPicture);
-//       randomizer(newPicture);
-//       calculation(newPicture);
-
-//       let newTableRow = document.createElement("tr");
-//       newTableRow.innerHTML = `<td>${i + 1}</td><td data-picture='${
-//         i + 1
-//       }'>${calculation(newPicture)}</td><td data-picture-answer='${
-//         i + 1
-//       }'></td>`;
-//       rouletteResult.appendChild(newTableRow);
-
-//       newPicture.querySelectorAll(".red").forEach((cell) => {
-//         cell.style.color = "hsl(0deg 100% 48% / 1)";
-//       });
-//       newPicture.querySelectorAll(".black").forEach((cell) => {
-//         cell.style.color = "hsl(0deg 0% 0% / 1)";
-//       });
-//       newPicture.querySelectorAll(".green").forEach((cell) => {
-//         cell.style.color = "hsl(120deg 100% 25% / 1)";
-//       });
-//     }
-//     numberOfPictures = Array.from(
-//       document.querySelectorAll("#layout > div")
-//     ).length;
-
-//     hideEmpty();
-
-//     document.getElementById("answer-input").focus();
-//   };
-//   xhr.send();
-// }
+function round5(x) {
+  return x % 5 >= 4.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
+}
 
 function fetchData(game) {
   document.querySelector("#linkList").style.display = "none";
-  document.querySelector('#game-descr').style.display = "flex";
+  document.querySelector("#game-descr").style.display = "flex";
+
+  var gameLabel = document.querySelector("#game");
+  var goalLabel = document.querySelector("#goal");
+  var betsLabel = document.querySelector("#bets");
+  var timeLabel = document.querySelector("#timelimit");
+  var header = document.querySelector("#game-title");
 
   let xhr = new XMLHttpRequest();
 
   xhr.open("GET", `js/${game}.json`, true);
 
+  gameName = game;
+
   xhr.onload = function () {
     let data = JSON.parse(xhr.response);
+    numberOfBets = data[0].numberOfBets;
+    TIME_LIMIT = data[0].time;
+    WARNING_THRESHOLD = TIME_LIMIT / 3;
+    ALERT_THRESHOLD = TIME_LIMIT / 12;
 
-    console.log(data)
-
-    var numberOfBets = 20;
+    gameLabel.textContent = data[0].game;
+    goalLabel.textContent = data[0].goal;
+    betsLabel.textContent = data[0].bet;
+    timeLabel.textContent = data[0].timelimit;
+    header.textContent = data[0].title;
 
     if (game === "roulette-pictures") {
       for (let i = 0; i < numberOfBets; i++) {
         let newPicture = document.createElement("div");
         newPicture.innerHTML =
-          data[getRandomIntInclusive(0, 4)] +
+          data[1][getRandomIntInclusive(0, 4)] +
           `<p class='pictureLabel'>Picture ${i + 1} of 20</p>`;
 
         layout.appendChild(newPicture);
@@ -311,7 +341,7 @@ function fetchData(game) {
         }'>${calculation(newPicture)}</td><td data-picture-answer='${
           i + 1
         }'></td>`;
-        rouletteResult.appendChild(newTableRow);
+        testResult.appendChild(newTableRow);
 
         newPicture.querySelectorAll(".red").forEach((cell) => {
           cell.style.color = "hsl(0deg 100% 48% / 1)";
@@ -325,13 +355,80 @@ function fetchData(game) {
       }
 
       hideEmpty();
+    } else if (game === "roulette-sector") {
+      for (let i = 0; i < 10; i++) {
+        var newBet = document.createElement("div");
+
+        var sector = data[1][getRandomIntInclusive(0, 3)];
+
+        var bet =
+          getRandomIntInclusive(1, sector.maxBet / 100 - 1) * 100 +
+          getRandomIntInclusive(-5, 5) * 10;
+
+        var playsBy;
+        var playsByBefore;
+        var playsByAfter;
+
+        if (bet <= sector.critical) {
+          playsBy = round5(bet / sector.coefficientBeforeCritical);
+        } else {
+          playsByBefore = sector.critical / sector.coefficientBeforeCritical;
+          playsByAfter =
+            (bet - sector.critical) / sector.coefficientAfterCritical;
+          playsBy = round5(playsByAfter + playsByBefore);
+        }
+
+        newBet.classList.add("newBet");
+        newBet.setAttribute("data-ranswer", playsBy);
+        newBet.innerHTML = `<h2>${
+          sector.name[0].toUpperCase() + sector.name.substring(1)
+        }</h2><p>${bet}</p>`;
+
+        layout.appendChild(newBet);
+      }
+
+      betCells = Array.from(document.querySelectorAll(".newBet"));
+
+      betCells[0].classList.add("newBetActive");
+    } else {
+      for (let i = 0; i < 10; i++) {
+        var newBet = document.createElement("div");
+        var bet = getRandomIntInclusive(1, 49) * 10 + 5;
+
+        console.log(data);
+
+        var combination = getRandomIntInclusive(0, 5);
+
+        if(game === 'blackjack'){combination = 0}
+
+        newBet.classList.add("newBet");
+        newBet.setAttribute(
+          "data-ranswer",
+          bet * data[1][combination].coefficient
+        );
+        newBet.innerHTML = `<h2>${
+          data[1][combination].name[0].toUpperCase() +
+          data[1][combination].name.substring(1)
+        }</h2><p>${bet}</p>`;
+
+        layout.appendChild(newBet);
+      }
+
+      betCells = Array.from(document.querySelectorAll(".newBet"));
+      console.log(betCells);
+
+      betCells[0].classList.add("newBetActive");
     }
   };
   xhr.send();
 }
 
 function startGame() {
-  document.querySelector('#game-descr').style.display = "none";
-  document.querySelector('#game-content').style.display = "flex";
-  startTimer();
+  document.querySelector("#game-descr").style.display = "none";
+  document.querySelector("#game-content").style.display = "flex";
+  setTimeout(startTimer(), 1000)
+}
+
+function goBack() {
+  window.location.reload();
 }
