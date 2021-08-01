@@ -187,16 +187,40 @@ function typeDigit(n) {
 }
 
 function testTotal() {
-  var tableRow = document.querySelectorAll("#testResult table tbody tr");
-  tableRow.forEach((row) => {
-    if (row.children[1].textContent == row.children[2].textContent) {
-      row.children[2].style.backgroundColor = "#3aee3a";
-      correctAnswers++;
-    } else {
-      row.children[2].style.backgroundColor = "#db3333";
-    }
-  });
+  if (gameName === "roulette-pictures") {
+    var tableRow = document.querySelectorAll("#testResult table tbody tr");
 
+    tableRow.forEach((row) => {
+      if (row.children[1].textContent == row.children[2].textContent) {
+        row.children[2].style.backgroundColor = "#3aee3a";
+        correctAnswers++;
+      } else {
+        row.children[2].style.backgroundColor = "#db3333";
+      }
+    });
+  } else {
+    for (let i = 0; i < 10; i++) {
+      var newResultRow = document.createElement("tr");
+      //if(betCells[i].dataset.uanswer == undefined) {betCells[i].dataset.uanswer = ''}
+
+      newResultRow.innerHTML = `
+      <td>${betCells[i].children[0].textContent} ${betCells[i].children[1].textContent}</td>
+      <td>${betCells[i].dataset.ranswer}</td>
+      <td>${betCells[i].dataset.uanswer}</td>`;
+
+      testResult.appendChild(newResultRow);
+
+      if (
+        newResultRow.children[1].textContent ===
+        newResultRow.children[2].textContent
+      ) {
+        newResultRow.children[2].style.backgroundColor = "#3aee3a";
+        correctAnswers++;
+      } else {
+        newResultRow.children[2].style.backgroundColor = "#db3333";
+      }
+    }
+  }
   var timer = timePassed;
 
   if (timer >= 60) {
@@ -204,30 +228,6 @@ function testTotal() {
   } else {
     timer = `${timer} sec`;
   }
-
-  for (let i = 0; i < 10; i++) {
-    var newResultRow = document.createElement("tr");
-
-    if(betCells[i].dataset.uanswer == undefined) {betCells[i].dataset.uanswer = ''}
-
-    newResultRow.innerHTML = `
-      <td>${betCells[i].children[0].textContent} ${betCells[i].children[1].textContent}</td>
-      <td>${betCells[i].dataset.ranswer}</td>
-      <td>${betCells[i].dataset.uanswer}</td>`;
-
-    testResult.appendChild(newResultRow);
-
-    if (
-      newResultRow.children[1].textContent ===
-      newResultRow.children[2].textContent
-    ) {
-      newResultRow.style.backgroundColor = "#3aee3a";
-      correctAnswers++;
-    } else {
-      newResultRow.style.backgroundColor = "#db3333";
-    }
-  }
-
   document.querySelector("#game-content").style.display = "none";
 
   document.querySelector("#correctPercent").textContent =
@@ -255,6 +255,10 @@ function saveResult() {
     activePicture.style.display = "none";
 
     betIndex++;
+
+    if (betIndex === 20) {
+      testTotal();
+    }
   } else if (gameName === "roulette-sector") {
     var activeBet = document.querySelector(".newBetActive");
 
@@ -395,11 +399,11 @@ function fetchData(game) {
         var newBet = document.createElement("div");
         var bet = getRandomIntInclusive(1, 49) * 10 + 5;
 
-        console.log(data);
-
         var combination = getRandomIntInclusive(0, 5);
 
-        if(game === 'blackjack'){combination = 0}
+        if (game === "blackjack") {
+          combination = 0;
+        }
 
         newBet.classList.add("newBet");
         newBet.setAttribute(
@@ -415,7 +419,6 @@ function fetchData(game) {
       }
 
       betCells = Array.from(document.querySelectorAll(".newBet"));
-      console.log(betCells);
 
       betCells[0].classList.add("newBetActive");
     }
@@ -426,7 +429,7 @@ function fetchData(game) {
 function startGame() {
   document.querySelector("#game-descr").style.display = "none";
   document.querySelector("#game-content").style.display = "flex";
-  setTimeout(startTimer(), 1000)
+  setTimeout(startTimer(), 1000);
 }
 
 function goBack() {
