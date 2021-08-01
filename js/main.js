@@ -386,7 +386,7 @@ function fetchData(game) {
         newBet.setAttribute("data-ranswer", playsBy);
         newBet.innerHTML = `<h2>${
           sector.name[0].toUpperCase() + sector.name.substring(1)
-        }</h2><p>${bet}</p>`;
+        }</h2><p>${bet}</p><p class='betLabel'>Bet ${i + 1} of 10</p>`;
 
         layout.appendChild(newBet);
       }
@@ -413,7 +413,7 @@ function fetchData(game) {
         newBet.innerHTML = `<h2>${
           data[1][combination].name[0].toUpperCase() +
           data[1][combination].name.substring(1)
-        }</h2><p>${bet}</p>`;
+        }</h2><p>${bet}</p><p class='betLabel'>Bet ${i + 1} of 10</p>`;
 
         layout.appendChild(newBet);
       }

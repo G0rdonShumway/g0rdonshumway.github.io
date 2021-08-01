@@ -24,15 +24,16 @@ body {
   top: 0;
   bottom: 0;
   background-color: rgb(227 233 238);
+
 }
 
 
 
 h1 {
-  font-size: 40px;
+  font-size: 70px;
   text-transform: uppercase;
   text-align: center;
-  margin: 20px auto 20px;
+  margin: 20px auto 50px;
 }
 
 #rouletteStart {
@@ -101,12 +102,14 @@ span#chipsValue {
 }
 
 #layout {
-  background-color: rgb(227 233 238);
+  background: #fff;
   padding: 20px 0px 0px 0px;
   width: 80%;
   margin: 0 auto;
-  height: 150px;
-  overflow: scroll;
+  height: 335px;
+  overflow: hidden;
+  background-color: rgb(227 233 238);
+
 }
 #layout div p {
   margin-bottom: 53px;
@@ -117,19 +120,10 @@ span#chipsValue {
   border-collapse: collapse;
   margin: 0 auto;
 }
-#layout table thead{
-  font-size: 20px;
-  font-weight: bold;
-  background-color: #9b9fd5;
-}
 #layout table td {
-  width: 145px;
-  height: 50px;
-  border: 1px solid black;
-  text-align: center;
-}
-#layout table tbody td:first-child {
-  font-size: 20px;
+  width: 86px;
+  height: 86px;
+  border: 3px solid black;
 }
 .bet {
   border: 3px solid rgb(131, 30, 30);
@@ -148,7 +142,7 @@ span#chipsValue {
 
 /*---ZERO---*/
 #layout table #zero-straight {
-  border: 3px solid;
+  border: 3px solid black;
   position: relative;
   background-color: #9b9fd5;
 }
@@ -544,78 +538,51 @@ input[name='stopwatch'] {
   display: none;
 }
 
-div#bjResult {
+div#testResult {
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  background: #fff;
   z-index: 10;
   display: none;
   overflow: scroll;
 }
 
-div#bjResult table {
+div#testResult table {
   border-collapse: collapse;
   width: 80%;
   display: block;
   margin: 20px auto;
 }
-div#bjResult table tr {
+div#testResult table tr {
   border-collapse: collapse;
   width: 100%;
   padding: 10px 15px;
 }
-div#bjResult table td {
+div#testResult table td {
   border-collapse: collapse;
   width: 20%;
   padding: 10px 15px;
   text-align: center;
 }
 
-td.bjUserInput.activeInputCell {
-  background: #ebf788;
-}
-
-.blindNewBet {
-  width: 100%;
-  height: 120px;
-  margin-bottom: 10px;
-  background-color: rgb(203 214 247);
-  border-radius: 5px;
+td {
   position: relative;
-  border: 1px solid rgb(125 132 208);
-  
-  display: none;
 }
-
-.blindNewBet.newBetActive {
-  display: block;
-}
-#layout .blindNewBet h2 {
-  text-align: center;
-  margin: 10px;
-}
-#layout .blindNewBet p {
-  margin: 0;
+span.number-label {
   font-size: 40px;
-  font-weight: bold;
-  line-height: 1;
   position: absolute;
-  top: 70%;
+  font-weight: bold;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%);
-}
-
-div#numberOfBets {
-  margin-bottom: auto;
-  text-align: center;
+  line-height: 1;
+  transform: rotate(270deg) translate(85%, -30%);
 }
 
 
 div#description {
-  padding: 20px;
+  /* padding: 20px; */
 }
 
 div#description p {
@@ -623,7 +590,177 @@ div#description p {
   margin-bottom: 15px;
 }
 
-div#description p span {
+div#description p span.descr-label {
   font-weight: bold;
   color: #050569;
+}
+
+/******************************************************/
+
+.base-timer {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+
+.base-timer__svg {
+  transform: scaleX(-1);
+}
+
+.base-timer__circle {
+  fill: none;
+  stroke: none;
+}
+
+.base-timer__path-elapsed {
+  stroke-width: 7px;
+  stroke: transparent;
+}
+
+.base-timer__path-remaining {
+  stroke-width: 7px;
+  stroke-linecap: round;
+  transform: rotate(90deg);
+  transform-origin: center;
+  transition: 1s linear all;
+  fill-rule: nonzero;
+  stroke: currentColor;
+}
+
+.base-timer__path-remaining.green {
+  color: rgb(65, 184, 131);
+}
+
+.base-timer__path-remaining.orange {
+  color: orange;
+}
+
+.base-timer__path-remaining.red {
+  color: red;
+}
+
+.base-timer__label {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #fff;
+}
+
+/******************************************************/
+
+div#linkList {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+div#linkList a {
+  padding: 20px 30px;
+  border: 1px solid;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-family: sans-serif;
+  border-radius: 5px;
+  color: #fff;
+  background-color: #456d97;
+  display: block;
+  width: 90%;
+}
+
+#start-button,
+#back-button {
+  padding: 15px 50px;
+  font-size: 24px;
+  /* font-weight: bold; */
+  text-transform: uppercase;
+  border-radius: 5px;
+  outline: none;
+  border: 1px solid #355980;
+  color: #fff;
+  background-color: #355980;
+  margin: 20px auto;
+  display: block;
+}
+
+div#game-descr {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: space-around;
+  height: 100%;
+  padding: 20px;
+}
+
+div#game-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  height: 70px;
+  background: #355980;
+  align-items: center;
+  padding: 10px;
+}
+
+h1 {
+  font-size: 20px;
+  margin: 0;
+  color: #fff;
+  font-weight: normal;
+}
+
+span#back-btn {
+  color: #fff;
+  font-size: 18px;
+}
+
+
+.newBet {
+  width: 100%;
+  height: 160px;
+  margin-bottom: 10px;
+  background-color: rgb(204 211 232);
+  border-radius: 5px;
+  position: relative;
+  border: 1px solid transparent;
+  -webkit-box-shadow: 0px 10px 13px -7px #000000, 10px 10px 24px 1px rgba(0,0,0,0); 
+  box-shadow: 0px 10px 13px -7px #000000, 10px 10px 24px 1px rgba(0,0,0,0);
+  display: none;
+}
+
+.newBet.newBetActive {
+  display: block;
+}
+#layout .newBet h2 {
+  text-align: center;
+  margin: 10px;
+}
+#layout .newBet p {
+  margin: 0;
+  font-size: 40px;
+  font-weight: bold;
+  line-height: 1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+#layout .newBet p.betLabel {
+  margin: 60px auto;
+  font-size: 16px;
+  color: #999;
 }
