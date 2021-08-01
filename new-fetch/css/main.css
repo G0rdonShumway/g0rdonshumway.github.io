@@ -654,6 +654,7 @@ div#description p span.descr-label {
 /******************************************************/
 
 div#linkList {
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
