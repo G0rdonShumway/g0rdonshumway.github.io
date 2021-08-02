@@ -201,7 +201,9 @@ function testTotal() {
   } else {
     for (let i = 0; i < 10; i++) {
       var newResultRow = document.createElement("tr");
-      //if(betCells[i].dataset.uanswer == undefined) {betCells[i].dataset.uanswer = ''}
+      if (betCells[i].dataset.uanswer == undefined) {
+        betCells[i].dataset.uanswer = "";
+      }
 
       newResultRow.innerHTML = `
       <td>${betCells[i].children[0].textContent} ${betCells[i].children[1].textContent}</td>
@@ -421,6 +423,39 @@ function fetchData(game) {
       betCells = Array.from(document.querySelectorAll(".newBet"));
 
       betCells[0].classList.add("newBetActive");
+
+      if (data[2]) {
+        var startScreen = document.querySelector("#game-descr");
+
+        var paytable = document.createElement("table");
+
+        paytable.innerHTML = `<table>
+        <thead>
+          <tr>
+            <th style="padding: 2px" colspan="3">${data[2].name}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 2px">&nbsp;</td>
+            <td style="padding: 2px">Blind</td>
+            <td style="padding: 2px">Trips</td>
+          </tr>
+        </tbody>
+        </table>`;
+
+        paytable.setAttribute("style", "border-collapse: collapse; font-size: 14px;")
+        paytable.setAttribute("border", "1")
+
+        data[2].combinations.forEach(c => {
+          var newRow = document.createElement('tr');
+          newRow.innerHTML = `<td style="padding: 2px">${c.name}</td><td style="padding: 2px">${c.blind}</td><td style="padding: 2px">${c.trips}</td>`;
+          paytable.tBodies[0].appendChild(newRow)
+          console.dir(paytable.tBodies[0])
+        })
+
+        startScreen.prepend(paytable);
+      }
     }
   };
   xhr.send();

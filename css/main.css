@@ -724,6 +724,7 @@ div#game-descr {
   justify-content: space-around;
   height: 100%;
   padding: 20px;
+  overflow-y: scroll;
 }
 
 div#game-content {
@@ -792,7 +793,6 @@ span#back-btn {
   color: #999;
 }
 
-
 @media (max-height: 640px) {
   #layout {
     background: #fff;
@@ -806,5 +806,12 @@ span#back-btn {
   }
   #keyboard .digit {
     height: 45px;
+  }
+  div#testResult table td {
+    border-collapse: collapse;
+    width: 20%;
+    padding: 10px 15px;
+    text-align: center;
+    font-size: 14px;
   }
 }

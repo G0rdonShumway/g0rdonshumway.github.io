@@ -1,40 +1,53 @@
 [
+  {
+    "game": "Ultimate Texas Hold'em",
+    "title": "UTH Trips",
+    "time": 90,
+    "timelimit": "1 min 30 sec",
+    "goal": "Calculate payout for TRIPS BET for given combinations",
+    "bet": "Trips (10)",
+    "numberOfBets": 10
+  },
+  [
     {
-      "game": "Ultimate Texas Hold'em",
-      "title": "UTH Trips",
-      "time": 90,
-      "timelimit": "1 min 30 sec",
-      "goal": "Calculate payout for TRIPS BET for given combinations",
-      "bet": "Trips (10)",
-      "numberOfBets": 10
-    },
-    [
-    {
-        "name" : "three of a kind",
-        "coefficient": 3
-    },
-    {
-        "name" : "straight",
-        "coefficient": 4
+      "name": "three of a kind",
+      "coefficient": 3
     },
     {
-        "name" : "flush",
-        "coefficient": 7
+      "name": "straight",
+      "coefficient": 4
     },
     {
-        "name" : "full-house",
-        "coefficient": 8
+      "name": "flush",
+      "coefficient": 7
     },
     {
-        "name" : "four of a kind",
-        "coefficient": 30
+      "name": "full-house",
+      "coefficient": 8
     },
     {
-        "name" : "straight flush",
-        "coefficient": 40
+      "name": "four of a kind",
+      "coefficient": 30
     },
     {
-        "name" : "royal flush",
-        "coefficient": 50
+      "name": "straight flush",
+      "coefficient": 40
+    },
+    {
+      "name": "royal flush",
+      "coefficient": 50
     }
-]]
+  ],
+  {
+    "name": "Ultimate Texas Hold'em",
+    "combinations": [
+      {"name": "Three of a kind","blind": "","trips": 3},
+      { "name": "Straight", "blind": 1, "trips": 4 },
+      { "name": "Flush", "blind": 1.5, "trips": 7 },
+      { "name": "Full house", "blind": 3, "trips": 8 },
+      { "name": "Four of a kind", "blind": 10, "trips": 30 },
+      { "name": "Straight flush", "blind": 50, "trips": 40 },
+      { "name": "Royal flush", "blind": 500, "trips": 50 }
+    ]
+  }
+]
