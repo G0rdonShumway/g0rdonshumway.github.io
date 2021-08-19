@@ -480,6 +480,11 @@ function fetchData(game) {
       var index;
       var amount = 0;
 
+      document.querySelectorAll('.digit').forEach(dig => {
+        dig.style.height = "60px"
+      })
+      document.querySelector('.dot').textContent = ''
+
       while (amount < 10) {
         var newBet = document.createElement("div");
 
@@ -509,9 +514,12 @@ function fetchData(game) {
               data[1][index + 1 === 37 ? 0 : index + 1 === 38 ? 1 : ++index]
             }>
         `;
-        
+
         layout.appendChild(newBet);
+
       }
+
+
 
       betCells = Array.from(document.querySelectorAll(".neighbours"));
 
