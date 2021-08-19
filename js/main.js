@@ -490,7 +490,7 @@ function fetchData(game) {
 
         index = getRandomIntInclusive(0, 36);
 
-        if (!arr.some((i) => index === i)) {
+        if (arr.some((i) => index !== i)) {
           arr.push(index);
           amount++;
         }
