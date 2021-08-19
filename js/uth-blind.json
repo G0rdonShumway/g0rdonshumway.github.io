@@ -2,8 +2,8 @@
   {
     "game": "Ultimate Texas Hold'em",
     "title": "UTH Blind",
-    "time": 90,
-    "timelimit": "1 min 30 sec",
+    "time": 120,
+    "timelimit": "2 min",
     "goal": "Calculate payout for BLIND BET for given combinations",
     "bet": "Blind (10)",
     "numberOfBets": 10

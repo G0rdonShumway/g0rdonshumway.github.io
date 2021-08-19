@@ -198,6 +198,57 @@ function testTotal() {
         row.children[2].style.backgroundColor = "#db3333";
       }
     });
+  } else if (gameName === "neighbours") {
+    var current;
+    for (let i = 0; i < 10; i++) {
+      var newResultRow = document.createElement("tr");
+      if (betCells[i].dataset.uanswer == undefined) {
+        betCells[i].dataset.uanswer = "";
+      }
+
+      newResultRow.innerHTML = `
+      <td>${i + 1}</td>
+      <td colspan="2" class="answerCell">
+        <span class="number-${
+          betCells[i].children[0].value === betCells[i].children[0].dataset.ult
+            ? "right"
+            : "wrong"
+        }">${betCells[i].children[0].value}</span>
+        <span class="number-${
+          betCells[i].children[1].value ===
+          betCells[i].children[1].dataset.preult
+            ? "right"
+            : "wrong"
+        }">${betCells[i].children[1].value}</span>
+        <span>${betCells[i].children[2].value}</span>
+        <span class="number-${
+          betCells[i].children[3].value === betCells[i].children[3].dataset.next
+            ? "right"
+            : "wrong"
+        }">${betCells[i].children[3].value}</span>
+        <span class="number-${
+          betCells[i].children[4].value ===
+          betCells[i].children[4].dataset.nextafter
+            ? "right"
+            : "wrong"
+        }">${betCells[i].children[4].value}</span>
+      </td>`;
+
+      testResult.appendChild(newResultRow);
+    }
+    var answers = document.querySelectorAll(`.answerCell`);
+
+    answers.forEach((ans) => {
+      if (ans.querySelectorAll(".number-right").length === 4) {
+        correctAnswers++;
+      }
+    });
+
+    var thead = document.querySelector("#testResult table thead");
+    console.dir(thead);
+    thead.children[1].children[1].setAttribute("colspan", 2);
+    thead.children[1].children[1].textContent = "Answers";
+    thead.children[1].removeChild(thead.children[1].children[2]);
   } else {
     for (let i = 0; i < 10; i++) {
       var newResultRow = document.createElement("tr");
@@ -272,6 +323,34 @@ function saveResult() {
     } else {
       onTimesUp();
       testTotal();
+    }
+
+    input.value = "";
+    numberOfBets.textContent = +numberOfBets.textContent + 1;
+    betIndex++;
+  } else if (gameName === "neighbours") {
+    var activeBet = document.querySelector(".neighbour-active");
+    var activeBlock = document.querySelector(".newBetActive");
+    var bets = document.querySelectorAll(".neighbour");
+
+    activeBet.setAttribute("value", input.value);
+
+    if (
+      (betIndex + 1) % 4 === 0 &&
+      activeBlock.nextElementSibling &&
+      betIndex < 39
+    ) {
+      activeBlock.classList.remove("newBetActive");
+      activeBlock.nextElementSibling.classList.add("newBetActive");
+    } else if (betIndex == 39) {
+      onTimesUp();
+      testTotal();
+    }
+    if (bets[betIndex]) {
+      bets[betIndex].classList.remove("neighbour-active");
+      if (bets[betIndex + 1]) {
+        bets[betIndex + 1].classList.add("neighbour-active");
+      }
     }
 
     input.value = "";
@@ -396,6 +475,47 @@ function fetchData(game) {
       betCells = Array.from(document.querySelectorAll(".newBet"));
 
       betCells[0].classList.add("newBetActive");
+    } else if (game === "neighbours") {
+      var arr = [];
+      var index;
+      var amount = 0;
+
+      while (amount < 10) {
+        var newBet = document.createElement("div");
+
+        index = getRandomIntInclusive(0, 36);
+
+        if (!arr.some((i) => index === i)) {
+          arr.push(index);
+          amount++;
+        }
+
+        newBet.classList.add("neighbours");
+
+        newBet.innerHTML = `
+            <input disabled class="neighbour neighbour-active" data-ult=${
+              data[1][index === 0 ? 35 : index === 1 ? 36 : index - 2]
+            }>
+            <input disabled class="neighbour" data-preult=${
+              data[1][index - 1 === -1 ? 36 : index - 1]
+            }>
+            <input disabled data-number=${data[1][index]} value=${
+              data[1][index++]
+            }>
+            <input disabled class="neighbour" data-next=${
+              data[1][index === 37 ? 0 : index]
+            }>
+            <input disabled class="neighbour" data-nextafter=${
+              data[1][index + 1 === 37 ? 0 : index + 1 === 38 ? 1 : ++index]
+            }>
+        `;
+        
+        layout.appendChild(newBet);
+      }
+
+      betCells = Array.from(document.querySelectorAll(".neighbours"));
+
+      betCells[0].classList.add("newBetActive");
     } else {
       for (let i = 0; i < 10; i++) {
         var newBet = document.createElement("div");
@@ -444,15 +564,18 @@ function fetchData(game) {
         </tbody>
         </table>`;
 
-        paytable.setAttribute("style", "border-collapse: collapse; font-size: 14px;")
-        paytable.setAttribute("border", "1")
+        paytable.setAttribute(
+          "style",
+          "border-collapse: collapse; font-size: 14px;"
+        );
+        paytable.setAttribute("border", "1");
 
-        data[2].combinations.forEach(c => {
-          var newRow = document.createElement('tr');
+        data[2].combinations.forEach((c) => {
+          var newRow = document.createElement("tr");
           newRow.innerHTML = `<td style="padding: 2px">${c.name}</td><td style="padding: 2px">${c.blind}</td><td style="padding: 2px">${c.trips}</td>`;
-          paytable.tBodies[0].appendChild(newRow)
-          console.dir(paytable.tBodies[0])
-        })
+          paytable.tBodies[0].appendChild(newRow);
+          console.dir(paytable.tBodies[0]);
+        });
 
         startScreen.prepend(paytable);
       }
