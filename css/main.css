@@ -806,6 +806,7 @@ span#back-btn {
 }
 .neighbours.newBetActive {
   display: flex;
+  margin-top: 70px;
 }
 .neighbours input {
   width: 18%;
