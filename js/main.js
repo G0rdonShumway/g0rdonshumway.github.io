@@ -486,40 +486,39 @@ function fetchData(game) {
       document.querySelector('.dot').textContent = ''
 
       while (amount < 10) {
-        var newBet = document.createElement("div");
 
         index = getRandomIntInclusive(0, 36);
 
-        if (arr.some((i) => index !== i)) {
+        if (arr.some((i) => index === i) === false) {
           arr.push(index);
+
+          var newBet = document.createElement("div");
+
+          newBet.classList.add("neighbours");
+  
+          newBet.innerHTML = `
+              <input disabled class="neighbour neighbour-active" data-ult=${
+                data[1][index === 0 ? 35 : index === 1 ? 36 : index - 2]
+              }>
+              <input disabled class="neighbour" data-preult=${
+                data[1][index - 1 === -1 ? 36 : index - 1]
+              }>
+              <input disabled data-number=${data[1][index]} value=${
+                data[1][index++]
+              }>
+              <input disabled class="neighbour" data-next=${
+                data[1][index === 37 ? 0 : index]
+              }>
+              <input disabled class="neighbour" data-nextafter=${
+                data[1][index + 1 === 37 ? 0 : index + 1 === 38 ? 1 : ++index]
+              }>
+          `;
+  
+          layout.appendChild(newBet);
+
           amount++;
         }
-
-        newBet.classList.add("neighbours");
-
-        newBet.innerHTML = `
-            <input disabled class="neighbour neighbour-active" data-ult=${
-              data[1][index === 0 ? 35 : index === 1 ? 36 : index - 2]
-            }>
-            <input disabled class="neighbour" data-preult=${
-              data[1][index - 1 === -1 ? 36 : index - 1]
-            }>
-            <input disabled data-number=${data[1][index]} value=${
-              data[1][index++]
-            }>
-            <input disabled class="neighbour" data-next=${
-              data[1][index === 37 ? 0 : index]
-            }>
-            <input disabled class="neighbour" data-nextafter=${
-              data[1][index + 1 === 37 ? 0 : index + 1 === 38 ? 1 : ++index]
-            }>
-        `;
-
-        layout.appendChild(newBet);
-
       }
-
-
 
       betCells = Array.from(document.querySelectorAll(".neighbours"));
 
