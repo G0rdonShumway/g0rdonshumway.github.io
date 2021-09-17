@@ -33,5 +33,18 @@
       "name": "royal flush",
       "coefficient": 300
     }
-  ]
+  ],
+  {
+    "name": "Russian poker bonus",
+    "firstCol":"5 card",
+    "secondCol":"6 card",
+    "combinations": [
+      { "name": "Straight", "firstCol": 25, "secondCol": 8 },
+      { "name": "Flush", "firstCol": 50, "secondCol": 15 },
+      { "name": "Full house", "firstCol": 100, "secondCol": 30 },
+      { "name": "Four of a kind", "firstCol": 300, "secondCol": 100 },
+      { "name": "Straight flush", "firstCol": 500, "secondCol": 150 },
+      { "name": "Royal flush", "firstCol": 1000, "secondCol": 300 }
+    ]
+  }
 ]

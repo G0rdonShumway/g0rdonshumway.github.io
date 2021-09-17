@@ -530,8 +530,12 @@ function fetchData(game) {
 
         var combination = getRandomIntInclusive(0, 5);
 
+
         if (game === "blackjack") {
           combination = 0;
+        }
+        if (game === "colorRest") {
+          combination = getRandomIntInclusive(0, 4);
         }
 
         newBet.classList.add("newBet");
@@ -565,12 +569,11 @@ function fetchData(game) {
         <tbody>
           <tr>
             <td style="padding: 2px">&nbsp;</td>
-            <td style="padding: 2px">Blind</td>
-            <td style="padding: 2px">Trips</td>
+            <td style="padding: 2px">${data[2].firstCol}</td>
+            <td style="padding: 2px">${data[2].secondCol}</td>
           </tr>
         </tbody>
         </table>`;
-
         paytable.setAttribute(
           "style",
           "border-collapse: collapse; font-size: 14px;"
@@ -579,9 +582,8 @@ function fetchData(game) {
 
         data[2].combinations.forEach((c) => {
           var newRow = document.createElement("tr");
-          newRow.innerHTML = `<td style="padding: 2px">${c.name}</td><td style="padding: 2px">${c.blind}</td><td style="padding: 2px">${c.trips}</td>`;
+          newRow.innerHTML = `<td style="padding: 2px">${c.name}</td><td style="padding: 2px">${c.firstCol}</td><td style="padding: 2px">${c.secondCol}</td>`;
           paytable.tBodies[0].appendChild(newRow);
-          console.dir(paytable.tBodies[0]);
         });
 
         startScreen.prepend(paytable);
