@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Split game</title>
+
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/main.css" />
+    <link rel="stylesheet" href="./css/table-layout.css" />
+    <link rel="stylesheet" href="./css/splits.css" />
+    <script src="./js/main.js" defer></script>
+  </head>
+  <body>
+    <div id="overlay">
+      <div id="popup-window"></div>
+    </div>
+    <div id="main">
+      <div id="main-header">
+        <div id="score">
+          <div id="player-one" class="player turn-active">
+            <div class="player-name">
+              <span class="player-color"></span> John
+            </div>
+            <div class="player-score">7</div>
+          </div>
+          <div id="player-two" class="player turn-active">
+            <div class="player-name">
+              <span class="player-color"></span> Jack
+            </div>
+            <div class="player-score">5</div>
+          </div>
+        </div>
+      </div>
+      <div id="main-layout">
+        <div id="table-layout">
+          <div class="parent">
+            <div data-number="0" class="number number-green div0">0</div>
+            <div data-number="1" class="number number-red div1">1</div>
+            <div data-number="2" class="number div2">2</div>
+            <div data-number="3" class="number number-red div3">3</div>
+            <div data-number="4" class="number div4">4</div>
+            <div data-number="5" class="number number-red div5">5</div>
+            <div data-number="6" class="number div6">6</div>
+            <div data-number="7" class="number number-red div7">7</div>
+            <div data-number="8" class="number div8">8</div>
+            <div data-number="9" class="number number-red div9">9</div>
+            <div data-number="10" class="number div10">10</div>
+            <div data-number="11" class="number div11">11</div>
+            <div data-number="12" class="number number-red div12">12</div>
+            <div data-number="13" class="number">13</div>
+            <div data-number="14" class="number number-red div14">14</div>
+            <div data-number="15" class="number">15</div>
+            <div data-number="16" class="number number-red div16">16</div>
+            <div data-number="17" class="number div17">17</div>
+            <div data-number="18" class="number number-red div18">18</div>
+            <div data-number="19" class="number number-red div19">19</div>
+            <div data-number="20" class="number div20">20</div>
+            <div data-number="21" class="number number-red div21">21</div>
+            <div data-number="22" class="number div22">22</div>
+            <div data-number="23" class="number number-red div23">23</div>
+            <div data-number="24" class="number div24">24</div>
+            <div data-number="25" class="number number-red div25">25</div>
+            <div data-number="26" class="number div26">26</div>
+            <div data-number="27" class="number number-red div27">27</div>
+            <div data-number="28" class="number div28">28</div>
+            <div data-number="29" class="number div29">29</div>
+            <div data-number="30" class="number number-red div30">30</div>
+            <div data-number="31" class="number div31">31</div>
+            <div data-number="32" class="number number-red div32">32</div>
+            <div data-number="33" class="number div33">33</div>
+            <div data-number="34" class="number number-red div34">34</div>
+            <div data-number="35" class="number div35">35</div>
+            <div data-number="36" class="number number-red div36">36</div>
+
+            <span data-split="0-1" class="split" id="split1"></span>
+            <span data-split="1-4" class="split" id="split2"></span>
+            <span data-split="4-7" class="split" id="split3"></span>
+            <span data-split="7-10" class="split" id="split4"></span>
+            <span data-split="10-13" class="split" id="split5"></span>
+            <span data-split="13-16" class="split" id="split6"></span>
+            <span data-split="16-19" class="split" id="split7"></span>
+            <span data-split="19-22" class="split" id="split8"></span>
+            <span data-split="22-25" class="split" id="split9"></span>
+            <span data-split="25-28" class="split" id="split10"></span>
+            <span data-split="28-31" class="split" id="split11"></span>
+            <span data-split="31-34" class="split" id="split12"></span>
+            <span data-split="0-2" class="split" id="split13"></span>
+            <span data-split="2-5" class="split" id="split14"></span>
+            <span data-split="5-8" class="split" id="split15"></span>
+            <span data-split="8-11" class="split" id="split16"></span>
+            <span data-split="11-14" class="split" id="split17"></span>
+            <span data-split="14-17" class="split" id="split18"></span>
+            <span data-split="17-20" class="split" id="split19"></span>
+            <span data-split="20-23" class="split" id="split20"></span>
+            <span data-split="23-26" class="split" id="split21"></span>
+            <span data-split="26-29" class="split" id="split22"></span>
+            <span data-split="29-32" class="split" id="split23"></span>
+            <span data-split="32-35" class="split" id="split24"></span>
+            <span data-split="0-3" class="split" id="split25"></span>
+            <span data-split="3-6" class="split" id="split26"></span>
+            <span data-split="6-9" class="split" id="split27"></span>
+            <span data-split="9-12" class="split" id="split28"></span>
+            <span data-split="12-15" class="split" id="split29"></span>
+            <span data-split="15-18" class="split" id="split30"></span>
+            <span data-split="18-21" class="split" id="split31"></span>
+            <span data-split="21-24" class="split" id="split32"></span>
+            <span data-split="24-27" class="split" id="split33"></span>
+            <span data-split="27-30" class="split" id="split34"></span>
+            <span data-split="30-33" class="split" id="split35"></span>
+            <span data-split="33-36" class="split" id="split36"></span>
+            <span data-split="1-2" class="split" id="split37"></span>
+            <span data-split="4-7" class="split" id="split38"></span>
+            <span data-split="7-8" class="split" id="split39"></span>
+            <span data-split="10-11" class="split" id="split40"></span>
+            <span data-split="13-14" class="split" id="split41"></span>
+            <span data-split="16-17" class="split" id="split42"></span>
+            <span data-split="19-20" class="split" id="split43"></span>
+            <span data-split="22-23" class="split" id="split44"></span>
+            <span data-split="25-26" class="split" id="split45"></span>
+            <span data-split="28-29" class="split" id="split46"></span>
+            <span data-split="31-32" class="split" id="split47"></span>
+            <span data-split="34-35" class="split" id="split48"></span>
+            <span data-split="2-3" class="split" id="split49"></span>
+            <span data-split="5-6" class="split" id="split50"></span>
+            <span data-split="8-9" class="split" id="split51"></span>
+            <span data-split="11-12" class="split" id="split52"></span>
+            <span data-split="14-15" class="split" id="split53"></span>
+            <span data-split="17-18" class="split" id="split54"></span>
+            <span data-split="20-21" class="split" id="split55"></span>
+            <span data-split="23-24" class="split" id="split56"></span>
+            <span data-split="26-27" class="split" id="split57"></span>
+            <span data-split="29-30" class="split" id="split58"></span>
+            <span data-split="32-33" class="split" id="split59"></span>
+            <span data-split="35-36" class="split" id="split60"></span>
+          </div>
+        </div>
+        <button id="start-button" onclick="getNumber()">
+          <div id="button-logo"><img src="./img/wheel.png" alt="#" /></div>
+          <span>Spin</span>
+        </button>
+      </div>
+    </div>
+  </body>
+</html>
