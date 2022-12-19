@@ -43,8 +43,8 @@ document.getElementById("app").innerHTML = `
     </g>
   </svg>
   <span id="base-timer-label" class="base-timer__label">${formatTime(
-    timeLeft
-  )}</span>
+  timeLeft
+)}</span>
 </div>
 `;
 
@@ -209,28 +209,24 @@ function testTotal() {
       newResultRow.innerHTML = `
       <td>${i + 1}</td>
       <td colspan="2" class="answerCell">
-        <span class="number-${
-          betCells[i].children[0].value === betCells[i].children[0].dataset.ult
-            ? "right"
-            : "wrong"
+        <span class="number-${betCells[i].children[0].value === betCells[i].children[0].dataset.ult
+          ? "right"
+          : "wrong"
         }">${betCells[i].children[0].value}</span>
-        <span class="number-${
-          betCells[i].children[1].value ===
+        <span class="number-${betCells[i].children[1].value ===
           betCells[i].children[1].dataset.preult
-            ? "right"
-            : "wrong"
+          ? "right"
+          : "wrong"
         }">${betCells[i].children[1].value}</span>
         <span>${betCells[i].children[2].value}</span>
-        <span class="number-${
-          betCells[i].children[3].value === betCells[i].children[3].dataset.next
-            ? "right"
-            : "wrong"
+        <span class="number-${betCells[i].children[3].value === betCells[i].children[3].dataset.next
+          ? "right"
+          : "wrong"
         }">${betCells[i].children[3].value}</span>
-        <span class="number-${
-          betCells[i].children[4].value ===
+        <span class="number-${betCells[i].children[4].value ===
           betCells[i].children[4].dataset.nextafter
-            ? "right"
-            : "wrong"
+          ? "right"
+          : "wrong"
         }">${betCells[i].children[4].value}</span>
       </td>`;
 
@@ -421,11 +417,9 @@ function fetchData(game) {
         calculation(newPicture);
 
         let newTableRow = document.createElement("tr");
-        newTableRow.innerHTML = `<td>${i + 1}</td><td data-picture='${
-          i + 1
-        }'>${calculation(newPicture)}</td><td data-picture-answer='${
-          i + 1
-        }'></td>`;
+        newTableRow.innerHTML = `<td>${i + 1}</td><td data-picture='${i + 1
+          }'>${calculation(newPicture)}</td><td data-picture-answer='${i + 1
+          }'></td>`;
         testResult.appendChild(newTableRow);
 
         newPicture.querySelectorAll(".red").forEach((cell) => {
@@ -465,9 +459,8 @@ function fetchData(game) {
 
         newBet.classList.add("newBet");
         newBet.setAttribute("data-ranswer", playsBy);
-        newBet.innerHTML = `<h2>${
-          sector.name[0].toUpperCase() + sector.name.substring(1)
-        }</h2><p>${bet}</p><p class='betLabel'>Bet ${i + 1} of 10</p>`;
+        newBet.innerHTML = `<h2>${sector.name[0].toUpperCase() + sector.name.substring(1)
+          }</h2><p>${bet}</p><p class='betLabel'>Bet ${i + 1} of 10</p>`;
 
         layout.appendChild(newBet);
       }
@@ -495,25 +488,20 @@ function fetchData(game) {
           var newBet = document.createElement("div");
 
           newBet.classList.add("neighbours");
-  
+
           newBet.innerHTML = `
-              <input disabled class="neighbour neighbour-active" data-ult=${
-                data[1][index === 0 ? 35 : index === 1 ? 36 : index - 2]
-              }>
-              <input disabled class="neighbour" data-preult=${
-                data[1][index - 1 === -1 ? 36 : index - 1]
-              }>
-              <input disabled data-number=${data[1][index]} value=${
-                data[1][index++]
-              }>
-              <input disabled class="neighbour" data-next=${
-                data[1][index === 37 ? 0 : index]
-              }>
-              <input disabled class="neighbour" data-nextafter=${
-                data[1][index + 1 === 37 ? 0 : index + 1 === 38 ? 1 : ++index]
-              }>
+              <input disabled class="neighbour neighbour-active" data-ult=${data[1][index === 0 ? 35 : index === 1 ? 36 : index - 2]
+            }>
+              <input disabled class="neighbour" data-preult=${data[1][index - 1 === -1 ? 36 : index - 1]
+            }>
+              <input disabled data-number=${data[1][index]} value=${data[1][index++]
+            }>
+              <input disabled class="neighbour" data-next=${data[1][index === 37 ? 0 : index]
+            }>
+              <input disabled class="neighbour" data-nextafter=${data[1][index + 1 === 37 ? 0 : index + 1 === 38 ? 1 : ++index]
+            }>
           `;
-  
+
           layout.appendChild(newBet);
 
           amount++;
@@ -526,7 +514,14 @@ function fetchData(game) {
     } else {
       for (let i = 0; i < 10; i++) {
         var newBet = document.createElement("div");
-        var bet = getRandomIntInclusive(1, 49) * 10 + 5;
+        var betsArray = []
+        var bet;
+        if (!betsArray.includes(bet)) {
+          bet = Math.ceil(Math.random() * 111) * 5
+          betsArray.push(bet)
+
+        }
+
 
         var combination = getRandomIntInclusive(0, 5);
 
@@ -543,10 +538,9 @@ function fetchData(game) {
           "data-ranswer",
           bet * data[1][combination].coefficient
         );
-        newBet.innerHTML = `<h2>${
-          data[1][combination].name[0].toUpperCase() +
+        newBet.innerHTML = `<h2>${data[1][combination].name[0].toUpperCase() +
           data[1][combination].name.substring(1)
-        }</h2><p>${bet}</p><p class='betLabel'>Bet ${i + 1} of 10</p>`;
+          }</h2><p>${bet}</p><p class='betLabel'>Bet ${i + 1} of 10</p>`;
 
         layout.appendChild(newBet);
       }
