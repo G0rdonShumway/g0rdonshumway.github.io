@@ -517,7 +517,7 @@ function fetchData(game) {
         var betsArray = []
         var bet;
         if (!betsArray.includes(bet)) {
-          bet = Math.ceil(Math.random() * 111) * 5
+          bet = Math.ceil(Math.random() * 100) * 5
           betsArray.push(bet)
 
         }
