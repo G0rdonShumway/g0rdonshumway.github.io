@@ -8,26 +8,38 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
     />
     <meta http-equiv="Cache-Control" content="no-cache" />
-    <meta http-equiv="Cache-Control" content="private">
+    <meta http-equiv="Cache-Control" content="private" />
     <title>Check!</title>
     <link rel="stylesheet" href="./css/main.css" />
     <script src="js/main.js" defer></script>
   </head>
   <body>
     <div id="linkList">
-      <a id="roulette-pictures" onclick="fetchData(this.id)" href="#">Roulette pictures</a>
-      <a id="roulette-sector" onclick="fetchData(this.id)" href="#">Roulette series</a>
+      <a id="roulette-pictures" onclick="fetchData(this.id)" href="#"
+        >Roulette pictures</a
+      >
+      <a id="roulette-sector" onclick="fetchData(this.id)" href="#"
+        >Roulette series</a
+      >
       <!-- <a id="neighbours" onclick="fetchData(this.id)" href="#">Roulette Neighbours</a> -->
       <!-- <a id="colorRest" onclick="fetchData(this.id)" href="#">Roulette payout via cash</a> -->
       <a id="blackjack" onclick="fetchData(this.id)" href="#">Blackjack</a>
-      <a id="russian-poker" onclick="fetchData(this.id)" href="#">Russian poker</a>
-      <a id="russian-poker-bonus" onclick="fetchData(this.id)" href="#">Russian poker Bonus</a>
+      <a id="russian-poker" onclick="fetchData(this.id)" href="#"
+        >Russian poker</a
+      >
+      <a id="russian-poker-bonus" onclick="fetchData(this.id)" href="#"
+        >Russian poker Bonus</a
+      >
       <a id="uth-blind" onclick="fetchData(this.id)" href="#">UTH blind bets</a>
       <a id="uth-trips" onclick="fetchData(this.id)" href="#">UTH trips bets</a>
-      <a id="texas-holdem-bonus" onclick="fetchData(this.id)" href="#">Texas Hold'em bonus</a>
+      <a id="texas-holdem-bonus" onclick="fetchData(this.id)" href="#"
+        >Texas Hold'em bonus</a
+      >
+
+      <span id="resolution">123x123</span>
     </div>
 
-    <div id="game-descr" style="display: none;">
+    <div id="game-descr" style="display: none">
       <div id="description">
         <p>
           <span class="descr-label">Game:</span> <span id="game">Content</span>
@@ -46,7 +58,7 @@
       <button id="start-button" onclick="startGame()">Start</button>
     </div>
 
-    <div id="game-content" style="display: none;">
+    <div id="game-content" style="display: none">
       <header>
         <span id="back-btn" onclick="goBack()">Back</span>
         <h1 id="game-title">Header</h1>
@@ -55,25 +67,33 @@
 
       <div id="layout"></div>
 
-      <div id='keyboard'>
-        <input class='div1 digit' id='answer-input' disabled />
-        <button class='div2 digit backspace' onclick='typeDigit(this)'>del</button>
-        <button class='div3 digit' onclick='typeDigit(this)'>1</button>
-        <button class='div4 digit' onclick='typeDigit(this)'>2</button>
-        <button class='div5 digit' onclick='typeDigit(this)'>3</button>
-        <button class='div6 digit' onclick='typeDigit(this)'>4</button>
-        <button class='div7 digit' onclick='typeDigit(this)'>5</button>
-        <button class='div8 digit' onclick='typeDigit(this)'>6</button>
-        <button class='div9 digit' onclick='typeDigit(this)'>7</button>
-        <button class='div10 digit' onclick='typeDigit(this)'>8</button>
-        <button class='div11 digit' onclick='typeDigit(this)'>9</button>
-        <button class='div12 digit dot' onclick='typeDigit(this)'>.</button>
-        <button class='div13 digit' onclick='typeDigit(this)'>0</button>
-        <button class='div14 digit submit' style='background: #7ed97e; color: #000;' onclick='typeDigit(this)'>ok</button>
+      <div id="keyboard">
+        <input class="div1 digit" id="answer-input" disabled />
+        <button class="div2 digit backspace" onclick="typeDigit(this)">
+          del
+        </button>
+        <button class="div3 digit" onclick="typeDigit(this)">1</button>
+        <button class="div4 digit" onclick="typeDigit(this)">2</button>
+        <button class="div5 digit" onclick="typeDigit(this)">3</button>
+        <button class="div6 digit" onclick="typeDigit(this)">4</button>
+        <button class="div7 digit" onclick="typeDigit(this)">5</button>
+        <button class="div8 digit" onclick="typeDigit(this)">6</button>
+        <button class="div9 digit" onclick="typeDigit(this)">7</button>
+        <button class="div10 digit" onclick="typeDigit(this)">8</button>
+        <button class="div11 digit" onclick="typeDigit(this)">9</button>
+        <button class="div12 digit dot" onclick="typeDigit(this)">.</button>
+        <button class="div13 digit" onclick="typeDigit(this)">0</button>
+        <button
+          class="div14 digit submit"
+          style="background: #7ed97e; color: #000"
+          onclick="typeDigit(this)"
+        >
+          ok
+        </button>
       </div>
     </div>
 
-    <div id="testResult" style="display: none;">
+    <div id="testResult" style="display: none">
       <table border="1">
         <thead>
           <tr>
@@ -94,7 +114,7 @@
           </tr>
         </tfoot>
       </table>
-      
+
       <button id="back-button" onclick="goBack()">Go back</button>
     </div>
   </body>
