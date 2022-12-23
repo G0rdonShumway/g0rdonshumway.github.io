@@ -719,6 +719,7 @@ div#linkList a {
 
 div#linkList a img {
   height: 32px;
+  width: auto;
   margin: 0;
 }
 
