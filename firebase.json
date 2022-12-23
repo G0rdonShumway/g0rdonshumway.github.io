@@ -1,7 +1,0 @@
-{
-  "hosting": {
-    "public": "public",
-    "site": "croupierassistant",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
-  }
-}
