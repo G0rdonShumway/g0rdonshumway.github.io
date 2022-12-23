@@ -12,7 +12,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: "Roboto Condensed", sans-serif;
 }
 
 body,
@@ -623,10 +623,15 @@ div#description {
 div#description p {
   font-size: 18px;
   margin-bottom: 15px;
+  font-family: "Roboto Condensed", sans-serif;
+  text-transform: uppercase;
+  font-weight: 300;
 }
 
 div#description p span.descr-label {
   font-weight: bold;
+  font-family: "Roboto Condensed", sans-serif;
+  text-transform: uppercase;
   color: #050569;
 }
 
@@ -735,7 +740,7 @@ div#linkList a img {
 #back-button {
   padding: 15px 50px;
   font-size: 24px;
-  /* font-weight: bold; */
+  font-weight: bold;
   text-transform: uppercase;
   border-radius: 5px;
   outline: none;
@@ -744,6 +749,7 @@ div#linkList a img {
   background-color: #355980;
   margin: 20px auto;
   display: block;
+  font-family: "metropolis_1920regular", sans-serif;
 }
 
 div#game-descr {
