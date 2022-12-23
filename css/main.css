@@ -442,6 +442,9 @@ span.bet.mid-right-sixline {
   grid-column-gap: 0px;
   grid-row-gap: 0px;
 }
+.disable-dbl-tap-zoom {
+  touch-action: manipulation;
+}
 
 .div1 {
   grid-area: 1 / 1 / 2 / 3;
