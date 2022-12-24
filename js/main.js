@@ -85,7 +85,7 @@ function startGame() {
 }
 
 function goBack() {
-  window.location.reload();
+  //window.location.reload();
   saveData();
 }
 
