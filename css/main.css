@@ -714,8 +714,8 @@ div#linkList a {
   margin-bottom: 10px;
   text-transform: uppercase;
   text-decoration: none;
-  font-family: "metropolis_1920regular", sans-serif;
-  font-weight: bold;
+  font-family: "Roboto Condensed", sans-serif;
+  /* font-weight: bold; */
   border-radius: 3px;
   font-size: 22px;
   color: #fff;
@@ -753,7 +753,7 @@ div#linkList a img {
   background-color: #355980;
   margin: 20px auto;
   display: block;
-  font-family: "metropolis_1920regular", sans-serif;
+  font-family: "Roboto Condensed", sans-serif;
 }
 
 div#game-descr {
