@@ -98,5 +98,5 @@ function testTotal() {
   document.querySelector("#calculationTime").textContent = timer;
   
   
-  saveData(gamename, (correctAnswers * 100) / numberOfBets + "%", timer );
+  saveData(gameName, (correctAnswers * 100) / numberOfBets + "%", timer );
 }
