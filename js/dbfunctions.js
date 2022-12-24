@@ -17,7 +17,7 @@ const saveData = (game, percentage, time) => {
     game: game,
     correctAnswers: percentage,
     time: time,
-    device: unescape(your_computernm)
+    device: navigator.userAgent
   })
     .then((docRef) => {
       console.log("Document written with ID: ", docRef.id);
