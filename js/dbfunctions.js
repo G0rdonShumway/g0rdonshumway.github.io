@@ -8,6 +8,16 @@ const firebaseConfig = {
   measurementId: "G-PSD9VKBZ2W"
 };
 
+function getMachineId() {
+  let machineId = localStorage.getItem('MachineId');
+
+  if (!machineId) {
+    machineId = crypto.randomUUID();
+    localStorage.setItem('MachineId', machineId);
+  }
+  return machineId;
+}
+
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 const db = firebaseApp.firestore();
 const auth = firebaseApp.auth();
@@ -15,13 +25,14 @@ const auth = firebaseApp.auth();
 const saveData = (game, percentage, time) => {
   var date = new Date();
   var current_date = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
-  db.collection(`${current_date}-${game}`).add({
+  db.collection(getMachineId()).doc(`${current_date}`).collection(game).add({
     game: game,
     correctAnswers: percentage,
-    time: time
+    time: time,
+    timeCode: `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
   })
     .then((docRef) => {
-      console.log("Document written with ID: ", docRef.id);
+      console.log("Document written");
     })
     .catch((error) => {
       console.error("Error adding document: ", error);
