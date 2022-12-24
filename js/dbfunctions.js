@@ -15,7 +15,7 @@ const auth = firebaseApp.auth();
 const saveData = (game, percentage, time) => {
   var date = new Date();
   var current_date = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
-  db.collection(`statistics-${game}/${current_date}`).add({
+  db.collection(`statistics-${game}-${current_date}`).add({
     game: game,
     correctAnswers: percentage,
     time: time
