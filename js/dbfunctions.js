@@ -13,10 +13,11 @@ const db = firebaseApp.firestore();
 const auth = firebaseApp.auth();
 
 const saveData = (game, percentage, time) => {
-  db.collection("users").add({
+  db.collection("statistics").add({
     game: game,
     correctAnswers: percentage,
-    time: time
+    time: time,
+    device: unescape(your_computernm)
   })
     .then((docRef) => {
       console.log("Document written with ID: ", docRef.id);
