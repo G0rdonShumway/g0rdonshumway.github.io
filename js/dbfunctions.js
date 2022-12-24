@@ -1,3 +1,15 @@
+let api_key
+
+function fetchApi(key) {
+  let xhr = new XMLHttpRequest();
+  xhr.open("GET", `js/data/api.json`, true);
+  xhr.onload = function () {
+    key = JSON.parse(xhr.response);
+    api_key = key.key
+  };
+  xhr.send();
+}
+
 const firebaseConfig = {
   apiKey: "AIzaSyDOYALzWbCOa3nrzZlUOBendAbAvv8C31A",
   authDomain: "test-b19d4.firebaseapp.com",
@@ -27,12 +39,3 @@ const saveData = (game, percentage, time) => {
     });
 }
 
-function fetchApi(key) {
-  let xhr = new XMLHttpRequest();
-  xhr.open("GET", `js/data/api.json`, true);
-  xhr.onload = function () {
-    key = JSON.parse(xhr.response);
-    return key.key
-  };
-  xhr.send();
-}
