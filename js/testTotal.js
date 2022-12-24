@@ -96,4 +96,7 @@ function testTotal() {
     (correctAnswers * 100) / numberOfBets + "%";
   document.querySelector("#testResult").style.display = "block";
   document.querySelector("#calculationTime").textContent = timer;
+  
+  
+  saveData(gamename, (correctAnswers * 100) / numberOfBets + "%", timer );
 }
