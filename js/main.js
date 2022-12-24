@@ -85,8 +85,7 @@ function startGame() {
 }
 
 function goBack() {
-  //window.location.reload();
-  saveData();
+  window.location.reload();
 }
 
 const resolution = document.getElementById('resolution')
