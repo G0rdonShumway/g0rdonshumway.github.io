@@ -13,11 +13,11 @@ const db = firebaseApp.firestore();
 const auth = firebaseApp.auth();
 
 const saveData = (game, percentage, time) => {
-  db.collection("statistics").add({
+  var current_date = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
+  db.collection(`statistics-${game}/${current_date}`).add({
     game: game,
     correctAnswers: percentage,
-    time: time,
-    device: navigator.userAgent
+    time: time
   })
     .then((docRef) => {
       console.log("Document written with ID: ", docRef.id);
@@ -25,4 +25,14 @@ const saveData = (game, percentage, time) => {
     .catch((error) => {
       console.error("Error adding document: ", error);
     });
+}
+
+function fetchApi(key) {
+  let xhr = new XMLHttpRequest();
+  xhr.open("GET", `js/data/api.json`, true);
+  xhr.onload = function () {
+    key = JSON.parse(xhr.response);
+    return key.key
+  };
+  xhr.send();
 }
