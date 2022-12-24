@@ -12,35 +12,6 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 const db = firebaseApp.firestore();
 const auth = firebaseApp.auth();
 
-const register = () => {
-  const email = document.getElementById('email').value
-  const pass = document.getElementById('pass').value
-
-  auth.createUserWithEmailAndPassword(email, pass)
-    .then((res) => {
-      console.log(res.user)
-    })
-    .catch((err) => {
-      alert(err.message)
-      console.error(err.message);
-    })
-
-
-}
-const login = () => {
-  const email = document.getElementById('email').value
-  const pass = document.getElementById('pass').value
-
-  auth.signInWithEmailAndPassword(email, pass)
-    .then((res) => {
-      console.log(res.user)
-    })
-    .catch((err) => {
-      alert(err.message)
-      console.error(err.message);
-    })
-}
-
 const saveData = () => {
   const email = document.getElementById('email').value
   const pass = document.getElementById('pass').value
