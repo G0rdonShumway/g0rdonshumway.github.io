@@ -12,13 +12,11 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 const db = firebaseApp.firestore();
 const auth = firebaseApp.auth();
 
-const saveData = () => {
-//   const email = document.getElementById('email').value
-//   const pass = document.getElementById('pass').value
+const saveData = (game, percentage, time) => {
   db.collection("users").add({
-    name: 'G0rdon',
-    email: 'pavel.sky.zorin@gmail.com',
-    password: '123456'
+    game: game,
+    correctAnswers: percentage,
+    time: time
   })
     .then((docRef) => {
       console.log("Document written with ID: ", docRef.id);
