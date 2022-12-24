@@ -1,15 +1,3 @@
-let api_key
-
-function fetchApi(key) {
-  let xhr = new XMLHttpRequest();
-  xhr.open("GET", `js/data/api.json`, true);
-  xhr.onload = function () {
-    key = JSON.parse(xhr.response);
-    api_key = key.key
-  };
-  xhr.send();
-}
-
 const firebaseConfig = {
   apiKey: "AIzaSyDOYALzWbCOa3nrzZlUOBendAbAvv8C31A",
   authDomain: "test-b19d4.firebaseapp.com",
@@ -25,6 +13,7 @@ const db = firebaseApp.firestore();
 const auth = firebaseApp.auth();
 
 const saveData = (game, percentage, time) => {
+  var date = new Date();
   var current_date = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
   db.collection(`statistics-${game}/${current_date}`).add({
     game: game,
