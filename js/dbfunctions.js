@@ -13,8 +13,8 @@ const db = firebaseApp.firestore();
 const auth = firebaseApp.auth();
 
 const saveData = () => {
-  const email = document.getElementById('email').value
-  const pass = document.getElementById('pass').value
+//   const email = document.getElementById('email').value
+//   const pass = document.getElementById('pass').value
   db.collection("users").add({
     name: 'G0rdon',
     email: 'pavel.sky.zorin@gmail.com',
