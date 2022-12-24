@@ -86,6 +86,7 @@ function startGame() {
 
 function goBack() {
   window.location.reload();
+  saveData();
 }
 
 const resolution = document.getElementById('resolution')
