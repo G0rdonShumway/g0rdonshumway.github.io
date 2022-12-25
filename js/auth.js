@@ -54,7 +54,7 @@ overflow.addEventListener('click', function (e) {
 
 document.addEventListener('DOMContentLoaded', function () {
   var local = localStorage.getItem('username');
-  !local ? localStorage.setItem('username', '') : localStorage.setItem('username', '')
+  !local ? localStorage.setItem('username', '') : ''
   checkUser()
 });
 
