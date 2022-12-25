@@ -8,6 +8,7 @@ function fetchData(game) {
   var betsLabel = document.querySelector("#bets");
   var timeLabel = document.querySelector("#timelimit");
   var header = document.querySelector("#game-title");
+  var appHeader = document.querySelector("#appTitle");
 
   let xhr = new XMLHttpRequest();
 
@@ -27,6 +28,7 @@ function fetchData(game) {
     betsLabel.textContent = data[0].bet;
     timeLabel.textContent = data[0].timelimit;
     header.textContent = data[0].title;
+    appHeader.style.display = 'none'
 
     if (game === "roulette-pictures") {
       for (let i = 0; i < numberOfBets; i++) {

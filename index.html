@@ -25,14 +25,79 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
 
-    <script src="js/timer.js?v=3" defer></script>
-    <script src="js/testTotal.js?v=3" defer></script>
-    <script src="js/saveResult.js?v=3" defer></script>
-    <script src="js/fetchGames.js?v=3" defer></script>
-    <script src="js/dbfunctions.js?v=3" defer></script>
-    <script src="js/main.js?v=3" defer></script>
+    <script src="js/timer.js?v=4" defer></script>
+    <script src="js/testTotal.js?v=4" defer></script>
+    <script src="js/saveResult.js?v=4" defer></script>
+    <script src="js/fetchGames.js?v=4" defer></script>
+    <script src="js/dbfunctions.js?v=4" defer></script>
+    <script src="js/auth.js?v=4" defer></script>
+    <script src="js/main.js?v=4" defer></script>
   </head>
   <body>
+    <header id="appTitle">
+      <h1>Croupier Assistant</h1>
+      <img id="userIcon" src="./img/Loading_icon.gif" />
+
+      <div id="dropdown_user">
+        <button id="profile">Profile</button>
+        <button id="login" onclick="showOverflow()">Log in</button>
+        <button id="logout" onclick="logout()">Log out</button>
+      </div>
+    </header>
+    <div id="overflow">
+      <div id="loginPopup">
+        <h2>WELCOME</h2>
+        <div id="loginPopupHeader">
+          <div
+            id="headerRegister"
+            class="popup_header__button popup_button__active"
+          >
+            Register
+          </div>
+          <div id="headerSignIn" class="popup_header__button">Sign In</div>
+        </div>
+        <div id="registerForm" class="popupForm popupForm_active">
+          <form action="#">
+            <div class="formItem">
+              <label for="newName">Username:</label>
+              <input id="newName" type="text" maxlength="20" required />
+            </div>
+            <div class="formItem">
+              <label for="newPass">Password:</label>
+              <input id="newPass" type="password" required />
+            </div>
+            <div class="formItem">
+              <label for="newPassRepeat">Repeat password:</label>
+              <input id="newPassRepeat" type="password" required />
+              <span id="message"></span>
+            </div>
+
+            <button type="submit" class="submit_login" onclick="register()">
+              CREATE NEW USER
+            </button>
+          </form>
+        </div>
+        <div id="signinForm" class="popupForm">
+          <form action="#">
+            <div class="formItem">
+              <label for="getName">Username:</label>
+              <input id="getName" type="text" required />
+            </div>
+            <div class="formItem">
+              <label for="getPass">Password:</label>
+              <input id="getPass" type="password" required />
+              <span id="messageLogin"></span>
+            </div>
+
+            <button type="submit" class="submit_login" onclick="login()">
+              SIGN IN
+            </button>
+          </form>
+        </div>
+      </div>
+      <div id="closeOverflow">Close</div>
+    </div>
+
     <div id="linkList">
       <a id="roulette-pictures" onclick="fetchData(this.id)" href="#"
         >Roulette pictures <img src="./img/casino_roulette_icon.png"
@@ -84,8 +149,8 @@
     <div id="game-content" style="display: none">
       <header>
         <span id="back-btn" onclick="goBack()">Back</span>
-        <h1 id="game-title">Header</h1>
-        <div id="app"></div>
+        <h1 id="game-title"></h1>
+        <div id="testTimer"></div>
       </header>
 
       <div id="layout"></div>

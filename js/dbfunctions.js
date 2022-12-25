@@ -17,20 +17,28 @@ function getMachineId() {
   }
   return machineId;
 }
+function getUsername() {
+  let username = localStorage.getItem('username');
+
+  if (!username) {
+    return false
+  }
+  return username;
+}
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 const db = firebaseApp.firestore();
-const auth = firebaseApp.auth();
 
 const saveData = (game, percentage, time) => {
 
   var date = new Date();
   var current_date = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
-  db.collection(current_date).doc(getMachineId()).collection(game).add({
+  var timeCode = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+  db.collection('tests').doc(getUsername() ? getUsername() : getMachineId()).collection(game).doc(`${current_date} ${timeCode}`).set({
     game: game,
     correctAnswers: percentage,
     time: time,
-    timeCode: `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+    timeCode: timeCode
   })
     .then((docRef) => {
       console.log("Document written");
