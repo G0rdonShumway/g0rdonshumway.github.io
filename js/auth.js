@@ -54,7 +54,7 @@ overflow.addEventListener('click', function (e) {
 
 document.addEventListener('DOMContentLoaded', function () {
   var local = localStorage.getItem('username');
-  !local ? localStorage.setItem('username', '') : ''
+  !local ? localStorage.setItem('username', '') : console.log('user in')
   checkUser()
 });
 
@@ -121,13 +121,17 @@ const login = () => {
         document.getElementById('dropdown_user').classList.add('userIn')
         localStorage.getItem('username') === '' ? localStorage.setItem('username', username) : ''
         overflow.style.display = 'none'
+        document.getElementById('messageLogin').innerHTML = "";
+        checkUser()
+      } else {
         document.getElementById('messageLogin').style.color = 'red';
         document.getElementById('messageLogin').innerHTML = "User not found or wrong password";
-        checkUser()
       }
 
     } else {
       console.log("No such document!");
+      document.getElementById('messageLogin').style.color = 'red';
+      document.getElementById('messageLogin').innerHTML = "User not found or wrong password";
     }
   }).catch((error) => {
     console.log("Error getting document:", error);
