@@ -119,7 +119,7 @@ const login = () => {
     if (doc.exists) {
       if (doc.data().password === pass) {
         document.getElementById('dropdown_user').classList.add('userIn')
-        localStorage.setItem('username', username);
+        localStorage.getItem('username') === '' ? localStorage.setItem('username', username) : ''
         overflow.style.display = 'none'
         checkUser()
       }
