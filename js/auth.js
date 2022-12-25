@@ -2,8 +2,6 @@ const checkUser = () => {
   let username = localStorage.getItem('username');
 
   if (!username) {
-    // username = crypto.randomUUID();
-    // localStorage.setItem('MachineId', machineId);
     document.getElementById('dropdown_user').classList.remove('userIn')
     document.getElementById('userIcon').setAttribute('src', '../../img/user_out.png')
   } else {
@@ -55,6 +53,8 @@ overflow.addEventListener('click', function (e) {
 })
 
 document.addEventListener('DOMContentLoaded', function () {
+  var local = localStorage.getItem('username');
+  !local ? localStorage.setItem('username', '') : localStorage.setItem('username', '')
   checkUser()
 });
 
