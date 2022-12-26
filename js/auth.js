@@ -87,8 +87,9 @@ const register = () => {
       if (document.getElementById('newPass').value === document.getElementById('newPassRepeat').value) {
         document.getElementById('message').style.color = 'green';
         document.getElementById('message').innerHTML = 'Passwords match';
-        localStorage.setItem('username', username);
-
+        setTimeout(() => {
+          localStorage.setItem('username', username);
+        }, 500)
         db.collection('users').doc(username).set({
           username: username,
           password: pass,
@@ -96,13 +97,16 @@ const register = () => {
         })
 
           .then((docRef) => {
+
+            setTimeout(() => {
+              checkUser()
+            }, 500)
             console.log("New user added");
           })
           .catch((error) => {
             console.error("Error adding document: ", error);
           });
 
-        checkUser()
         overflow.style.display = 'none'
       } else {
         document.getElementById('message').style.color = 'red';

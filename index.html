@@ -25,13 +25,13 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
 
-    <script src="js/timer.js?v=8" defer></script>
-    <script src="js/testTotal.js?v=8" defer></script>
-    <script src="js/saveResult.js?v=8" defer></script>
-    <script src="js/fetchGames.js?v=8" defer></script>
-    <script src="js/dbfunctions.js?v=8" defer></script>
-    <script src="js/auth.js?v=8" defer></script>
-    <script src="js/main.js?v=8" defer></script>
+    <script src="js/timer.js?v=9" defer></script>
+    <script src="js/testTotal.js?v=9" defer></script>
+    <script src="js/saveResult.js?v=9" defer></script>
+    <script src="js/fetchGames.js?v=9" defer></script>
+    <script src="js/dbfunctions.js?v=9" defer></script>
+    <script src="js/auth.js?v=9" defer></script>
+    <script src="js/main.js?v=9" defer></script>
   </head>
   <body>
     <header id="appTitle">
@@ -57,7 +57,7 @@
           <div id="headerSignIn" class="popup_header__button">Sign In</div>
         </div>
         <div id="registerForm" class="popupForm popupForm_active">
-          <form action="#">
+          <form action="#" onsubmit="return false">
             <div class="formItem">
               <label for="newName">Username:</label>
               <input id="newName" type="text" maxlength="20" required />
@@ -78,7 +78,7 @@
           </form>
         </div>
         <div id="signinForm" class="popupForm">
-          <form action="#">
+          <form action="#" onsubmit="return false">
             <div class="formItem">
               <label for="getName">Username:</label>
               <input id="getName" type="text" required />
