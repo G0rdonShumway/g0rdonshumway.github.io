@@ -17,6 +17,7 @@ const userIcon = document.getElementById('userIcon')
 const dropDown = document.getElementById('dropdown_user')
 
 userIcon.addEventListener('click', function () {
+  console.dir('');
   dropDown.style.display = dropDown.style.display === 'none' ? 'flex' : 'none'
   dropDown.style.height = dropDown.style.height === '0px' ? 'auto' : '0px'
 })
@@ -59,15 +60,14 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 var checkPass = function () {
-  if (document.getElementById('newPass').value ==
-    document.getElementById('newPassRepeat').value) {
+  if (document.getElementById('newPass').value === document.getElementById('newPassRepeat').value) {
     document.getElementById('message').style.color = 'green';
     document.getElementById('message').innerHTML = 'Passwords match';
     return true
   } else {
     document.getElementById('message').style.color = 'red';
     document.getElementById('message').innerHTML = "Passwords don't match";
-    return false
+    console.log('not ok')
   }
 }
 
@@ -84,7 +84,10 @@ const register = () => {
       document.getElementById('message').innerHTML = "Username is already taken";
       console.log("Username is taken");
     } else {
-      if (checkPass()) {
+      if (document.getElementById('newPass').value === document.getElementById('newPassRepeat').value) {
+        document.getElementById('message').style.color = 'green';
+        document.getElementById('message').innerHTML = 'Passwords match';
+        localStorage.setItem('username', username);
 
         db.collection('users').doc(username).set({
           username: username,
@@ -99,9 +102,12 @@ const register = () => {
             console.error("Error adding document: ", error);
           });
 
-        localStorage.setItem('username', username);
         checkUser()
         overflow.style.display = 'none'
+      } else {
+        document.getElementById('message').style.color = 'red';
+        document.getElementById('message').innerHTML = "Passwords don't match";
+        console.log('not ok')
       }
 
     }
