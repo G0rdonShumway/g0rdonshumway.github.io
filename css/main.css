@@ -970,7 +970,6 @@ input.neighbour.neighbour-active {
   padding: 10px;
   flex-direction: column;
   align-content: center;
-  justify-content: space-between;
 }
 
 #loginPopup h2 {
@@ -979,7 +978,7 @@ input.neighbour.neighbour-active {
 }
 #loginPopup {
   width: 100%;
-  height: calc(100% - 50px);
+  height: auto;
   background: #2c4968;
   z-index: 20;
   border-radius: 3px;
@@ -992,7 +991,7 @@ input.neighbour.neighbour-active {
   justify-content: flex-start;
 }
 #closeOverflow {
-  font-size: 20px;
+  font-size: 24px;
   height: 50px;
   width: 100%;
   text-align: center;
@@ -1073,6 +1072,6 @@ input.neighbour.neighbour-active {
   background: #2c4968;
   border: 0;
   border-radius: 3px;
-  margin-top: auto;
+  margin-top: 50px;
   display: block;
 }
