@@ -41,6 +41,7 @@ const saveData = (game, percentage, time) => {
     timeCode: timeCode
   })
     .then((docRef) => {
+      db.collection('users').doc(username).update({lastVisit: `${current_date} ${timeCode}`})
       console.log("Document written");
     })
     .catch((error) => {
