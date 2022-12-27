@@ -4,7 +4,7 @@ const checkUser = () => {
   if (!username) {
     document.getElementById('dropdown_user').classList.remove('userIn')
     document.getElementById('userIcon').setAttribute('src', '../../img/user_out.png')
-    document.getElementById('profile').innerHTML = 'Log in to your account'
+    document.getElementById('profile').innerHTML = 'Log in to your account to save statistics'
   } else {
     document.getElementById('dropdown_user').classList.add('userIn')
     document.getElementById('userIcon').setAttribute('src', '../../img/user_in.png')
