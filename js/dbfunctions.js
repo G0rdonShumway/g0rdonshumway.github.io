@@ -33,7 +33,7 @@ const saveData = (game, percentage, time) => {
 
   var date = new Date();
   var current_date = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
-  var timeCode = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+  var timeCode = `${date.getHours() < 10 ? "0" + date.getHours() : date.getHours()}:${date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()}:${date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds()}`
   db.collection('tests').doc(getUsername() ? getUsername() : getMachineId()).collection(game).doc(`${current_date} ${timeCode}`).set({
     game: game,
     correctAnswers: percentage,
