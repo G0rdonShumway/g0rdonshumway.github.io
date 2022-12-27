@@ -938,7 +938,7 @@ input.neighbour.neighbour-active {
 #dropdown_user #profile {
   background: #2c4968;
   color: #e3e9ee;
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 #dropdown_user.userIn #login {
   display: none;
