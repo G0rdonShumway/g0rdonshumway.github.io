@@ -931,7 +931,7 @@ input.neighbour.neighbour-active {
 }
 #dropdown_user.userIn #logout {
   display: block;
-  width: 100%;
+  width: auto;
   padding: 10px;
   line-height: 1;
 }
