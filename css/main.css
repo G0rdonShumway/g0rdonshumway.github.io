@@ -903,40 +903,39 @@ input.neighbour.neighbour-active {
 }
 
 #dropdown_user {
-  position: absolute;
-  display: none;
-  height: 0px;
-  width: 122px;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid #2c4968;
-  background: #2c4968;
-  padding: 10px;
-  top: 75px;
-  right: 5px;
-  gap: 10px;
-  border-radius: 0 0 3px 3px;
-  z-index: 10;
-  transition: 0.5s all;
+    position: absolute;
+    display: none;
+    height: 0px;
+    /* width: 122px; */
+    /* flex-direction: column; */
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #2c4968;
+    background: #2c4968;
+    padding: 10px;
+    top: 70px;
+    right: 5px;
+    left: 5px;
+    gap: 10px;
+    border-radius: 0 0 3px 3px;
+    z-index: 10;
+    transition: 0.5s all;
 }
 
-#dropdown_user #logout,
-#dropdown_user #profile {
+#dropdown_user #logout {
   display: none;
 }
 
 #dropdown_user.userIn {
   width: auto;
 }
-#dropdown_user.userIn #logout,
-#dropdown_user.userIn #profile {
+#dropdown_user.userIn #logout {
   display: block;
   width: 100%;
   padding: 10px;
   line-height: 1;
 }
-#dropdown_user.userIn #profile {
+#dropdown_user #profile {
   background: #2c4968;
   color: #e3e9ee;
   font-weight: bold;
@@ -946,17 +945,17 @@ input.neighbour.neighbour-active {
 }
 
 #dropdown_user button {
-  width: 100px;
-  height: 40px;
-  /* padding: 10px; */
-  font-size: 20px;
-  background: #e3e9ee;
-  border: none;
-  outline: none;
-  border-radius: 3px;
-  text-transform: uppercase;
-  line-height: 40px;
-  color: #355980;
+    width: auto;
+    height: 40px;
+    padding: 10px;
+    font-size: 20px;
+    background: #e3e9ee;
+    border: none;
+    outline: none;
+    border-radius: 3px;
+    text-transform: uppercase;
+    /* line-height: 40px; */
+    color: #355980;
 }
 
 #overflow {
