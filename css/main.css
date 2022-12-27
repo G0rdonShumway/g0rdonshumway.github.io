@@ -905,7 +905,6 @@ input.neighbour.neighbour-active {
 #dropdown_user {
     position: absolute;
     display: none;
-    height: 0px;
     /* width: 122px; */
     /* flex-direction: column; */
     justify-content: space-between;
@@ -946,7 +945,8 @@ input.neighbour.neighbour-active {
 
 #dropdown_user button {
     width: auto;
-    height: 40px;
+    min-width: 100px;
+    /* height: 40px; */
     padding: 10px;
     font-size: 20px;
     background: #e3e9ee;
