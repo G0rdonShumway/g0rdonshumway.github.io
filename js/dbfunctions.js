@@ -43,6 +43,12 @@ const saveData = (game, percentage, time) => {
     .then((docRef) => {
       if(getUsername()){
         db.collection('users').doc(getUsername()).update({lastVisit: `${current_date} ${timeCode}`})
+        if(percentage === "100%"){
+          db.collection("ratings").doc(game).add({
+            username: getUsername(),
+            time: time
+          })
+        }
       }
       console.log("Document written");
     })
