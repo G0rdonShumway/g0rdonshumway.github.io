@@ -63,6 +63,8 @@ const saveData = (game, percentage, time) => {
             .get()
             .then((doc) => {
               if (doc.exists) {
+                console.log(+doc.data().time)
+                console.log(+time.slice(0, -4))
                 if (+doc.data().time < +time.slice(0, -4)) {
                   db.collection(game).doc(getUsername()).set({
                     username: getUsername(),
