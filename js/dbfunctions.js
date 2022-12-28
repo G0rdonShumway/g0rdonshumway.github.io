@@ -46,7 +46,7 @@ const saveData = (game, percentage, time) => {
       if(getUsername()){
         db.collection('users').doc(getUsername()).update({lastVisit: `${current_date} ${timeCode}`})
         if (percentage === "100%") {
-          db.collection('ratings').doc(game).collection(getUsername()).set({
+          db.collection('ratings').doc(game).collection(getUsername()).doc({
             username: getUsername(),
             time: time,
             timeCode: timeCode
