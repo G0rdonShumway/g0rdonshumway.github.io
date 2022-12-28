@@ -46,13 +46,13 @@ const saveData = (game, percentage, time) => {
       if(getUsername()){
         db.collection('users').doc(getUsername()).update({lastVisit: `${current_date} ${timeCode}`})
 
-//         if (percents === 100) {
-//           db.collection(game).doc(getUsername()).add({
-//             username: getUsername(),
-//             time: time,
-//             timeCode: timeCode
-//           })
-//         }
+        if (percents === 100) {
+          db.collection(game).doc(getUsername()).set({
+            username: getUsername(),
+            time: time,
+            timeCode: timeCode
+          })
+        }
       }
       console.log("Document written");
     })
