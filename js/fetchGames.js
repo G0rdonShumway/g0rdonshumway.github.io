@@ -31,6 +31,7 @@ function fetchData(game) {
     appHeader.style.display = 'none'
 
     if (game === "roulette-pictures") {
+      let picturesArray = []
       for (let i = 0; i < numberOfBets; i++) {
         let newPicture = document.createElement("div");
         newPicture.innerHTML =
@@ -56,8 +57,9 @@ function fetchData(game) {
         newPicture.querySelectorAll(".green").forEach((cell) => {
           cell.style.color = "hsl(120deg 100% 25% / 1)";
         });
+        picturesArray.push(newPicture)
       }
-
+      console.log(picturesArray)
       hideEmpty();
     } else if (game === "roulette-sector") {
       for (let i = 0; i < 10; i++) {
