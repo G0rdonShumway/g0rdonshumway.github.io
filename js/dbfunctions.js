@@ -31,22 +31,30 @@ const db = firebaseApp.firestore();
 
 const saveData = (game, percentage, time) => {
   var date = new Date();
-  
+  var current_date =
+    date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
+  var timeCode = `${
+    date.getHours() < 10 ? "0" + date.getHours() : date.getHours()
+  }:${date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()}:${
+    date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds()
+  }`;
   var percents = +percentage.slice(0, -1);
+  // db.collection('tests').doc(getUsername() ? getUsername() : getMachineId()).collection(game).doc(`${current_date} ${timeCode}`).set({
   db.collection("tests")
     .doc(game)
     .collection(getUsername() ? getUsername() : getMachineId())
-    .doc(date)
+    .doc(`${current_date} ${timeCode}`)
     .set({
       game: game,
       correctAnswers: percents,
-      time: time
+      time: time,
+      timeCode: timeCode,
     })
     .then((docRef) => {
       if (getUsername()) {
         db.collection("users")
           .doc(getUsername())
-          .update({ lastVisit: date });
+          .update({ lastVisit: `${current_date} ${timeCode}` });
 
         if (percents === 100) {
           var docExist = db.collection(game).doc(getUsername());
@@ -59,7 +67,7 @@ const saveData = (game, percentage, time) => {
                   db.collection(game).doc(getUsername()).set({
                     username: getUsername(),
                     time: time,
-                    timeCode: date,
+                    timeCode: timeCode,
                   });
                 }
               }
