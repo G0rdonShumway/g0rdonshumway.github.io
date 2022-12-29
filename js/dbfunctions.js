@@ -70,6 +70,12 @@ const saveData = (game, percentage, time) => {
                     timeCode: `${new Date()}`,
                   });
                 }
+              } else {
+                  db.collection(game).doc(getUsername()).set({
+                    username: getUsername(),
+                    time: time,
+                    timeCode: `${new Date()}`,
+                  });
               }
             })
             .catch((error) => {
