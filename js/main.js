@@ -1,3 +1,5 @@
+let completedBets = [];
+
 function hideEmpty() {
   var bet = Array.from(document.querySelectorAll(".bet"));
   bet.forEach((bet) => {
