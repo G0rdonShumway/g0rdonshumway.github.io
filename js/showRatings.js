@@ -1,11 +1,11 @@
 const showRatings = (game) => {
+  if (game === '') return false
   db.collection(game)
     .get()
     .then((querySnapshot) => {
       var chart = []
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, " => ", doc.data());
         var element = {}
         element.name = doc.data().username
         element.time = doc.data().time
@@ -25,7 +25,6 @@ const showRatings = (game) => {
 
       const newChart = chart.sort(compare);
       if (newChart.length > 10) newChart.length = 10
-      console.log(newChart)
 
       newChart.map((item, index) => {
         var newRatingsItem = document.createElement('div')

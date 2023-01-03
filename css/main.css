@@ -621,7 +621,7 @@ span.number-label {
 }
 
 div#description {
-  /* padding: 20px; */
+  margin: 20px 0;
 }
 
 div#description p {
@@ -751,17 +751,17 @@ div#linkList a img {
   border: 1px solid #355980;
   color: #fff;
   background-color: #355980;
-  margin: 20px auto;
+  margin: auto auto 20px auto;
   display: block;
   font-family: "Roboto Condensed", sans-serif;
 }
 
-div#game-descr {
+#game-descr {
   display: flex;
   flex-direction: column;
-  align-content: center;
-  justify-content: space-around;
-  height: auto;
+  /* align-content: center; */
+  /* justify-content: space-around; */
+  /* height: auto; */
   padding: 20px;
   overflow-y: scroll;
 }
@@ -1077,6 +1077,9 @@ body.authorized #dropdown_user #login {
 
 /* RATINGS */
 
+#ratings {
+  margin: 20px 0;
+}
 .ratings-header {
   color: #050569;
   text-align: center;
