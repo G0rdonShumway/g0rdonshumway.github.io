@@ -761,7 +761,7 @@ div#game-descr {
   flex-direction: column;
   align-content: center;
   justify-content: space-around;
-  height: 100%;
+  height: auto;
   padding: 20px;
   overflow-y: scroll;
 }
