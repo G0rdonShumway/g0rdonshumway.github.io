@@ -87,6 +87,8 @@ function startGame() {
 }
 
 function goBack() {
+  localStorage.removeItem('game')
+  showRatings('')
   window.location.reload();
 }
 

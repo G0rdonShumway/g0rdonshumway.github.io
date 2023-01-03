@@ -15,6 +15,8 @@ function fetchData(game) {
   xhr.open("GET", `js/data/${game}.json`, true);
 
   gameName = game;
+  localStorage.setItem('game', game)
+  showRatings(game)
 
   xhr.onload = function () {
     let data = JSON.parse(xhr.response);
@@ -31,7 +33,7 @@ function fetchData(game) {
     appHeader.style.display = 'none'
 
     if (game === "roulette-pictures") {
-      
+
       for (let i = 0; i < numberOfBets; i++) {
         let newPicture = document.createElement("div");
         newPicture.innerHTML =

@@ -2,11 +2,11 @@ const checkUser = () => {
   let username = localStorage.getItem('username');
 
   if (!username) {
-    document.getElementById('dropdown_user').classList.remove('userIn')
+    document.body.classList.remove('authorized')
     document.getElementById('userIcon').setAttribute('src', '../../img/user_out.png')
     document.getElementById('profile').innerHTML = 'Log in to your account to save statistics'
   } else {
-    document.getElementById('dropdown_user').classList.add('userIn')
+    document.body.classList.add('authorized')
     document.getElementById('userIcon').setAttribute('src', '../../img/user_in.png')
     document.getElementById('profile').innerHTML = username
   }
@@ -129,7 +129,7 @@ const login = () => {
   docRef.get().then((doc) => {
     if (doc.exists) {
       if (doc.data().password === pass) {
-        document.getElementById('dropdown_user').classList.add('userIn')
+        document.body.classList.add('authorized')
         localStorage.getItem('username') === '' ? localStorage.setItem('username', username) : ''
         overflow.style.display = 'none'
         document.getElementById('messageLogin').innerHTML = "";
