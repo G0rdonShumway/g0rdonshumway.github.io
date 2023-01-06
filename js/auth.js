@@ -121,8 +121,8 @@ const register = () => {
   });
 }
 const login = () => {
-  var username = document.getElementById('getName').value
-  var pass = document.getElementById('getPass').value
+  var username = document.getElementById('getName').value.trim()
+  var pass = document.getElementById('getPass').value.trim()
 
   var docRef = db.collection("users").doc(username);
 
