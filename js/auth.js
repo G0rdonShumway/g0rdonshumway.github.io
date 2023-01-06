@@ -73,8 +73,8 @@ var checkPass = function () {
 }
 
 const register = () => {
-  var username = document.getElementById('newName').value
-  var pass = document.getElementById('newPass').value
+  var username = document.getElementById('newName').value.trim()
+  var pass = document.getElementById('newPass').value.trim()
   var date = new Date();
   var current_date = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
   var docRef = db.collection("users").doc(username);
