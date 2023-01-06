@@ -88,7 +88,7 @@ function testTotal() {
   if (timer >= 60) {
     timer = `${Math.floor(timer / 60)} min ${timer % 60} sec`;
   } else {
-    timer = `${timer} sec`;
+    timer = `0 min ${timer} sec`;
   }
   document.querySelector("#game-content").style.display = "none";
 
