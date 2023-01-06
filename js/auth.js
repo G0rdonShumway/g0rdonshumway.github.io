@@ -1,5 +1,5 @@
 const checkUser = () => {
-  let username = localStorage.getItem('username');
+  let username = localStorage.getItem('username').trim();
 
   if (!username) {
     document.body.classList.remove('authorized')
@@ -55,7 +55,7 @@ overflow.addEventListener('click', function (e) {
 })
 
 document.addEventListener('DOMContentLoaded', function () {
-  var local = localStorage.getItem('username');
+  var local = localStorage.getItem('username').trim();
   !local ? localStorage.setItem('username', '') : console.log('user in')
   checkUser()
 });
@@ -130,7 +130,7 @@ const login = () => {
     if (doc.exists) {
       if (doc.data().password === pass) {
         document.body.classList.add('authorized')
-        localStorage.getItem('username') === '' ? localStorage.setItem('username', username) : ''
+        localStorage.getItem('username').trim() === '' ? localStorage.setItem('username', username) : ''
         overflow.style.display = 'none'
         document.getElementById('messageLogin').innerHTML = "";
         checkUser()
