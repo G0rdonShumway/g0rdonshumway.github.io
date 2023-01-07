@@ -18,7 +18,7 @@ function getMachineId() {
   return machineId;
 }
 function getUsername() {
-  let username = localStorage.getItem("username");
+  let username = localStorage.getItem("username").trim();
 
   if (!username) {
     return false;
