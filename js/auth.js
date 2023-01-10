@@ -87,6 +87,8 @@ const register = () => {
   var date = new Date();
   var current_date = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
   var docRef = db.collection("users").doc(username);
+  var passwordInput = document.getElementById('newPass').value
+  var passwordRepeat = document.getElementById('newPassRepeat').value
 
   docRef.get().then((doc) => {
     if (doc.exists) {
@@ -94,7 +96,7 @@ const register = () => {
       document.getElementById('message').innerHTML = "Username is already taken";
       console.log("Username is taken");
     } else {
-      if (document.getElementById('newPass').value === document.getElementById('newPassRepeat').value) {
+      if (passwordInput && passwordInput === passwordRepeat) {
         document.getElementById('message').style.color = 'green';
         document.getElementById('message').innerHTML = 'Passwords match';
         setTimeout(() => {
@@ -118,10 +120,15 @@ const register = () => {
           });
 
         overflow.style.display = 'none'
+      } else if (!password) {
+        document.getElementById('message').style.color = 'red';
+        document.getElementById('message').innerHTML = "Password can not be empty";
+        return false
       } else {
         document.getElementById('message').style.color = 'red';
         document.getElementById('message').innerHTML = "Passwords don't match";
         console.log('not ok')
+        return false
       }
 
     }
