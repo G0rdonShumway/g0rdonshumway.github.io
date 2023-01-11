@@ -2,7 +2,7 @@
   {
     "game": "Texas Hold'em",
     "title": "Texas Hold'em Bonus",
-    "time": 90,
+    "time": 90000,
     "timelimit": "1 min 30 sec",
     "goal": "Calculate payout for BONUS BET for given combinations",
     "bet": "Bonus (10)",

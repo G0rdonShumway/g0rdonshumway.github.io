@@ -2,7 +2,7 @@
   {
     "game": "Russian poker",
     "title": "Russian poker Bonus",
-    "time": 90,
+    "time": 90000,
     "timelimit": "1 min 30 sec",
     "goal": "Calculate payout for BONUS (6 card) for given combinations",
     "bet": "Bonus (6-card) (10)",
@@ -36,8 +36,8 @@
   ],
   {
     "name": "Russian poker bonus",
-    "firstCol":"5 card",
-    "secondCol":"6 card",
+    "firstCol": "5 card",
+    "secondCol": "6 card",
     "combinations": [
       { "name": "Straight", "firstCol": 25, "secondCol": 8 },
       { "name": "Flush", "firstCol": 50, "secondCol": 15 },

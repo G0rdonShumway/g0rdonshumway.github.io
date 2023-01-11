@@ -2,7 +2,7 @@
   {
     "game": "American Roulette",
     "title": "Roulette series",
-    "time": 150,
+    "time": 150000,
     "timelimit": "2 min 30 sec",
     "goal": "You need to write the maximum denomination of how much the sector plays. Step 5, maximum is 200 progressive (DON'T WRITE THE REST)",
     "bet": "Series (10)",
