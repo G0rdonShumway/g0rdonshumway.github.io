@@ -54,7 +54,7 @@ const saveData = (game, percentage, time) => {
           .doc(getUsername())
           .update({ lastVisit: `${new Date()}` });
 
-        if (percents === 100) {
+        if (percents === 100 && getUsername() !== 'test') {
           var docExist = db.collection(game).doc(getUsername());
 
           docExist
