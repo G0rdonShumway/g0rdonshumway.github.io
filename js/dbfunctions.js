@@ -62,7 +62,7 @@ const saveData = (game, percentage, time) => {
             .then((doc) => {
               if (doc.exists) {
                 if (doc.data().time > time) {
-                  db.collection(game).doc(getUsername() !== 'test' ? getUsername() : '').set({
+                  db.collection(game).doc(getUsername()).set({
                     username: getUsername(),
                     time: time,
                     timeCode: `${new Date()}`,

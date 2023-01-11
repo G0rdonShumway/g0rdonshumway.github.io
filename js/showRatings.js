@@ -23,9 +23,10 @@ const showRatings = (game) => {
       }
 
       const newChart = chart.sort(compare);
-      if (newChart.length > 10) newChart.length = 10
+      newChartFiltered = newChart.filter(person => person.username !== 'test')
+      if (newChartFiltered.length > 10) newChartFiltered.length = 10
 
-      newChart.map((item, index) => {
+      newChartFiltered.map((item, index) => {
         var newRatingsItem = document.createElement('div')
         newRatingsItem.classList.add("ratings-item")
         document.getElementById('ratings').appendChild(newRatingsItem)
@@ -40,7 +41,7 @@ const showRatings = (game) => {
         </div>`
       })
 
-      let isInChart = newChart.some(findInChart);
+      let isInChart = newChartFiltered.some(findInChart);
 
       function findInChart(value) {
         return value.name === localStorage.getItem('username');
