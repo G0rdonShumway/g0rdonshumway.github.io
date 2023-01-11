@@ -52,12 +52,26 @@ function onTimesUp() {
   clearInterval(timerInterval);
 }
 
+// function startTimer() {
+//   timerInterval = setInterval(() => {
+//     timePassed = timePassed + 10;
+//     timeLeft = TIME_LIMIT - timePassed;
+//     document.getElementById("base-timer-label").innerHTML = formatTime(timeLeft);
+//     setCircleDasharray();
+//     setRemainingPathColor(timeLeft);
+
+//     if (timeLeft === 0) {
+//       // onTimesUp();
+//       testTotal();
+//     }
+//   }, 100);
+// }
+
 function startTimer() {
   timerInterval = setInterval(() => {
-    timePassed = timePassed += 1;
-    timeLeft = TIME_LIMIT - timePassed;
-    document.getElementById("base-timer-label").innerHTML =
-      formatTime(timeLeft);
+    timePassed = timePassed + 10
+    timeLeft = TIME_LIMIT - timePassed
+    document.getElementById("base-timer-label").innerHTML = formatTime(timeLeft);
     setCircleDasharray();
     setRemainingPathColor(timeLeft);
 
@@ -65,12 +79,12 @@ function startTimer() {
       // onTimesUp();
       testTotal();
     }
-  }, 1000);
+  }, 10)
 }
 
 function formatTime(time) {
-  const minutes = Math.floor(time / 60);
-  let seconds = time % 60;
+  var minutes = Math.floor(time / 60000);
+  var seconds = Math.floor((time % 60000) / 1000);
 
   if (seconds < 10) {
     seconds = `0${seconds}`;
@@ -82,18 +96,11 @@ function formatTime(time) {
 function setRemainingPathColor(timeLeft) {
   let { alert, warning, info } = COLOR_CODES;
   if (timeLeft <= alert.threshold) {
-    document
-      .getElementById("base-timer-path-remaining")
-      .classList.remove(warning.color);
-    document
-      .getElementById("base-timer-path-remaining")
-      .classList.add(alert.color);
+    document.getElementById("base-timer-path-remaining").classList.remove(warning.color);
+    document.getElementById("base-timer-path-remaining").classList.add(alert.color);
   } else if (timeLeft <= warning.threshold) {
-    document
-      .getElementById("base-timer-path-remaining")
-      .classList.remove(info.color);
-    document
-      .getElementById("base-timer-path-remaining")
+    document.getElementById("base-timer-path-remaining").classList.remove(info.color);
+    document.getElementById("base-timer-path-remaining")
       .classList.add(warning.color);
   }
 }

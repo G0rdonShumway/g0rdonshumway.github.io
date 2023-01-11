@@ -33,13 +33,11 @@ const saveData = (game, percentage, time) => {
   var date = new Date();
   var current_date =
     date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
-  var timeCode = `${
-    date.getHours() < 10 ? "0" + date.getHours() : date.getHours()
-  }:${date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()}:${
-    date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds()
-  }`;
+  var timeCode = `${date.getHours() < 10 ? "0" + date.getHours() : date.getHours()
+    }:${date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()}:${date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds()
+    }`;
   var percents = +percentage.slice(0, -1);
-  
+
   db.collection("tests")
     .doc(game)
     .collection(getUsername() ? getUsername() : getMachineId())
@@ -71,11 +69,11 @@ const saveData = (game, percentage, time) => {
                   });
                 }
               } else {
-                  db.collection(game).doc(getUsername()).set({
-                    username: getUsername(),
-                    time: time,
-                    timeCode: `${new Date()}`,
-                  });
+                db.collection(game).doc(getUsername()).set({
+                  username: getUsername(),
+                  time: time,
+                  timeCode: `${new Date()}`,
+                });
               }
             })
             .catch((error) => {

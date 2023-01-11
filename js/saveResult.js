@@ -18,6 +18,7 @@ function saveResult() {
     betIndex++;
 
     if (betIndex === 20) {
+      onTimesUp();
       testTotal();
     }
   } else if (gameName === "roulette-sector") {
@@ -31,34 +32,6 @@ function saveResult() {
     } else {
       onTimesUp();
       testTotal();
-    }
-
-    input.value = "";
-    numberOfBets.textContent = +numberOfBets.textContent + 1;
-    betIndex++;
-  } else if (gameName === "neighbours") {
-    var activeBet = document.querySelector(".neighbour-active");
-    var activeBlock = document.querySelector(".newBetActive");
-    var bets = document.querySelectorAll(".neighbour");
-
-    activeBet.setAttribute("value", input.value);
-
-    if (
-      (betIndex + 1) % 4 === 0 &&
-      activeBlock.nextElementSibling &&
-      betIndex < 39
-    ) {
-      activeBlock.classList.remove("newBetActive");
-      activeBlock.nextElementSibling.classList.add("newBetActive");
-    } else if (betIndex == 39) {
-      onTimesUp();
-      testTotal();
-    }
-    if (bets[betIndex]) {
-      bets[betIndex].classList.remove("neighbour-active");
-      if (bets[betIndex + 1]) {
-        bets[betIndex + 1].classList.add("neighbour-active");
-      }
     }
 
     input.value = "";

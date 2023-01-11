@@ -83,21 +83,17 @@ function testTotal() {
       }
     }
   }
-  var timer = timePassed;
+  var timer = new Date(timePassed)
 
-  if (timer >= 60) {
-    timer = `${Math.floor(timer / 60)} min ${timer % 60 >= 10 ? timer % 60 : '0' + timer % 60} sec`;
-  } else {
-    timer = `0 min ${timer >= 10 ? timer : '0' + timer} sec`;
-  }
+  var timerString = timer.toISOString().slice(14, -2)
+
   document.querySelector("#game-content").style.display = "none";
 
   document.querySelector("#correctPercent").textContent =
     (correctAnswers * 100) / numberOfBets + "%";
   document.querySelector("#testResult").style.display = "block";
-  document.querySelector("#calculationTime").textContent = timer;
-  
-      console.log(completedBets)
-  
-  saveData(gameName, (correctAnswers * 100) / numberOfBets + "%", timer );
+  document.querySelector("#calculationTime").textContent = timerString;
+
+
+  saveData(gameName, (correctAnswers * 100) / numberOfBets + "%", timerString);
 }
