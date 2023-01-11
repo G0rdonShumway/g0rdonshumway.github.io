@@ -23,7 +23,8 @@ const showRatings = (game) => {
       }
 
       const newChart = chart.sort(compare);
-      newChartFiltered = newChart.filter(person => person.username !== 'test')
+      console.log(newChart)
+      const newChartFiltered = newChart.filter(person => person.name !== )
       if (newChartFiltered.length > 10) newChartFiltered.length = 10
 
       newChartFiltered.map((item, index) => {
