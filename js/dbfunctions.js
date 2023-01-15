@@ -29,6 +29,13 @@ function getUsername() {
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 const db = firebaseApp.firestore();
 
+let date = new Date();
+let formattedDate = date.toLocaleDateString("ru-RU", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric"
+});
+
 const saveData = (game, percentage, time) => {
   var date = new Date();
   var current_date =
@@ -86,4 +93,24 @@ const saveData = (game, percentage, time) => {
     .catch((error) => {
       console.error("Error adding document: ", error);
     });
+
+  var docDaily = db.collection("dailyUsage").doc(formattedDate).collection(getUsername() ? getUsername() : getMachineId()).doc(game);
+
+  docDaily.get().then((doc) => {
+    if (doc.exists) {
+      return
+    } else {
+      db.collection("dailyUsage")
+        .doc(formattedDate)
+        .collection(getUsername() ? getUsername() : getMachineId())
+        .doc(game).set({})
+        .then((docRef) => {
+
+          console.log("Document written");
+        })
+        .catch((error) => {
+          console.error("Error adding document: ", error);
+        });
+    }
+  })
 };
