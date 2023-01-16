@@ -95,12 +95,43 @@ const saveData = (game, percentage, time) => {
     });
 
   var docDaily = db.collection("dailyUsage").doc(formattedDate).collection(getUsername() ? getUsername() : getMachineId()).doc(game);
+  var docDailyByGame = db.collection("dailyUsageByGame").doc(formattedDate).collection(game).doc('totalTries');
 
+  docDailyByGame.get().then((doc) => {
+    if (doc.exists) {
+      var usageValueByGame = doc.data().usage
+
+
+      db.collection("dailyUsageByGame")
+        .doc(formattedDate)
+        .collection(game)
+        .doc('totalTries')
+        .set({ usage: usageValueByGame + 1 })
+        .then((docRef) => {
+          console.log("Document written");
+        })
+        .catch((error) => {
+          console.error("Error adding document: ", error);
+        });
+
+    } else {
+      db.collection("dailyUsageByGame")
+        .doc(formattedDate)
+        .collection(game)
+        .doc('totalTries')
+        .set({ usage: 1 })
+        .then((docRef) => {
+          console.log("Document written");
+        })
+        .catch((error) => {
+          console.error("Error adding document: ", error);
+        });
+    }
+  })
 
   docDaily.get().then((doc) => {
     if (doc.exists) {
       var usageValue = doc.data().usage
-      console.log(usageValue)
 
       db.collection("dailyUsage")
         .doc(formattedDate)
