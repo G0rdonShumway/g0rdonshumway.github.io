@@ -99,8 +99,7 @@ const saveData = (game, percentage, time) => {
 
   docDailyByGame.get().then((doc) => {
     if (doc.exists) {
-      var usageValueByGame = doc.data().usage
-
+      var usageValueByGame = Number(doc.data().usage)
 
       db.collection("dailyUsageByGame")
         .doc(formattedDate)
@@ -131,8 +130,7 @@ const saveData = (game, percentage, time) => {
 
   docDaily.get().then((doc) => {
     if (doc.exists) {
-      var usageValue = doc.data().usage
-
+      var usageValue = Number(doc.data().usage)
       db.collection("dailyUsage")
         .doc(formattedDate)
         .collection(getUsername() ? getUsername() : getMachineId())
