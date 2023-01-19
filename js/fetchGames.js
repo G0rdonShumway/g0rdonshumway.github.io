@@ -34,7 +34,6 @@ function fetchData(game) {
 
     if (game === "roulette-pictures") {
       var chipCount = [15, 20, 20, 30, 30, 30, 40, 40, 40, 40, 50, 50, 50, 50, 50, 55, 55, 55, 55, 60, 60]
-      // var chipCount = [40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40]
       
       for (let i = 0; i < numberOfBets; i++) {
         let newPicture = document.createElement("div");
