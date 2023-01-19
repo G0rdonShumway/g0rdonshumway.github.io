@@ -52,8 +52,7 @@ const saveData = (game, percentage, time) => {
     .set({
       game: game,
       correctAnswers: percents,
-      time: time,
-      timeCode: timeCode,
+      time: time
     })
     .then((docRef) => {
       if (getUsername()) {
@@ -72,14 +71,14 @@ const saveData = (game, percentage, time) => {
                   db.collection(game).doc(getUsername()).set({
                     username: getUsername(),
                     time: time,
-                    timeCode: `${new Date()}`,
+                    timeCode: `${new Date()}`
                   });
                 }
               } else {
                 db.collection(game).doc(getUsername()).set({
                   username: getUsername(),
                   time: time,
-                  timeCode: `${new Date()}`,
+                  timeCode: `${new Date()}`
                 });
               }
             })

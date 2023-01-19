@@ -1,6 +1,8 @@
 
 function saveResult() {
+  
   if (gameName === "roulette-pictures") {
+
     var activePicture = document.querySelectorAll("#layout > div")[betIndex];
 
     var tableCell = document.querySelectorAll("#testResult table tbody td");
