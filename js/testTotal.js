@@ -11,54 +11,7 @@ function testTotal() {
         row.children[2].style.backgroundColor = "#db3333";
       }
     });
-  } else if (gameName === "neighbours") {
-    var current;
-    for (let i = 0; i < 10; i++) {
-      var newResultRow = document.createElement("tr");
-      if (betCells[i].dataset.uanswer == undefined) {
-        betCells[i].dataset.uanswer = "";
-      }
-
-      newResultRow.innerHTML = `
-      <td>${i + 1}</td>
-      <td colspan="2" class="answerCell">
-        <span class="number-${betCells[i].children[0].value === betCells[i].children[0].dataset.ult
-          ? "right"
-          : "wrong"
-        }">${betCells[i].children[0].value}</span>
-        <span class="number-${betCells[i].children[1].value ===
-          betCells[i].children[1].dataset.preult
-          ? "right"
-          : "wrong"
-        }">${betCells[i].children[1].value}</span>
-        <span>${betCells[i].children[2].value}</span>
-        <span class="number-${betCells[i].children[3].value === betCells[i].children[3].dataset.next
-          ? "right"
-          : "wrong"
-        }">${betCells[i].children[3].value}</span>
-        <span class="number-${betCells[i].children[4].value ===
-          betCells[i].children[4].dataset.nextafter
-          ? "right"
-          : "wrong"
-        }">${betCells[i].children[4].value}</span>
-      </td>`;
-
-      testResult.appendChild(newResultRow);
-    }
-    var answers = document.querySelectorAll(`.answerCell`);
-
-    answers.forEach((ans) => {
-      if (ans.querySelectorAll(".number-right").length === 4) {
-        correctAnswers++;
-      }
-    });
-
-    var thead = document.querySelector("#testResult table thead");
-    console.dir(thead);
-    thead.children[1].children[1].setAttribute("colspan", 2);
-    thead.children[1].children[1].textContent = "Answers";
-    thead.children[1].removeChild(thead.children[1].children[2]);
-  } else {
+  }  else {
     for (let i = 0; i < 10; i++) {
       var newResultRow = document.createElement("tr");
       if (betCells[i].dataset.uanswer == undefined) {
@@ -86,14 +39,14 @@ function testTotal() {
   var timer = new Date(timePassed)
 
   var timerString = timer.toISOString().slice(14, -2)
+  var percentCorrect = ((correctAnswers * 100) / numberOfBets).toFixed(2) + "%";
 
   document.querySelector("#game-content").style.display = "none";
 
-  document.querySelector("#correctPercent").textContent =
-    (correctAnswers * 100) / numberOfBets + "%";
+  document.querySelector("#correctPercent").textContent = percentCorrect
   document.querySelector("#testResult").style.display = "block";
   document.querySelector("#calculationTime").textContent = timerString;
 
 
-  saveData(gameName, (correctAnswers * 100) / numberOfBets + "%", timerString);
+  saveData(gameName, percentCorrect, timerString);
 }

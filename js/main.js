@@ -116,12 +116,3 @@ function goBack() {
   showRatings('')
   document.location.href="/";
 }
-
-const resolution = document.getElementById('resolution')
-
-resolution.addEventListener('click', function (e) {
-  e.target.style.opacity = e.target.style.opacity === '0' ? '1' : '0'
-})
-resolution.innerText = `${window.innerWidth} x ${window.innerHeight}`
-
-
