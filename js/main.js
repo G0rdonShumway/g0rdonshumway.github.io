@@ -41,20 +41,45 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function randomizer(parent) {
-  var bet = Array.from(parent.querySelectorAll(".bet"));
-  var numberOfChips = getRandomIntInclusive(1, 5) * 10;
+function randomizer(parent, chipCount) {
+  var bet = Array.from(parent.querySelectorAll(".bet"))
+  var n = bet.length
+  var m = chipCount
 
+  var randomNumbers = [];
   var sum = 0;
-  while (sum < numberOfChips) {
-    bet.forEach((bet) => {
-      if (sum < numberOfChips && getRandomIntInclusive(0, 1)) {
-        bet.textContent = Number(bet.textContent) + 1;
-        sum++;
-      }
-    });
+  for (var i = 0; i < n-1; i++) {
+      var randomNumber;
+      do {
+        randomNumber = Math.floor(Math.random() * (m - sum));
+      } while (randomNumber > m / 5);
+
+      randomNumbers.push(randomNumber);
+      sum += randomNumber;
   }
+  if(m - sum <= m / 5) {
+    randomNumbers.push(m - sum);
+  } else {
+    var newLastNumber = (m/5)
+    randomNumbers.push(newLastNumber);
+    sum += newLastNumber;
+    var newSpanOne = Math.floor((m - sum) / 2)
+    var newSpanTwo = Math.ceil((m - sum) / 2)
+
+    let sortedNumbers = randomNumbers.sort((a, b) => a - b);
+    sortedNumbers[0] += newSpanTwo
+    sortedNumbers[1] += newSpanOne
+
+    randomNumbers = sortedNumbers.sort(() => Math.random() - 0.5);
+  }
+
+  for (var j = 0; j < n; j++) {
+    bet[j].textContent = randomNumbers[j]
+  }
+  return randomNumbers;
 }
+
+
 
 var digit = Array.from(document.querySelectorAll(".digit"));
 var input = document.querySelector("#answer-input");
@@ -89,7 +114,7 @@ function startGame() {
 function goBack() {
   localStorage.removeItem('game')
   showRatings('')
-  window.location.reload();
+  document.location.href="/";
 }
 
 const resolution = document.getElementById('resolution')
@@ -98,3 +123,5 @@ resolution.addEventListener('click', function (e) {
   e.target.style.opacity = e.target.style.opacity === '0' ? '1' : '0'
 })
 resolution.innerText = `${window.innerWidth} x ${window.innerHeight}`
+
+

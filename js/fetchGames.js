@@ -33,15 +33,17 @@ function fetchData(game) {
     appHeader.style.display = 'none'
 
     if (game === "roulette-pictures") {
-
+      var chipCount = [15, 20, 20, 30, 30, 30, 40, 40, 40, 40, 50, 50, 50, 50, 50, 55, 55, 55, 55, 60, 60]
+      // var chipCount = [40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40]
+      
       for (let i = 0; i < numberOfBets; i++) {
         let newPicture = document.createElement("div");
         newPicture.innerHTML =
           data[1][getRandomIntInclusive(0, 4)] +
-          `<p class='pictureLabel'>Picture ${i + 1} of 20</p>`;
+          `<p class='pictureLabel'>Picture ${i + 1} of 21</p>`;
 
         layout.appendChild(newPicture);
-        randomizer(newPicture);
+        randomizer(newPicture, chipCount[i]);
         calculation(newPicture);
 
         let newTableRow = document.createElement("tr");
@@ -59,9 +61,7 @@ function fetchData(game) {
         newPicture.querySelectorAll(".green").forEach((cell) => {
           cell.style.color = "hsl(120deg 100% 25% / 1)";
         });
-        completedBets.push(newPicture)
       }
-      console.log(completedBets)
       hideEmpty();
     } else if (game === "roulette-sector") {
       for (let i = 0; i < 10; i++) {
@@ -95,49 +95,6 @@ function fetchData(game) {
       }
 
       betCells = Array.from(document.querySelectorAll(".newBet"));
-
-      betCells[0].classList.add("newBetActive");
-    } else if (game === "neighbours") {
-      var arr = [];
-      var index;
-      var amount = 0;
-
-      document.querySelectorAll('.digit').forEach(dig => {
-        dig.style.height = "60px"
-      })
-      document.querySelector('.dot').textContent = ''
-
-      while (amount < 10) {
-
-        index = getRandomIntInclusive(0, 36);
-
-        if (arr.some((i) => index === i) === false) {
-          arr.push(index);
-
-          var newBet = document.createElement("div");
-
-          newBet.classList.add("neighbours");
-
-          newBet.innerHTML = `
-              <input disabled class="neighbour neighbour-active" data-ult=${data[1][index === 0 ? 35 : index === 1 ? 36 : index - 2]
-            }>
-              <input disabled class="neighbour" data-preult=${data[1][index - 1 === -1 ? 36 : index - 1]
-            }>
-              <input disabled data-number=${data[1][index]} value=${data[1][index++]
-            }>
-              <input disabled class="neighbour" data-next=${data[1][index === 37 ? 0 : index]
-            }>
-              <input disabled class="neighbour" data-nextafter=${data[1][index + 1 === 37 ? 0 : index + 1 === 38 ? 1 : ++index]
-            }>
-          `;
-
-          layout.appendChild(newBet);
-
-          amount++;
-        }
-      }
-
-      betCells = Array.from(document.querySelectorAll(".neighbours"));
 
       betCells[0].classList.add("newBetActive");
     } else {

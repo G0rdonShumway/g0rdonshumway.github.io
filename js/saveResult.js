@@ -17,7 +17,7 @@ function saveResult() {
 
     betIndex++;
 
-    if (betIndex === 20) {
+    if (betIndex === 21) {
       onTimesUp();
       testTotal();
     }

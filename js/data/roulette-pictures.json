@@ -5,8 +5,8 @@
     "time": 600000,
     "timelimit": "10 min",
     "goal": "Calculate payout for given pictures",
-    "bet": "Pictures (20)",
-    "numberOfBets": 20
+    "bet": "Pictures (21)",
+    "numberOfBets": 21
   },
   [
     "<div id='zero'><table><tbody><tr><td id='zero-straight' rowspan='3'><span class='number-label green'> 0 </span> <span class='bet zero-straight' data-bet='straight'> </span> <span class='bet zero-top-split' data-bet='split'> </span> <span class='bet zero-mid-split' data-bet='split'> </span> <span class='bet zero-bottom-split' data-bet='split'> </span> <span class='bet zero-corner' data-bet='corner'> </span> <span class='bet zero-top-street' data-bet='street'> </span> <span class='bet zero-bottom-street' data-bet='street'> </span></td><td style='border-top: 9px double black;'><span class='number-label red'> 3 </span></td><td style='border-top: 9px double black;'><span class='number-label black'> 6 </span></td></tr><tr><td><span class='number-label black'> 2 </span></td><td><span class='number-label red'> 5 </span></td></tr><tr><td><span class='number-label red'> 1 </span></td><td><span class='number-label black'> 4 </span></td></tr></tbody></table></div>",
