@@ -1,5 +1,14 @@
 const showRatings = (game) => {
   if (game === 'roulette-pictures') return
+
+  document.getElementById('ratings').innerHTML = `
+    <div class="ratings-header"><h2>TOP-10</h2></div>
+    <div class="ratings-description">
+      In order to get to TOP-10 you have to be logged in and get 100% in
+      specific test
+    </div>
+  `
+
   db.collection(game)
     .get()
     .then((querySnapshot) => {
