@@ -1,5 +1,5 @@
 const showRatings = (game) => {
-  if (game === '') return false
+  if (game === 'roulette-pictures') return
   db.collection(game)
     .get()
     .then((querySnapshot) => {
