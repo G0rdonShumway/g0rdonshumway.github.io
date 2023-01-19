@@ -1,8 +1,8 @@
 // Reference to the original collection
-var originalRef = db.collection("roulette-pictures");
+var originalRef = db.collection("old");
 
 // Reference to the new collection
-var copyRef = db.collection("roulette-pictures-copy");
+var copyRef = db.collection("new");
 
 async function copyCollection(db, originalRef, copyRef) {
     // Get all documents in the original collection
