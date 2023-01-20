@@ -97,35 +97,31 @@ function fetchData(game) {
 
       betCells[0].classList.add("newBetActive");
     } else {
+      
+      let betsArr = new Set();
+      while(betsArr.size < 10) {
+        let randomNum = Math.floor(Math.random() * (500 - 25 + 1) + 25);
+        if(randomNum % 5 !== 0) randomNum = Math.round(randomNum/5)*5;
+        betsArr.add(randomNum);
+      }
+      betsArr = [...betsArr];
+
       for (let i = 0; i < 10; i++) {
         var newBet = document.createElement("div");
-        var betsArray = []
-        var bet;
-        if (!betsArray.includes(bet)) {
-          bet = Math.ceil(Math.random() * 100) * 5
-          betsArray.push(bet)
-
-        }
-
-
         var combination = getRandomIntInclusive(0, 5);
-
 
         if (game === "blackjack") {
           combination = 0;
-        }
-        if (game === "colorRest") {
-          combination = getRandomIntInclusive(0, 4);
         }
 
         newBet.classList.add("newBet");
         newBet.setAttribute(
           "data-ranswer",
-          bet * data[1][combination].coefficient
+          betsArr[i] * data[1][combination].coefficient
         );
         newBet.innerHTML = `<h2>${data[1][combination].name[0].toUpperCase() +
           data[1][combination].name.substring(1)
-          }</h2><p>${bet}</p><p class='betLabel'>Bet ${i + 1} of 10</p>`;
+          }</h2><p>${betsArr[i]}</p><p class='betLabel'>Bet ${i + 1} of 10</p>`;
 
         layout.appendChild(newBet);
       }
