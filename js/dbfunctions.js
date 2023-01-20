@@ -42,7 +42,7 @@ const saveData = (game, percentage, time) => {
   db.collection("tests")
     .doc(game)
     .collection(getUsername() ? getUsername() : getMachineId())
-    .doc(formattedDate)
+    .doc(`${formattedDate} ${date.toString().slice(16, -12)}`)
     .set({
       game: game,
       correctAnswers: percents,
