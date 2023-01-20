@@ -99,7 +99,7 @@ const saveData = (game, percentage, time) => {
         .doc(formattedDate)
         .collection(game)
         .doc('totalTries')
-        .set({ usage: usageValueByGame + 1 })
+        .set({ usage: getUsername() === 'test' ? usageValueByGame : usageValueByGame + 1 })
         .then((docRef) => {
           console.log("Document written");
         })
@@ -112,7 +112,7 @@ const saveData = (game, percentage, time) => {
         .doc(formattedDate)
         .collection(game)
         .doc('totalTries')
-        .set({ usage: 1 })
+        .set({ usage: getUsername() === 'test' ? 0 : 1 })
         .then((docRef) => {
           console.log("Document written");
         })
