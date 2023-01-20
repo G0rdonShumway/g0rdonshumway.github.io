@@ -52,21 +52,6 @@ function onTimesUp() {
   clearInterval(timerInterval);
 }
 
-// function startTimer() {
-//   timerInterval = setInterval(() => {
-//     timePassed = timePassed + 10;
-//     timeLeft = TIME_LIMIT - timePassed;
-//     document.getElementById("base-timer-label").innerHTML = formatTime(timeLeft);
-//     setCircleDasharray();
-//     setRemainingPathColor(timeLeft);
-
-//     if (timeLeft === 0) {
-//       // onTimesUp();
-//       testTotal();
-//     }
-//   }, 100);
-// }
-
 function startTimer() {
   timerInterval = setInterval(() => {
     timePassed = timePassed + 10

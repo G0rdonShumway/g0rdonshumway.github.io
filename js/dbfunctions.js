@@ -37,22 +37,17 @@ let formattedDate = date.toLocaleDateString("ru-RU", {
 });
 
 const saveData = (game, percentage, time) => {
-  var date = new Date();
-  var current_date =
-    date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
-  var timeCode = `${date.getHours() < 10 ? "0" + date.getHours() : date.getHours()
-    }:${date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()}:${date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds()
-    }`;
   var percents = +percentage.slice(0, -1);
 
   db.collection("tests")
     .doc(game)
     .collection(getUsername() ? getUsername() : getMachineId())
-    .doc(`${new Date()}`)
+    .doc(formattedDate)
     .set({
       game: game,
       correctAnswers: percents,
-      time: time
+      timeSpent: time,
+      timeAt: date.toString().slice(16, -12)
     })
     .then((docRef) => {
       if (getUsername()) {

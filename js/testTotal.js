@@ -48,5 +48,5 @@ function testTotal() {
   document.querySelector("#calculationTime").textContent = timerString;
 
 
-  saveData(gameName, percentCorrect, timerString, answerInterval);
+  saveData(gameName, percentCorrect, timerString);
 }
