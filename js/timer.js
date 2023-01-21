@@ -51,18 +51,24 @@ function onTimesUp() {
 }
 
 function startTimer() {
+  // Get the current time
+  let startTime = new Date();
+
   timerInterval = setInterval(() => {
+    // Calculate the elapsed time
     timePassed = timePassed + 10
-    timeLeft = TIME_LIMIT - timePassed
+    let elapsedTime = new Date() - startTime;
+    timeLeft = TIME_LIMIT - elapsedTime;
     document.getElementById("base-timer-label").innerHTML = formatTime(timeLeft);
     setCircleDasharray();
     setRemainingPathColor(timeLeft);
 
-    if (timeLeft === 0) {
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
       // onTimesUp();
       testTotal();
     }
-  }, 10)
+  }, 10);
 }
 
 function formatTime(time) {
