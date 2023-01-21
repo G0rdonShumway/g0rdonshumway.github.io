@@ -66,14 +66,14 @@ const saveData = (game, percentage, time) => {
                   db.collection(game).doc(getUsername()).set({
                     username: getUsername(),
                     time: time,
-                    timeCode: `${new Date()}`
+                    timeCode: `${formattedDate} ${date.toString().slice(16, 33)}`
                   });
                 }
               } else {
                 db.collection(game).doc(getUsername()).set({
                   username: getUsername(),
                   time: time,
-                  timeCode: `${new Date()}`
+                  timeCode: `${formattedDate} ${date.toString().slice(16, 33)}`
                 });
               }
             })

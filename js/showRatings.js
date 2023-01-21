@@ -1,5 +1,5 @@
 const showRatings = (game) => {
-  if (game === 'roulette-pictures' || game === '') return
+  if (game === '') return
 
   document.getElementById('ratings').innerHTML = `
     <div class="ratings-header"><h2>TOP-10</h2></div>

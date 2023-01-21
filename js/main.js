@@ -48,19 +48,19 @@ function randomizer(parent, chipCount) {
 
   var randomNumbers = [];
   var sum = 0;
-  for (var i = 0; i < n-1; i++) {
-      var randomNumber;
-      do {
-        randomNumber = Math.floor(Math.random() * (m - sum));
-      } while (randomNumber > m / 5);
+  for (var i = 0; i < n - 1; i++) {
+    var randomNumber;
+    do {
+      randomNumber = Math.floor(Math.random() * (m - sum));
+    } while (randomNumber > m / 5);
 
-      randomNumbers.push(randomNumber);
-      sum += randomNumber;
+    randomNumbers.push(randomNumber);
+    sum += randomNumber;
   }
-  if(m - sum <= m / 5) {
+  if (m - sum <= m / 5) {
     randomNumbers.push(m - sum);
   } else {
-    var newLastNumber = (m/5)
+    var newLastNumber = (m / 5)
     randomNumbers.push(newLastNumber);
     sum += newLastNumber;
     var newSpanOne = Math.floor((m - sum) / 2)
@@ -114,5 +114,5 @@ function startGame() {
 function goBack() {
   localStorage.removeItem('game')
   showRatings('')
-  document.location.href="/";
+  document.location.href = "/";
 }
