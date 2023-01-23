@@ -56,9 +56,8 @@ function startTimer() {
 
   timerInterval = setInterval(() => {
     // Calculate the elapsed time
-    timePassed = timePassed + 10
-    let elapsedTime = new Date() - startTime;
-    timeLeft = TIME_LIMIT - elapsedTime;
+    timePassed = new Date() - startTime;
+    timeLeft = TIME_LIMIT - timePassed;
     document.getElementById("base-timer-label").innerHTML = formatTime(timeLeft);
     setCircleDasharray();
     setRemainingPathColor(timeLeft);
@@ -68,6 +67,7 @@ function startTimer() {
       // onTimesUp();
       testTotal();
     }
+    console.log(formatTime(timeLeft), formatTime(timePassed));
   }, 10);
 }
 
