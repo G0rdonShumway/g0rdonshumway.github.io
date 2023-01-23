@@ -63,6 +63,8 @@ function startTimer() {
     setRemainingPathColor(timeLeft);
 
     if (timeLeft <= 0) {
+      timeLeft = 0
+      timePassed = TIME_LIMIT
       clearInterval(timerInterval);
       // onTimesUp();
       testTotal();
