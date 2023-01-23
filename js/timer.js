@@ -42,7 +42,7 @@ document.getElementById("testTimer").innerHTML = `
       ></path>
     </g>
   </svg>
-  <span id="base-timer-label" class="base-timer__label">${formatTime(timeLeft)}</span>
+  <span id="base-timer-label" class="base-timer__label"></span>
 </div>
 `;
 
@@ -58,7 +58,7 @@ function startTimer() {
     // Calculate the elapsed time
     timePassed = new Date() - startTime;
     timeLeft = TIME_LIMIT - timePassed;
-    document.getElementById("base-timer-label").innerHTML = formatTime(timeLeft);
+    document.getElementById("base-timer-label").innerHTML = formatTime(timeLeft, 'short');
     setCircleDasharray();
     setRemainingPathColor(timeLeft);
 
@@ -67,20 +67,30 @@ function startTimer() {
       // onTimesUp();
       testTotal();
     }
-    console.log(formatTime(timeLeft), formatTime(timePassed));
+    console.log(formatTime(timeLeft), formatTime(timePassed, 'short'));
   }, 10);
 }
 
-function formatTime(time) {
-  var minutes = Math.floor(time / 60000);
-  var seconds = Math.floor((time % 60000) / 1000);
+function formatTime(time, mode) {
+  var minutes = Math.floor(time / 60000).toString().padStart(2, "0");
+  var seconds = Math.floor((time % 60000) / 1000).toString().padStart(2, "0");
+  var milliseconds = ((time % 1000) / 10).toString().padStart(2, "0").slice(0, 2);
 
-  if (seconds < 10) {
-    seconds = `0${seconds}`;
-  }
+  return mode === 'short'
+    ? `${minutes}:${seconds}`
+    : `${minutes}:${seconds}.${milliseconds}`
 
-  return `${minutes}:${seconds}`;
 }
+// function formatTime(time) {
+//   var minutes = Math.floor(time / 60000);
+//   var seconds = Math.floor((time % 60000) / 1000);
+
+//   if (seconds < 10) {
+//     seconds = `0${seconds}`;
+//   }
+
+//   return `${minutes}:${seconds}`;
+// }
 
 function setRemainingPathColor(timeLeft) {
   let { alert, warning, info } = COLOR_CODES;

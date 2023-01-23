@@ -11,7 +11,7 @@ function testTotal() {
         row.children[2].style.backgroundColor = "#db3333";
       }
     });
-  }  else {
+  } else {
     for (let i = 0; i < 10; i++) {
       var newResultRow = document.createElement("tr");
       if (betCells[i].dataset.uanswer == undefined) {
@@ -36,17 +36,19 @@ function testTotal() {
       }
     }
   }
-  var timer = new Date(timePassed)
+  // var timer = new Date(timePassed)
 
-  var timerString = timer.toISOString().slice(14, -2)
+  // var timerString = timer.toISOString().slice(14, -2)
+
   var percentCorrect = ((correctAnswers * 100) / numberOfBets).toFixed(2) + "%";
 
   document.querySelector("#game-content").style.display = "none";
 
   document.querySelector("#correctPercent").textContent = percentCorrect
   document.querySelector("#testResult").style.display = "block";
-  document.querySelector("#calculationTime").textContent = timerString;
+  // document.querySelector("#calculationTime").textContent = timerString;
+  document.querySelector("#calculationTime").textContent = formatTime(timePassed, 'full');
 
 
-  saveData(gameName, percentCorrect, timerString);
+  saveData(gameName, percentCorrect, formatTime(timePassed, 'full'));
 }
