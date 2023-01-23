@@ -74,7 +74,7 @@ function startTimer() {
 function formatTime(time, mode) {
   var minutes = Math.floor(time / 60000).toString().padStart(2, "0");
   var seconds = Math.floor((time % 60000) / 1000).toString().padStart(2, "0");
-  var milliseconds = ((time % 1000) / 10).toString().padStart(2, "0").slice(0, 2);
+  var milliseconds = ((time % 1000) / 10).toFixed().toString().padStart(2, "0");
 
   return mode === 'short'
     ? `${minutes}:${seconds}`
