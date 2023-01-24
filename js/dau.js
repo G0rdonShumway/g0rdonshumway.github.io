@@ -3,9 +3,9 @@ const getDAU = async () => {
     try {
         // Get all documents in the 'dailyUsage' collection
         const snapshot = await db.collection('dailyUsage').get();
-        console.log('snapshot')
+        console.log(snapshot.docs);
         const data = await Promise.all(snapshot.docs.map(async doc => {
-            const collections = await doc.ref.listCollections();
+            const collections = await doc.ref.listCollections().catch(err => console.log(err));
             console.log('collections')
             return {
                 date: doc.id,
