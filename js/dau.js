@@ -1,4 +1,5 @@
 // Get all documents in the 'dailyUsage' collection
+async function updateDAU(db) {
 db.collection('dailyUsage').get()
   .then(snapshot => {
     snapshot.forEach(doc => {
@@ -25,3 +26,5 @@ db.collection('dailyUsage').get()
   .catch(err => {
     console.log('Error getting dailyUsage documents:', err);
   });
+}
+updateDAU(db)
