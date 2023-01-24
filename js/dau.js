@@ -1,14 +1,13 @@
 const getDAU = async () => {
     try {
         // Get all documents in the 'dailyUsage' collection
-        const docs = await db.collection('dailyUsage').listDocuments();
-        const data = await Promise.all(docs.map(doc => {
-            return doc.listCollections().then(collections => {
-                return {
-                    date: doc.id,
-                    numSubcollections: collections.length
-                }
-            })
+        const snapshot = await db.collection('dailyUsage').get();
+        const data = await Promise.all(snapshot.docs.map(async doc => {
+            const collections = await doc.ref.listCollections();
+            return {
+                date: doc.id,
+                numSubcollections: collections.size
+            }
         }));
         data.forEach(({date, numSubcollections}) => {
             db.collection('DAU').doc(date).set({numSubcollections});
