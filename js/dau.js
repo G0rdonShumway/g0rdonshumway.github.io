@@ -4,12 +4,14 @@ db.collection('dailyUsage').get()
     snapshot.forEach(doc => {
       // Get date from document ID
       const date = doc.id;
+      console.log(date)
       
       // Get subcollections
       doc.ref.listCollections()
         .then(collections => {
             // Use the `size` method to get the number of subcollections
             const numSubcollections = collections.size;
+            console.log(numSubcollections)
             // Create a new 'DAU' collection if it does not exist
             db.collection('DAU').doc(date).set({
               DAU: numSubcollections
