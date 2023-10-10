@@ -35,177 +35,23 @@
     <script src="js/main.js?v=17" defer></script>
   </head>
   <body>
-    <header id="appTitle">
-      <h1>Croupier Assistant</h1>
-      <img id="userIcon" src="./img/Loading_icon.gif" />
-
-      <div id="dropdown_user" style="display: none; height: 0px">
-        <button id="profile">Log in to your account to save statistics</button>
-        <button id="login" onclick="showOverflow()">Log in</button>
-        <button id="logout" onclick="logout()">Log out</button>
-      </div>
-    </header>
-    <div id="overflow">
-      <div id="loginPopup">
-        <h2>WELCOME</h2>
-        <div id="loginPopupHeader">
-          <div
-            id="headerRegister"
-            class="popup_header__button popup_button__active"
-          >
-            Register
-          </div>
-          <div id="headerSignIn" class="popup_header__button">Sign In</div>
-        </div>
-        <div id="registerForm" class="popupForm popupForm_active">
-          <form action="#" onsubmit="return false">
-            <div class="formItem">
-              <label for="newName">Username:</label>
-              <input id="newName" type="text" maxlength="20" required />
-            </div>
-            <div class="formItem">
-              <label for="newPass">Password:</label>
-              <input id="newPass" type="password" required />
-            </div>
-            <div class="formItem">
-              <label for="newPassRepeat">Repeat password:</label>
-              <input id="newPassRepeat" type="password" required />
-              <span id="message"></span>
-            </div>
-
-            <button type="submit" class="submit_login" onclick="register()">
-              CREATE NEW USER
-            </button>
-          </form>
-        </div>
-        <div id="signinForm" class="popupForm">
-          <form action="#" onsubmit="return false">
-            <div class="formItem">
-              <label for="getName">Username:</label>
-              <input id="getName" type="text" required />
-            </div>
-            <div class="formItem">
-              <label for="getPass">Password:</label>
-              <input id="getPass" type="password" required />
-              <span id="messageLogin"></span>
-            </div>
-
-            <button type="submit" class="submit_login" onclick="login()">
-              SIGN IN
-            </button>
-          </form>
-        </div>
-      </div>
-      <div id="closeOverflow">Close</div>
-    </div>
-
-    <div id="linkList">
-      <a id="roulette-pictures" onclick="fetchData(this.id)" href="#"
-        >Roulette pictures <img src="./img/casino_roulette_icon.png"
-      /></a>
-      <a id="roulette-sector" onclick="fetchData(this.id)" href="#"
-        >Roulette series <img src="./img/casino_roulette_icon.png"
-      /></a>
-      <a id="blackjack" onclick="fetchData(this.id)" href="#"
-        >Blackjack <img src="./img/blackjack_icon.png"
-      /></a>
-      <a id="russian-poker" onclick="fetchData(this.id)" href="#"
-        >Russian poker <img src="./img/poker.png"
-      /></a>
-      <a id="russian-poker-bonus" onclick="fetchData(this.id)" href="#"
-        >Russian poker Bonus <img src="./img/poker.png"
-      /></a>
-      <a id="uth-blind" onclick="fetchData(this.id)" href="#"
-        >UTH blind bets<img src="./img/uth.png"
-      /></a>
-      <a id="uth-trips" onclick="fetchData(this.id)" href="#"
-        >UTH trips bets<img src="./img/uth.png"
-      /></a>
-      <a id="texas-holdem-bonus" onclick="fetchData(this.id)" href="#"
-        >Texas Hold'em bonus <img src="./img/texas.png"
-      /></a>
-
-      <span id="resolution"></span>
-    </div>
-
-    <div id="game-descr" style="display: none">
-      <div id="ratings"></div>
-      <div id="description">
-        <p>
-          <span class="descr-label">Game:</span> <span id="game">Content</span>
-        </p>
-        <p>
-          <span class="descr-label">Bet:</span> <span id="bets">Content</span>
-        </p>
-        <p>
-          <span class="descr-label">Goal:</span> <span id="goal">Content</span>
-        </p>
-        <p>
-          <span class="descr-label">Time limit:</span>
-          <span id="timelimit">Content</span>
-        </p>
-      </div>
-      <button id="start-button" onclick="startGame()">Start</button>
-    </div>
-
-    <div id="game-content" style="display: none">
-      <header>
-        <span id="back-btn" onclick="goBack()">Back</span>
-        <h1 id="game-title"></h1>
-        <div id="testTimer"></div>
-      </header>
-
-      <div id="layout"></div>
-
-      <div id="keyboard">
-        <input class="div1 digit" id="answer-input" disabled />
-        <button class="div2 digit backspace" onclick="typeDigit(this)">
-          del
-        </button>
-        <button class="div3 digit" onclick="typeDigit(this)">1</button>
-        <button class="div4 digit" onclick="typeDigit(this)">2</button>
-        <button class="div5 digit" onclick="typeDigit(this)">3</button>
-        <button class="div6 digit" onclick="typeDigit(this)">4</button>
-        <button class="div7 digit" onclick="typeDigit(this)">5</button>
-        <button class="div8 digit" onclick="typeDigit(this)">6</button>
-        <button class="div9 digit" onclick="typeDigit(this)">7</button>
-        <button class="div10 digit" onclick="typeDigit(this)">8</button>
-        <button class="div11 digit" onclick="typeDigit(this)">9</button>
-        <button class="div12 digit dot" onclick="typeDigit(this)">.</button>
-        <button class="div13 digit" onclick="typeDigit(this)">0</button>
-        <button
-          class="div14 digit submit"
-          style="background: #7ed97e; color: #000"
-          onclick="typeDigit(this)"
-        >
-          ok
-        </button>
-      </div>
-    </div>
-
-    <div id="testResult" style="display: none">
-      <table border="1">
-        <thead>
-          <tr>
-            <td>Time</td>
-            <td colspan="2" id="calculationTime"></td>
-          </tr>
-          <tr>
-            <td>Bet</td>
-            <td>Right answer</td>
-            <td>Your answer</td>
-          </tr>
-        </thead>
-        <tbody></tbody>
-        <tfoot>
-          <tr>
-            <td colspan="2">Correct answers</td>
-            <td id="correctPercent"></td>
-          </tr>
-        </tfoot>
-      </table>
-
-      <button id="back-button" onclick="goBack()">Go back</button>
-    </div>
+    <script src="https://livechatv2.chat2desk.com/packs/ie-11-support.js"></script>
+<script>
+  window.chat24_token = "be20dc945fa2e7ca90c591c3c0254410";
+  window.chat24_url = "https://livechatv2.chat2desk.com";
+  window.chat24_socket_url ="wss://livechatv2.chat2desk.com/widget_ws_new";
+  window.chat24_show_new_wysiwyg = "true";
+  window.chat24_static_files_domain = "https://storage.chat2desk.com/";
+  window.lang = "ru";
+  window.fetch("".concat(window.chat24_url, "/packs/manifest.json?nocache=").concat(new Date().getTime())).then(function (res) {
+    return res.json();
+  }).then(function (data) {
+    var chat24 = document.createElement("script");
+    chat24.type = "text/javascript";
+    chat24.async = true;
+    chat24.src = "".concat(window.chat24_url).concat(data["application.js"]);
+    document.body.appendChild(chat24);
+  });
+</script>
   </body>
 </html>
