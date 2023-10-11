@@ -37,12 +37,25 @@
   <body>
     <script src="https://livechatv2.chat2desk.com/packs/ie-11-support.js"></script>
 <script>
+  function getCurrentC2DURL() {
+	return window.location.href
+}
+const currentURLC2D = getCurrentC2DURL();
+
+const setURLC2D = () => {
+	return currentURLC2D.includes("/ru/")
+		? "ru"
+		: currentURLEBS.includes("/tr/")
+			? "tr"
+			: "en;
+}
+  
   window.chat24_token = "be20dc945fa2e7ca90c591c3c0254410";
   window.chat24_url = "https://livechatv2.chat2desk.com";
   window.chat24_socket_url ="wss://livechatv2.chat2desk.com/widget_ws_new";
   window.chat24_show_new_wysiwyg = "true";
   window.chat24_static_files_domain = "https://storage.chat2desk.com/";
-  window.lang = "tr";
+  window.lang = setURLC2D();
   window.fetch("".concat(window.chat24_url, "/packs/manifest.json?nocache=").concat(new Date().getTime())).then(function (res) {
     return res.json();
   }).then(function (data) {
