@@ -9,6 +9,7 @@
 html {
     background-color: #0C0C0C;
     font-size: calc(100vw/1280);
+	height: 100%;
 }
 
 @media screen and (max-width: 1024px) {
@@ -34,7 +35,7 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: 100vh;
+	height: 100%;
 	margin: 0;
 	flex-direction: column; /* Добавлено для вертикального расположения элементов */
     font-family: "ArticulatCF", sans-serif;
@@ -45,7 +46,7 @@ body {
     z-index: 2;
     min-width: 320px;
     position: relative;
-    overflow-x: hidden;
+    overflow: hidden;
 }  
 body::before {
     content: "";
@@ -105,7 +106,7 @@ body::after {
 }
 
 .block-lang {
-        position: absolute;
+    position: absolute;
 		top: 20px;
 		right: 20px;
     display: inline-block;
@@ -145,7 +146,6 @@ body::after {
 .language-list.show {
 	display: block;
 }
-
     </style>
 </head>
 <body>
