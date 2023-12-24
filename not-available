@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выберите язык</title>
+    <style>
+html {
+    background-color: #0C0C0C;
+    font-size: calc(100vw/1280);
+}
+
+@media screen and (max-width: 1024px) {
+    html {
+        font-size: calc(100vw / 1024); /* Небольшой шаг изменения */
+    }
+}
+
+@media screen and (max-width: 768px) {
+    html {
+        font-size: calc(100vw / 768); /* Еще более мелкий шаг изменения */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    html {
+        font-size: calc(100vw / 480); /* Минимальный шаг изменения */
+    }
+}
+
+
+body {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	margin: 0;
+	flex-direction: column; /* Добавлено для вертикального расположения элементов */
+    font-family: "ArticulatCF", sans-serif;
+    font-size: 16rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #fff;
+    z-index: 2;
+    min-width: 320px;
+    position: relative;
+    overflow-x: hidden;
+}  
+body::before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 654rem;
+    height: 418rem;
+    border-radius: 50%;
+    background-color: #141414;
+    top: 115rem;
+    left: calc(50% - 654rem / 2);
+    -webkit-filter: blur(100rem);
+    filter: blur(100rem);
+    z-index: -1;
+}
+body::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url(https://vpn.eclipse.bet/wp-content/themes/custom/assets/img/bg.png);
+    z-index: -1;
+    background-position: center top;
+}
+
+#root {
+	flex: 1;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column; /* Добавлено для вертикального расположения элементов */
+}
+
+#content-container {
+/* 	width: 100%; */
+	height: 100%;
+	max-width: 640px;
+	padding: 0 20px;
+	
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+}
+
+#content-container p {
+	color: #fff;
+	text-align: center;
+}
+
+#content-container p a {
+	color: #d3ae5d;
+}
+
+.block-lang {
+        position: absolute;
+		top: 20px;
+		right: 20px;
+    display: inline-block;
+}
+
+.toggle-lang {
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+    color: #C69C51;
+}
+
+.language-list {
+    display: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    border-radius: 5rem;
+    background-color: #0c0c0c;
+}
+
+.language-list li {
+    padding: 4px 8px;
+    cursor: pointer;
+	font-size: 12rem;
+}
+
+.language-list li:hover {
+    background-color: #C69C51;
+	color: #fff;
+}
+
+.language-list.show {
+	display: block;
+}
+
+    </style>
+</head>
+<body>
+	<div id="root">
+		<div class="block-lang">
+			<button class="toggle-lang"><span>EN</span></button>
+			<ul class="language-list">
+				<li>EN</li>
+				<li>RU</li>
+				<li>TR</li>
+			</ul>
+		</div>
+		<!-- Ваш контент здесь -->
+		<div id="content-container">
+			<p>&nbsp;</p>
+			<p id="content-message">Sorry, webpage <a>eclipsebet.com</a> is not available for this location</p>
+			<p><a href="https://vpn.eclipse.bet/">vpn.eclipse.bet</a></p>
+		</div>
+	</div>
+</body>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleButton = document.querySelector('.toggle-lang');
+    const languageList = document.querySelector('.language-list');
+    const contentMessage = document.getElementById('content-message');
+
+    toggleButton.addEventListener('click', function() {
+        languageList.classList.toggle('show');
+    });
+
+    languageList.addEventListener('click', function(e) {
+        if (e.target.tagName === 'LI') {
+            const selectedLang = e.target.textContent;
+            contentMessage.innerHTML = getTranslatedMessage(selectedLang);
+            toggleButton.querySelector('span').textContent = selectedLang;
+            languageList.classList.remove('show');
+        }
+    });
+
+    function getTranslatedMessage(lang) {
+        switch (lang) {
+            case 'EN':
+                return `Sorry, webpage <a>eclipsebet.com</a> is not available for this location`;
+            case 'RU':
+                return `Сожалеем, страница <a>eclipsebet.com</a> не доступна в данном регионе`;
+            case 'TR':
+                return `Üzgünüz, <a>eclipsebet.com</a> sayfası bu bölgede kullanılamıyor`;
+            default:
+                return 'Выберите язык, чтобы увидеть сообщение.';
+        }
+    }
+});
+
+</script>
+</html>
