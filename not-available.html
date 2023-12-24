@@ -13,29 +13,6 @@ html {
     overflow: hidden;
 }
 
-@media screen and (max-width: 1024px) {
-	html {
-		font-size: calc(100vw / 1024); /* Небольшой шаг изменения */
-	}
-	.toggle-lang,
-	.language-list li {
-		font-size: 16rem;
-	}
-}
-
-@media screen and (max-width: 768px) {
-    html {
-        font-size: calc(100vw / 768); /* Еще более мелкий шаг изменения */
-    }
-}
-
-@media screen and (max-width: 480px) {
-    html {
-        font-size: calc(100vw / 480); /* Минимальный шаг изменения */
-    }
-}
-
-
 body {
 	display: flex;
 	align-items: center;
@@ -150,6 +127,28 @@ body::after {
 
 .language-list.show {
 	display: block;
+}
+	    
+@media screen and (max-width: 1024px) {
+	html {
+		font-size: calc(100vw / 1024); /* Небольшой шаг изменения */
+	}
+	.toggle-lang,
+	.language-list li {
+		font-size: 16rem;
+	}
+}
+
+@media screen and (max-width: 768px) {
+    html {
+        font-size: calc(100vw / 768); /* Еще более мелкий шаг изменения */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    html {
+        font-size: calc(100vw / 480); /* Минимальный шаг изменения */
+    }
 }
     </style>
 </head>
