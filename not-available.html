@@ -7,10 +7,16 @@
     <title>Выберите язык</title>
     <style>
 html {
-    background-color: #0C0C0C;
-    font-size: calc(100vw/1280);
+	background-color: #0c0c0c;
+	font-size: calc(100vw / 1280);
 	height: 100%;
-    overflow: hidden;
+	overflow: hidden;
+}
+
+p {
+    background-image: linear-gradient(93deg, #E8C06F 2.55%, #8E621F 95.28%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 body {
@@ -20,41 +26,41 @@ body {
 	height: 100%;
 	margin: 0;
 	flex-direction: column; /* Добавлено для вертикального расположения элементов */
-    font-family: "ArticulatCF", sans-serif;
-    font-size: 22rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #fff;
-    z-index: 2;
-    min-width: 320px;
-    position: relative;
-    overflow: hidden;
-}  
+	font-family: "ArticulatCF", sans-serif;
+	font-size: 22rem;
+	font-weight: 400;
+	line-height: 1.5;
+	color: #fff;
+	z-index: 2;
+	min-width: 320px;
+	position: relative;
+	overflow: hidden;
+}
 body::before {
-    content: "";
-    display: block;
-    position: absolute;
-    width: 654rem;
-    height: 418rem;
-    border-radius: 50%;
-    background-color: #141414;
-    top: 115rem;
-    left: calc(50% - 654rem / 2);
-    -webkit-filter: blur(100rem);
-    filter: blur(100rem);
-    z-index: -1;
+	content: "";
+	display: block;
+	position: absolute;
+	width: 654rem;
+	height: 418rem;
+	border-radius: 50%;
+	background-color: #141414;
+	top: 115rem;
+	left: calc(50% - 654rem / 2);
+	-webkit-filter: blur(100rem);
+	filter: blur(100rem);
+	z-index: -1;
 }
 body::after {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url(https://vpn.eclipse.bet/wp-content/themes/custom/assets/img/bg.png);
-    z-index: -1;
-    background-position: center top;
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-image: url(https://vpn.eclipse.bet/wp-content/themes/custom/assets/img/bg.png);
+	z-index: -1;
+	background-position: center top;
 }
 
 #root {
@@ -67,11 +73,11 @@ body::after {
 }
 
 #content-container {
-/* 	width: 100%; */
+	/* 	width: 100%; */
 	height: 100%;
 	max-width: 640px;
 	padding: 0 20px;
-	
+
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -88,68 +94,73 @@ body::after {
 }
 
 .block-lang {
-    position: absolute;
-		top: 20px;
-		right: 20px;
-    display: inline-block;
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	display: inline-block;
 }
 
 .toggle-lang {
-    padding: 8px 12px;
-    border: none;
-    cursor: pointer;
-    background-color: transparent;
-    color: #C69C51;
+	padding: 8px 12px;
+	border: none;
+	cursor: pointer;
+	background-color: transparent;
+	color: #c69c51;
 }
 
 .language-list {
-    display: none;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    border-radius: 5rem;
-    background-color: #0c0c0c;
-}
-
-.language-list li {
-    padding: 4px 8px;
-    cursor: pointer;
+	display: none;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	background-color: #0c0c0c;
 	font-size: 12rem;
 }
 
+.language-list li {
+	padding: 4px 8px;
+	cursor: pointer;
+	color: #929292;
+}
+
 .language-list li:hover {
-    background-color: #C69C51;
+	background-color: #c69c51;
 	color: #fff;
 }
 
 .language-list.show {
 	display: block;
+	border: 1px solid #0c0c0c;
+	border-radius: 5rem;
 }
-	    
+
+
 @media screen and (max-width: 1024px) {
 	html {
 		font-size: calc(100vw / 1024); /* Небольшой шаг изменения */
 	}
 	.toggle-lang,
-	.language-list li {
+	.language-list {
 		font-size: 16rem;
 	}
 }
 
 @media screen and (max-width: 768px) {
-    html {
-        font-size: calc(100vw / 768); /* Еще более мелкий шаг изменения */
-    }
+	html {
+		font-size: calc(100vw / 768); /* Еще более мелкий шаг изменения */
+	}
 }
 
 @media screen and (max-width: 480px) {
-    html {
-        font-size: calc(100vw / 480); /* Минимальный шаг изменения */
-    }
+	html {
+		font-size: calc(100vw / 480); /* Минимальный шаг изменения */
+	}
 }
+
+
     </style>
 </head>
 <body>
