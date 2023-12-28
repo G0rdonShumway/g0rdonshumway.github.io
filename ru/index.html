@@ -18,24 +18,328 @@
 <h1>Russian</h1>
     <script src="https://livechatv2.chat2desk.com/packs/ie-11-support.js"></script>
 	<script>
-function getCurrentC2DURL() { return window.location.href }
-const currentURLC2D = getCurrentC2DURL();
-const setURLC2D = () => {return currentURLC2D.includes("/ru/") ? "ru" : currentURLC2D.includes("/tr/") ? "tr" : "en";}
-  window.chat24_token = "be20dc945fa2e7ca90c591c3c0254410";
-  window.chat24_url = "https://livechatv2.chat2desk.com";
-  window.chat24_socket_url ="wss://livechatv2.chat2desk.com/widget_ws_new";
-  window.chat24_show_new_wysiwyg = "true";
-  window.chat24_static_files_domain = "https://storage.chat2desk.com/";
-  window.lang = setURLC2D();
-  window.fetch("".concat(window.chat24_url, "/packs/manifest.json?nocache=").concat(new Date().getTime())).then(function (res) {
-    return res.json();
-  }).then(function (data) {
-    var chat24 = document.createElement("script");
-    chat24.type = "text/javascript";
-    chat24.async = true;
-    chat24.src = "".concat(window.chat24_url).concat(data["application.js"]);
-    document.body.appendChild(chat24);
-  });
+/* STYLES BEGIN*/
+var stylesEBS = {};
+stylesEBS.widgetEBS = {
+	boxSizing: "border-box",
+	width: "60px",
+	height: "60px",
+	borderRadius: "50%",
+	backgroundColor: "#000",
+	position: "fixed",
+	bottom: "60px",
+	right: "30px",
+	display: "flex",
+	justifyContent: "center",
+	alignItems: "center",
+	border: "2px solid #d3ae5d",
+	cursor: "pointer",
+	zIndex: "5"
+};
+stylesEBS.widgetBorderEBS = {
+	boxSizing: "border-box",
+	position: "absolute",
+	top: "50%",
+	left: "50%",
+	transform: "translate(-50%,-50%)",
+	width: "60px",
+	height: "60px",
+	borderRadius: "50%",
+	border: "2px solid #d3ae5d",
+	background: "transparent",
+	zIndex: "5"
+};
+stylesEBS.widgetTextEBS = {
+	boxSizing: "border-box",
+	position: "absolute",
+	top: "50%",
+	left: "50%",
+	transform: "translate(-50%,-50%)",
+	width: "60px",
+	height: "60px",
+	borderRadius: "50%",
+	display: "flex",
+	justifyContent: "center",
+	alignItems: "center",
+	zIndex: "5"
+};
+stylesEBS.widgetImageEBS = {
+	boxSizing: "border-box",
+	width: "30px"
+};
+stylesEBS.widgetContainerEBS = {
+	boxSizing: "border-box",
+	display: "block",
+	opacity: "0",
+	gap: "10px",
+	flexDirection: "column",
+	position: "fixed",
+	bottom: "134px",
+	right: "40px",
+	transform: "translateY(100%)",
+	zIndex: "-1",
+	transition: "transform 0.4s cubic-bezier(1.000, 0.185, 0.045, 0.825), opacity 0.3s cubic-bezier(0.965, 0.010, 0.995, 0.110)",
+	pointerEvents: "none"
+};
+stylesEBS.widgetContainerActiveEBS = {
+	boxSizing: "border-box",
+	display: "flex",
+	opacity: "1",
+	gap: "10px",
+	flexDirection: "column",
+	position: "fixed",
+	bottom: "134px",
+	right: "40px",
+	transform: "translateY(0)",
+	zIndex: "5",
+	transition: "all 0.5s cubic-bezier(1.000, 0.185, 0.045, 0.825)",
+	pointerEvents: "auto"
+};
+stylesEBS.widgetButtonImageEBS = {
+	boxSizing: "border-box",
+	width: "40px",
+	height: "40px",
+	marginTop: "-30px",
+	display: "block",
+	backgroundColor: "#d3ae5d",
+	transition: "all 0.5s ease-in",
+	borderRadius: "50%"
+};
+stylesEBS.widgetButtonImageActiveEBS = {
+	boxSizing: "border-box",
+	width: "40px",
+	height: "40px",
+	display: "block",
+	marginTop: "0",
+	backgroundColor: "#d3ae5d",
+	transition: "all 0.5s ease-in",
+	borderRadius: "50%"
+};
+/*STYLES END*/
+
+/*HTML BEGIN*/
+function getCurrentURLEBS() {
+	return window.location.href
+}
+var currentURLEBS = getCurrentURLEBS();
+
+const setTelegramLinkEBS = () => {
+	telegramLink = currentURLEBS.includes("/ru/")
+		? "https://t.me/EclipseBetSupportRuGe_bot"
+		: currentURLEBS.includes("/ka/")
+			? "https://t.me/EclipseBetSupportGe_bot"
+			: "https://t.me/EclipseBetSupportEnGe_bot";
+	widgetButtonTelegramEBS.setAttribute("href", telegramLink);
+}
+
+var widgetEBS = document.createElement("div");
+widgetEBS.classList.add("widgetEBS");
+Object.assign(widgetEBS.style, stylesEBS.widgetEBS);
+
+function detectMob() {
+	const toMatch = [
+		/Android/i,
+		/webOS/i,
+		/iPhone/i,
+		/iPad/i,
+		/iPod/i,
+		/BlackBerry/i,
+		/Windows Phone/i
+	];
+
+	return toMatch.some((toMatchItem) => {
+		return navigator.userAgent.match(toMatchItem);
+	});
+}
+
+if(detectMob()){
+	if(!currentURLEBS.includes("/LaunchGame")){
+		document.body.appendChild(widgetEBS);
+	}
+} else {
+	document.body.appendChild(widgetEBS);
+}
+
+var widgetBorderEBS = document.createElement("div");
+widgetBorderEBS.classList.add("widgetBorderEBS");
+Object.assign(widgetBorderEBS.style, stylesEBS.widgetBorderEBS);
+widgetEBS.appendChild(widgetBorderEBS);
+
+var widgetTextEBS = document.createElement("a");
+widgetTextEBS.classList.add("widgetTextEBS");
+Object.assign(widgetTextEBS.style, stylesEBS.widgetTextEBS);
+widgetEBS.appendChild(widgetTextEBS);
+
+var widgetImageEBS = document.createElement("img");
+widgetImageEBS.setAttribute("src", "https://i.imgur.com/S0SQakG.png");
+Object.assign(widgetImageEBS.style, stylesEBS.widgetImageEBS);
+widgetTextEBS.appendChild(widgetImageEBS);
+
+var widgetContainerEBS = document.createElement("div");
+widgetContainerEBS.classList.add("widgetContainerEBS");
+Object.assign(widgetContainerEBS.style, stylesEBS.widgetContainerEBS);
+document.body.appendChild(widgetContainerEBS);
+
+var widgetButtonTelegramEBS = document.createElement("a");
+widgetButtonTelegramEBS.classList.add("widgetButtonEBS");
+widgetButtonTelegramEBS.setAttribute("href", '');
+widgetButtonTelegramEBS.setAttribute("title", "Telegram");
+widgetButtonTelegramEBS.setAttribute("target", "_blank");
+Object.assign(widgetButtonTelegramEBS.style, stylesEBS.widgetButtonEBS);
+widgetContainerEBS.appendChild(widgetButtonTelegramEBS);
+
+var widgetButtonTelegramImageEBS = document.createElement("img");
+widgetButtonTelegramImageEBS.setAttribute(
+	"src",
+	"https://i.imgur.com/PLew6Kg.png"
+);
+Object.assign(
+	widgetButtonTelegramImageEBS.style,
+	stylesEBS.widgetButtonImageEBS
+);
+widgetButtonTelegramEBS.appendChild(widgetButtonTelegramImageEBS);
+
+var widgetButtonWhatsAppEBS = document.createElement("a");
+widgetButtonWhatsAppEBS.classList.add("widgetButtonEBS");
+widgetButtonWhatsAppEBS.setAttribute("href", "https://wa.me/995557909090");
+widgetButtonWhatsAppEBS.setAttribute("title", "WhatsApp");
+widgetButtonWhatsAppEBS.setAttribute("target", "_blank");
+Object.assign(widgetButtonWhatsAppEBS.style, stylesEBS.widgetButtonEBS);
+widgetContainerEBS.appendChild(widgetButtonWhatsAppEBS);
+
+var widgetButtonWhatsAppImageEBS = document.createElement("img");
+widgetButtonWhatsAppImageEBS.setAttribute(
+	"src",
+	"https://i.imgur.com/wfD2zT6.png"
+);
+Object.assign(
+	widgetButtonWhatsAppImageEBS.style,
+	stylesEBS.widgetButtonImageEBS
+);
+widgetButtonWhatsAppEBS.appendChild(widgetButtonWhatsAppImageEBS);
+
+var widgetButtonLiveChatEBS = document.createElement("a");
+widgetButtonLiveChatEBS.classList.add("widgetButtonEBS");
+widgetButtonLiveChatEBS.setAttribute("href", "#");
+widgetButtonLiveChatEBS.setAttribute("title", "LiveChat");
+widgetButtonLiveChatEBS.setAttribute(
+	"onclick",
+	'LiveChatWidget.call("maximize")'
+);
+Object.assign(widgetButtonLiveChatEBS.style, stylesEBS.widgetButtonEBS);
+widgetContainerEBS.appendChild(widgetButtonLiveChatEBS);
+
+var widgetButtonLiveChatImageEBS = document.createElement("img");
+widgetButtonLiveChatImageEBS.setAttribute(
+	"src",
+	"https://i.imgur.com/sQikkmF.png"
+);
+Object.assign(
+	widgetButtonLiveChatImageEBS.style,
+	stylesEBS.widgetButtonImageEBS
+);
+widgetButtonLiveChatEBS.appendChild(widgetButtonLiveChatImageEBS);
+/*HTML END*/
+
+/*ANIMATION BEGIN*/
+const keyframesStylesEBS = `
+	@keyframes custom-ebs-rotate {
+		0% {
+			transform: translate(-50%,-50%) rotate(0deg);
+		}
+		10% {
+			transform: translate(-50%,-50%) rotate(30deg);
+		}
+		20% {
+			transform: translate(-50%,-50%) rotate(-30deg);
+		}
+		30% {
+			transform: translate(-50%,-50%) rotate(30deg);
+		}
+		40% {
+			transform: translate(-50%,-50%) rotate(-30deg);
+		}
+		100% {
+			transform: translate(-50%,-50%) rotate(0deg);
+		}
+	}
+	
+	@keyframes custom-ebs-wave {
+		to {
+			transform: translate(-50%,-50%) scale(1.3);
+		}
+}
+`;
+
+const styleElementEBS = document.createElement("style");
+styleElementEBS.innerHTML = keyframesStylesEBS;
+document.head.appendChild(styleElementEBS);
+
+widgetEBS.addEventListener("mouseover", () => {
+	widgetBorderEBS.style.animation = "custom-ebs-wave 1s ease-in 3";
+	widgetTextEBS.style.animation = "custom-ebs-rotate 1s linear 3";
+});
+widgetEBS.addEventListener("mouseout", () => {
+	widgetBorderEBS.style.animation = "";
+	widgetTextEBS.style.animation = "";
+});
+
+widgetButtonTelegramImageEBS.addEventListener("mouseover", () => {
+	widgetButtonTelegramImageEBS.style.transform = "scale(1.2)";
+	widgetButtonTelegramImageEBS.style.transition = "0.3s all";
+});
+widgetButtonTelegramImageEBS.addEventListener("mouseout", () => {
+	widgetButtonTelegramImageEBS.style.transform = "scale(1)";
+	widgetButtonTelegramImageEBS.style.transition = "0.3s all";
+});
+
+widgetButtonWhatsAppImageEBS.addEventListener("mouseover", () => {
+	widgetButtonWhatsAppImageEBS.style.transform = "scale(1.2)";
+	widgetButtonWhatsAppImageEBS.style.transition = "0.3s all";
+});
+widgetButtonWhatsAppImageEBS.addEventListener("mouseout", () => {
+	widgetButtonWhatsAppImageEBS.style.transform = "scale(1)";
+	widgetButtonWhatsAppImageEBS.style.transition = "0.3s all";
+});
+
+widgetButtonLiveChatImageEBS.addEventListener("mouseover", () => {
+	widgetButtonLiveChatImageEBS.style.transform = "scale(1.2)";
+	widgetButtonLiveChatImageEBS.style.transition = "0.3s all";
+});
+widgetButtonLiveChatImageEBS.addEventListener("mouseout", () => {
+	widgetButtonLiveChatImageEBS.style.transform = "scale(1)";
+	widgetButtonLiveChatImageEBS.style.transition = "0.3s all";
+});
+/*ANIMATION END*/
+
+/*JS BEGIN*/
+widgetEBS.addEventListener("click", function () {
+	this.classList.toggle("activeEBS");
+	setTelegramLinkEBS()
+	this.classList.contains("activeEBS")
+		? widgetImageEBS.setAttribute("src", "https://i.imgur.com/LqbfYT9.png")
+		: widgetImageEBS.setAttribute("src", "https://i.imgur.com/S0SQakG.png");
+
+	widgetContainerEBS.classList.toggle("activeEBS");
+	
+	widgetContainerEBS.classList.contains("activeEBS")
+		? Object.assign(widgetContainerEBS.style, stylesEBS.widgetContainerActiveEBS)
+		: Object.assign(widgetContainerEBS.style, stylesEBS.widgetContainerEBS);
+	
+	widgetContainerEBS.classList.contains("activeEBS")
+		? Object.assign(widgetButtonTelegramImageEBS.style, stylesEBS.widgetButtonImageActiveEBS)
+		: Object.assign(widgetButtonTelegramImageEBS.style, stylesEBS.widgetButtonImageEBS);
+	
+	widgetContainerEBS.classList.contains("activeEBS")
+		? Object.assign(widgetButtonWhatsAppImageEBS.style, stylesEBS.widgetButtonImageActiveEBS)
+		: Object.assign(widgetButtonWhatsAppImageEBS.style, stylesEBS.widgetButtonImageEBS);
+	
+	widgetContainerEBS.classList.contains("activeEBS")
+		? Object.assign(widgetButtonLiveChatImageEBS.style, stylesEBS.widgetButtonImageActiveEBS)
+		: Object.assign(widgetButtonLiveChatImageEBS.style, stylesEBS.widgetButtonImageEBS);
+});
+/*JS END*/
+
 	</script>
   </body>
 </html>
