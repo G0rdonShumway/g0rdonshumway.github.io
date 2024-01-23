@@ -133,10 +133,10 @@ var currentURLEBS = getCurrentURLEBS();
 
 const setTelegramLinkEBS = () => {
 	telegramLink = currentURLEBS.includes("/ru/")
-		? "https://ecl4apps.com/tme3"
-		: currentURLEBS.includes("/tr/")
-			? "https://ecl4apps.com/tme1"
-			: "https://ecl4apps.com/tme2";
+		? "ecl4apps.com/ge_tme3"
+		: currentURLEBS.includes("/ka/")
+			? "ecl4apps.com/ge_tme1"
+			: "ecl4apps.com/ge_tme2";
 	widgetButtonTelegramEBS.setAttribute("href", telegramLink);
 }
 
@@ -209,7 +209,7 @@ widgetButtonTelegramEBS.appendChild(widgetButtonTelegramImageEBS);
 
 var widgetButtonWhatsAppEBS = document.createElement("a");
 widgetButtonWhatsAppEBS.classList.add("widgetButtonEBS");
-widgetButtonWhatsAppEBS.setAttribute("href", "https://ecl4apps.com/wa1");
+widgetButtonWhatsAppEBS.setAttribute("href", "https://wa.me/995557909090");
 widgetButtonWhatsAppEBS.setAttribute("title", "WhatsApp");
 widgetButtonWhatsAppEBS.setAttribute("target", "_blank");
 Object.assign(widgetButtonWhatsAppEBS.style, stylesEBS.widgetButtonEBS);
@@ -347,6 +347,7 @@ widgetEBS.addEventListener("click", function () {
 		: Object.assign(widgetButtonLiveChatImageEBS.style, stylesEBS.widgetButtonImageEBS);
 });
 /*JS END*/
+
 
 
 	</script>
