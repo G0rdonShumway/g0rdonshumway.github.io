@@ -133,10 +133,10 @@ var currentURLEBS = getCurrentURLEBS();
 
 const setTelegramLinkEBS = () => {
 	telegramLink = currentURLEBS.includes("/ru/")
-		? "ecl4apps.com/ge_tme3"
+		? "https://ecl4apps.com/ge_tme3"
 		: currentURLEBS.includes("/ka/")
-			? "ecl4apps.com/ge_tme1"
-			: "ecl4apps.com/ge_tme2";
+			? "https://ecl4apps.com/ge_tme1"
+			: "https://ecl4apps.com/ge_tme2";
 	widgetButtonTelegramEBS.setAttribute("href", telegramLink);
 }
 
