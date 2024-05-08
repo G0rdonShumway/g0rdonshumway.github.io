@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>call_chat</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneNumber = '+254110777333'; // Замените на нужный вам номер телефона
+            const redirectUrl = 'https://contacts.moyobet.info/';
+
+            // Определение мобильного устройства
+            const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+
+            if (isMobile) {
+                // Перенаправление на телефонный звонок для мобильных устройств
+                window.location.href = `tel:${phoneNumber}`;
+            } else {
+                // Перенаправление на страницу для ПК
+                window.location.href = redirectUrl;
+            }
+        });
+    </script>
+</head>
+<body>
+</body>
+</html>
