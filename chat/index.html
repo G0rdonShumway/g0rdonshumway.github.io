@@ -12,12 +12,25 @@
 		    padding: 0;
 		    box-sizing: border-box;
 		}
-		html {
-		    height: 100%;
-		}
-		body {
-		    min-height: 100%;
-		}
+	    html, body {
+		width: 100%;
+		min-height: 100%;
+	    }
+	    body {
+		background: #0f0f0f !important;
+	    }
+	    body::after {
+		content: "";
+		display: block;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-image: url(https://cmsbetconstruct.com/storage/medias/betsunrise/media_1868048_bcaf979….png);
+		z-index: -1;
+		background-position: center top;
+	    }
 	</style>
 	<!-- Start of LiveChat (www.livechat.com) code -->
 	<script>
