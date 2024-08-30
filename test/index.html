@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Fetch</title>
+  </head>
+  <body>
+    <script>
+      async function getData() {
+        const url = "https://script.google.com/macros/s/AKfycbyhhKW6STXCbfCPBYvaWkAWER2qhrBxUmiXRaQA1p1an3juqWyvDFHd8GgPyr7kBQ4yHw/exec";
+        try {
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+          }
+      
+          const json = await response.json();
+          console.log(json);
+        } catch (error) {
+          console.error(error.message);
+        }
+      }
+    </script>
+  </body>
+</html>
