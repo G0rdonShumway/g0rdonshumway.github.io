@@ -11,12 +11,7 @@
       async function getData() {
         const url = "https://script.google.com/macros/s/AKfycbyhhKW6STXCbfCPBYvaWkAWER2qhrBxUmiXRaQA1p1an3juqWyvDFHd8GgPyr7kBQ4yHw/exec";
         try {
-          const response = await fetch(url, {
-            mode: 'cors',
-            headers: {
-              'Access-Control-Allow-Origin':'*'
-            }
-          });
+          const response = await fetch(url, {mode: 'no-cors'});
           if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
           }
