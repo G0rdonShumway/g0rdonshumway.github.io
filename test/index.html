@@ -9,7 +9,7 @@
   <body>
     <script>
       async function getData() {
-        const url = "https://script.google.com/macros/s/AKfycbyhhKW6STXCbfCPBYvaWkAWER2qhrBxUmiXRaQA1p1an3juqWyvDFHd8GgPyr7kBQ4yHw/exec";
+        const url = "http://script.google.com/macros/s/AKfycbyhhKW6STXCbfCPBYvaWkAWER2qhrBxUmiXRaQA1p1an3juqWyvDFHd8GgPyr7kBQ4yHw/exec";
         try {
           const response = await fetch(url);
           if (!response.ok) {
@@ -18,6 +18,7 @@
       
           const json = await response.json();
           console.log(json);
+          console.log(response);
         } catch (error) {
           console.error(error.message);
         }
