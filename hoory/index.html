@@ -9,118 +9,17 @@
   </head>
   <body>
 <style>
-/*   @media only screen and (min-width: 667px) {
+  @media only screen and (min-width: 667px) {
       .woot-widget-holder.woot-elements--right {
           right: 100px !important;
       }
   }
   .woot-hidden.woot--bubble-holder.woot-mini {
       display: none !important;
-  } */
+  }
 </style>
 
-    <script src="https://ecl4apps.com/ebs/cwhecom.js"></script>
+    <script src="https://ecl4apps.com/ebs/testwidget.js"></script>
 
-    <script async>
-  // Load the Hoory SDK
-  window.hoorySettings = {
-    hideMessageBubble: false,
-    showPopoutButton: true,
-  };
-  (function (d, t) {
-    var BASE_URL = "https://app.hoory.com";
-    var g = d.createElement(t),
-      s = d.getElementsByTagName(t)[0];
-    g.src = BASE_URL + "/packs/js/sdk.js";
-    g.defer = true;
-    g.async = true;
-    s.parentNode.insertBefore(g, s);
-    g.onload = function () {
-      window.hoorySDK.run({
-        websiteToken: "fo1PugqAVkB2qBAihLgG38YT",
-        baseUrl: BASE_URL,
-      });
-    };
-  })(document, "script");
-
-  // Submit site and user information to the AI Assistant
-  window.addEventListener("hoory:ready", function () {
-    // Partner site information (required)
-    const site = {
-      id: -1, // Required Partner Site ID
-    };
-
-    // User information (optional)
-    const user = {
-      id: -1, // Required User ID
-      email: "<Use Email>", // Required User Email
-      name: "<User Name>", // Require User Name
-      auth_token: "XXX", // Optional User Swarm Auth Token
-      jwe_token: "XXX", // Optional User Swarm JWE Token
-    };
-
-    if (user) {
-      // If user is logged in set user and site information
-
-      console.info("Setting user information");
-
-      window.$hoory.setUser(user.id, {
-        identifier: user.id,
-        email: user.email,
-        name: user.name,
-        custom_attributes: {
-          __assistant: {
-            context: {
-              site_id: site.id,
-              site_url: site.url,
-              swarm_url: site.swarm_url,
-              auth_token: user.auth_token,
-              jwe_token: user.jwe_token,
-            },
-          },
-        },
-      });
-    } else {
-      // If user is not logged in only set site information
-
-      console.info("Setting site information");
-
-      window.$hoory.setCustomAttributes({
-        __assistant: {
-          context: {
-            site_id: site.id,
-            site_url: site.url,
-            swarm_url: site.swarm_url,
-          },
-        },
-      });
-    }
-  });
-
-  // Handle messages from the AI Assistant
-  window.addEventListener("hoory:on-message", function (message) {
-    // Check if the message requires an action
-    if (message.detail.content_type === "require_action") {
-      try {
-        // Parse the content of the message
-        const content = JSON.parse(message.detail.content);
-        // Switch based on the action specified in the message
-        switch (content.action) {
-          case "betslip":
-            // Log information about adding an event to the betslip
-            // Data schema: { event_id: number, game_id: number }
-            console.info("Adding event to betslip: ", content.data);
-            break;
-          default:
-            // Handle unknown actions
-            console.warn("Received an unknown action: ", content.action);
-            break;
-        }
-      } catch (error) {
-        console.error("Error processing message: ", error);
-      }
-    }
-  });
-</script>
   </body>
 </html>
