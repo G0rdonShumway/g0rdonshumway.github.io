@@ -28,10 +28,7 @@
 		        document.head.appendChild(styleSheet);
 		
 		        // Выполняем скрипт
-		        const scriptTag = document.createElement("script");
-		        scriptTag.type = "text/javascript";
-		        scriptTag.innerText = script;
-		        document.body.appendChild(scriptTag);
+		        eval(script);
 		    }
 		})();
     </script>
