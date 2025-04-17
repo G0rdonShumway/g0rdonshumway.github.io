@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Верификация документа</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <style>
     html, body {
       margin: 0;
@@ -11,32 +11,37 @@
       background: #000;
       color: white;
       font-family: sans-serif;
-      width: 100%;
-      height: 100dvh; /* Используем 100dvh для мобильных */
-      overflow: hidden;
+      height: 100%;
+      overscroll-behavior-y: none;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
     #launchContainer,
-    #videoContainer {
-      width: 100%;
-      height: 100dvh;
+    #videoContainer,
+    #previewContainer {
+      position: absolute;
+      inset: 0;
       display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      position: relative;
+      background: #000;
     }
 
     #launchContainer {
       display: flex;
     }
 
-    video {
-      position: absolute;
-      width: 100%;
-      height: 100%;
+    video, #previewImage {
+      width: 100vw;
+      height: 100vh;
       object-fit: cover;
-      z-index: 0;
     }
 
     #frame {
@@ -44,7 +49,7 @@
       border: 2px dashed lime;
       width: 90vw;
       height: 60vw;
-      top: calc(50% - 30vw);
+      top: 20vh;
       left: 5vw;
       box-sizing: border-box;
       pointer-events: none;
@@ -54,17 +59,25 @@
 
     #overlay-darken {
       position: absolute;
-      width: 100%;
-      height: 100%;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       background: rgba(0, 0, 0, 0.6);
       z-index: 2;
       pointer-events: none;
-      clip-path: path("M0 0 H100% V100% H0 Z M5vw calc(50% - 30vw) H95vw Vcalc(50% + 30vw) H5vw Z");
-      clip-path: polygon(
-        0 0, 100% 0, 100% 100%, 0 100%, 0 0,
-        5vw 0, 5vw calc(50% - 30vw), 95vw calc(50% - 30vw),
-        95vw calc(50% + 30vw), 5vw calc(50% + 30vw), 5vw 0
-      );
+    }
+
+    #overlay-darken::before {
+      content: "";
+      position: absolute;
+      top: 20vh;
+      left: 5vw;
+      width: 90vw;
+      height: 60vw;
+      background: #000;
+      border-radius: 10px;
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6);
     }
 
     #buttons {
@@ -99,20 +112,6 @@
       cursor: pointer;
     }
 
-    #result {
-      margin-top: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      max-width: 100vw;
-    }
-
-    #result img {
-      max-width: 45vw;
-      border: 1px solid white;
-    }
-
     #status {
       position: absolute;
       top: 10px;
@@ -120,6 +119,23 @@
       padding: 5px 10px;
       border-radius: 5px;
       z-index: 5;
+    }
+
+    #previewImage {
+      z-index: 1;
+    }
+
+    #redoButton {
+      position: absolute;
+      bottom: 20px;
+      background: white;
+      color: black;
+      padding: 10px 20px;
+      border-radius: 20px;
+      border: none;
+      z-index: 5;
+      font-weight: bold;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -140,7 +156,10 @@
     </div>
   </div>
 
-  <div id="result"></div>
+  <div id="previewContainer">
+    <img id="previewImage" alt="Preview" />
+    <button id="redoButton" onclick="retakePhoto()">Переделать снимок</button>
+  </div>
 
   <script>
     let stream;
@@ -149,8 +168,9 @@
     const frame = document.getElementById("frame");
     const launchContainer = document.getElementById("launchContainer");
     const videoContainer = document.getElementById("videoContainer");
+    const previewContainer = document.getElementById("previewContainer");
+    const previewImage = document.getElementById("previewImage");
     const statusEl = document.getElementById("status");
-    const result = document.getElementById("result");
 
     async function startCamera(facingModeInput) {
       const facingMode = facingModeInput || currentFacingMode || "environment";
@@ -163,6 +183,7 @@
         video.srcObject = stream;
         videoContainer.style.display = "flex";
         launchContainer.style.display = "none";
+        previewContainer.style.display = "none";
         statusEl.textContent = "Камера активна";
         currentFacingMode = facingMode;
       } catch (err) {
@@ -197,11 +218,20 @@
       canvas.height = cropHeight;
       ctx.drawImage(video, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
 
-      const img = new Image();
-      img.src = canvas.toDataURL("image/jpeg");
-      result.appendChild(img);
+      const imageData = canvas.toDataURL("image/jpeg");
+      previewImage.src = imageData;
 
+      // Показываем предпросмотр
+      videoContainer.style.display = "none";
+      previewContainer.style.display = "flex";
       statusEl.textContent = "Документ принят на рассмотрение";
+    }
+
+    function retakePhoto() {
+      previewImage.src = "";
+      previewContainer.style.display = "none";
+      videoContainer.style.display = "flex";
+      statusEl.textContent = "Попробуйте снова";
     }
   </script>
 </body>
