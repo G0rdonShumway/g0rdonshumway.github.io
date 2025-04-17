@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Автофиксация документа</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    #videoContainer {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      aspect-ratio: 4 / 3;
+    }
+    video, canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    p {
+      color: white;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="videoContainer">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="overlay"></canvas>
+  </div>
+  <p id="status">Ожидание документа...</p>
+
+  <!-- OpenCV -->
+  <script async src="https://docs.opencv.org/4.x/opencv.js" onload="onOpenCvReady();"></script>
+
+  <script>
+    let video = document.getElementById("video");
+    let canvas = document.getElementById("overlay");
+    let ctx = canvas.getContext("2d");
+    let statusEl = document.getElementById("status");
+    let autoCaptured = false;
+
+    navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+      video.srcObject = stream;
+    });
+
+    function onOpenCvReady() {
+      console.log('OpenCV loaded');
+      video.addEventListener("loadedmetadata", () => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        drawGuide();
+        processFrame();
+      });
+    }
+
+    function drawGuide() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = "#00FF00";
+      ctx.lineWidth = 3;
+
+      const rectWidth = canvas.width * 0.8;
+      const rectHeight = rectWidth * 0.63;
+      const rectX = (canvas.width - rectWidth) / 2;
+      const rectY = (canvas.height - rectHeight) / 2;
+
+      ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
+    }
+
+    function processFrame() {
+      if (autoCaptured) return;
+
+      const tempCanvas = document.createElement("canvas");
+      tempCanvas.width = video.videoWidth;
+      tempCanvas.height = video.videoHeight;
+      const tempCtx = tempCanvas.getContext("2d");
+      tempCtx.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
+
+      const src = cv.imread(tempCanvas);
+      let gray = new cv.Mat();
+      let blur = new cv.Mat();
+      let edges = new cv.Mat();
+      let contours = new cv.MatVector();
+      let hierarchy = new cv.Mat();
+
+      cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+      cv.GaussianBlur(gray, blur, new cv.Size(5, 5), 0);
+      cv.Canny(blur, edges, 75, 200);
+      cv.findContours(edges, contours, hierarchy, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE);
+
+      let found = false;
+      for (let i = 0; i < contours.size(); i++) {
+        let cnt = contours.get(i);
+        let approx = new cv.Mat();
+        cv.approxPolyDP(cnt, approx, 0.02 * cv.arcLength(cnt, true), true);
+        if (approx.rows === 4 && cv.contourArea(cnt) > 5000) {
+          found = true;
+          approx.delete();
+          break;
+        }
+        approx.delete();
+      }
+
+      // Освобождаем память
+      src.delete(); gray.delete(); blur.delete(); edges.delete(); contours.delete(); hierarchy.delete();
+
+      if (found) {
+        statusEl.textContent = "Документ найден! Сохраняем...";
+        autoCaptured = true;
+        takePhoto();
+      } else {
+        statusEl.textContent = "Ожидание документа...";
+        setTimeout(processFrame, 500); // Продолжаем обработку
+      }
+    }
+
+    function takePhoto() {
+      const outputCanvas = document.createElement("canvas");
+      outputCanvas.width = video.videoWidth;
+      outputCanvas.height = video.videoHeight;
+      const outputCtx = outputCanvas.getContext("2d");
+      outputCtx.drawImage(video, 0, 0, outputCanvas.width, outputCanvas.height);
+      const dataURL = outputCanvas.toDataURL("image/jpeg");
+
+      const img = new Image();
+      img.src = dataURL;
+      img.style.marginTop = "20px";
+      img.style.maxWidth = "90%";
+      document.body.appendChild(img);
+    }
+  </script>
+</body>
+</html>
