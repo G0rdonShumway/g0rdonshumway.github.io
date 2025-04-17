@@ -227,32 +227,31 @@
         const frameRect = frame.getBoundingClientRect();
         const videoRect = video.getBoundingClientRect();
 
-        // Calculate the aspect ratio of the video and the frame
+        // Calculate the aspect ratio of the video
         const videoAspect = videoWidth / videoHeight;
-        const frameAspect = frameRect.width / frameRect.height;
+        const displayAspect = videoRect.width / videoRect.height;
 
-        // Determine scaling to map video to display
-        let displayWidth, displayHeight, offsetX, offsetY;
-        if (videoAspect > frameAspect) {
-          // Video is wider than frame; fit height
-          displayHeight = videoRect.height;
-          displayWidth = displayHeight * videoAspect;
-          offsetX = (videoRect.width - displayWidth) / 2;
+        // Since object-fit: cover is used, determine how the video is scaled and cropped
+        let scaleX, scaleY, offsetX, offsetY;
+        if (videoAspect > displayAspect) {
+          // Video is wider than display; height is fully shown, width is cropped
+          scaleY = videoHeight / videoRect.height;
+          scaleX = scaleY; // Same scale factor for x to maintain aspect ratio
+          const scaledVideoWidth = videoWidth / scaleX;
+          offsetX = (scaledVideoWidth - videoRect.width) / 2; // Cropped portion on the sides
           offsetY = 0;
         } else {
-          // Video is taller than frame; fit width
-          displayWidth = videoRect.width;
-          displayHeight = displayWidth / videoAspect;
+          // Video is taller than display; width is fully shown, height is cropped
+          scaleX = videoWidth / videoRect.width;
+          scaleY = scaleX; // Same scale factor for y to maintain aspect ratio
+          const scaledVideoHeight = videoHeight / scaleY;
           offsetX = 0;
-          offsetY = (videoRect.height - displayHeight) / 2;
+          offsetY = (scaledVideoHeight - videoRect.height) / 2; // Cropped portion on top/bottom
         }
 
-        // Calculate cropping coordinates in video's coordinate system
-        const scaleX = videoWidth / displayWidth;
-        const scaleY = videoHeight / displayHeight;
-
-        const cropX = (frameRect.left - videoRect.left - offsetX) * scaleX;
-        const cropY = (frameRect.top - videoRect.top - offsetY) * scaleY;
+        // Calculate cropping coordinates in the video's coordinate system
+        const cropX = (frameRect.left - videoRect.left + offsetX) * scaleX;
+        const cropY = (frameRect.top - videoRect.top + offsetY) * scaleY;
         const cropWidth = frameRect.width * scaleX;
         const cropHeight = frameRect.height * scaleY;
 
