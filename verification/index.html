@@ -138,7 +138,7 @@
         object-fit: contain;
       }
 
-      #redoButton {
+      #redoButton, #downloadButton {
         position: absolute;
         bottom: 20px;
         background: white;
@@ -149,6 +149,32 @@
         z-index: 5;
         font-weight: bold;
         cursor: pointer;
+        text-decoration: none;
+      }
+
+      #downloadButton {
+        bottom: 80px; /* Position above the redo button */
+      }
+
+      #launchContainer button {
+        padding: 15px 30px;
+        font-size: 18px;
+        font-weight: bold;
+        color: rgb(0, 0, 0);
+        background: linear-gradient(45deg, #ff6f61, #ffcc5c);
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+      }
+
+      #launchContainer button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+      }
+
+      #launchContainer button:active {
+        transform: scale(0.95);
       }
     </style>
   </head>
@@ -171,6 +197,7 @@
 
     <div id="previewContainer">
       <img id="previewImage" alt="Preview" />
+      <a id="downloadButton" href="#" download="captured-photo.jpg">Скачать фото</a>
       <button id="redoButton" onclick="retakePhoto()">Переделать снимок</button>
     </div>
 
@@ -184,6 +211,7 @@
       const previewContainer = document.getElementById("previewContainer");
       const previewImage = document.getElementById("previewImage");
       const statusEl = document.getElementById("status");
+      const downloadButton = document.getElementById("downloadButton");
 
       async function startCamera(facingModeInput) {
         const facingMode =
@@ -191,7 +219,11 @@
         if (stream) stream.getTracks().forEach((track) => track.stop());
         try {
           stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode },
+            video: {
+              facingMode,
+              width: { ideal: 1280 }, // Запрашиваем более высокое разрешение
+              height: { ideal: 720 },
+            },
             audio: false,
           });
           video.srcObject = stream;
@@ -200,6 +232,11 @@
           previewContainer.style.display = "none";
           statusEl.textContent = "Камера активна";
           currentFacingMode = facingMode;
+
+          // Ждем, пока видео не начнет воспроизводиться, чтобы получить точные размеры
+          await new Promise((resolve) => {
+            video.onloadedmetadata = () => resolve();
+          });
         } catch (err) {
           console.warn("Ошибка камеры:", err);
           if (
@@ -272,9 +309,10 @@
           cropHeight
         );
 
-        // Generate image data
-        const imageData = canvas.toDataURL("image/jpeg");
+        // Generate image data with higher quality
+        const imageData = canvas.toDataURL("image/jpeg", 1.0); // Устанавливаем максимальное качество JPEG
         previewImage.src = imageData;
+        downloadButton.href = imageData; // Set the download link to the captured image
 
         // Show preview
         videoContainer.style.display = "none";
@@ -284,6 +322,7 @@
 
       function retakePhoto() {
         previewImage.src = "";
+        downloadButton.href = "#"; // Reset download link
         previewContainer.style.display = "none";
         videoContainer.style.display = "flex";
         statusEl.textContent = "Попробуйте снова";
