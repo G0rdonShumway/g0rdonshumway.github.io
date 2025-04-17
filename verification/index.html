@@ -1,238 +1,294 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8" />
-  <title>Верификация документа</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: #000;
-      color: white;
-      font-family: sans-serif;
-      height: 100%;
-      overscroll-behavior-y: none;
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #launchContainer,
-    #videoContainer,
-    #previewContainer {
-      position: absolute;
-      inset: 0;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: #000;
-    }
-
-    #launchContainer {
-      display: flex;
-    }
-
-    video, #previewImage {
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-    }
-
-    #frame {
-      position: absolute;
-      border: 2px dashed lime;
-      width: 90vw;
-      height: 60vw;
-      top: 20vh;
-      left: 5vw;
-      box-sizing: border-box;
-      pointer-events: none;
-      border-radius: 10px;
-      z-index: 3;
-    }
-
-    #overlay-darken {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    #overlay-darken::before {
-      content: "";
-      position: absolute;
-      top: 20vh;
-      left: 5vw;
-      width: 90vw;
-      height: 60vw;
-      background: #000;
-      border-radius: 10px;
-      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6);
-    }
-
-    #buttons {
-      position: absolute;
-      bottom: 20px;
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      width: 100%;
-      z-index: 4;
-    }
-
-    .btn-circle {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: white;
-      border: none;
-      cursor: pointer;
-    }
-
-    .btn-switch {
-      background: rgba(255, 255, 255, 0.7);
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-image: url('data:image/svg+xml;utf8,<svg fill="black" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 5l-.71.71 2.79 2.79H3v1h14.59l-2.79 2.79.71.71L19 9z"/><path d="M4.5 19l.71-.71L2.42 15.5H21v-1H2.41l2.8-2.79L4.5 11 1 14.5z"/></svg>');
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: 24px;
-      border: none;
-      cursor: pointer;
-    }
-
-    #status {
-      position: absolute;
-      top: 10px;
-      background: rgba(0,0,0,0.5);
-      padding: 5px 10px;
-      border-radius: 5px;
-      z-index: 5;
-    }
-
-    #previewImage {
-      z-index: 1;
-    }
-
-    #redoButton {
-      position: absolute;
-      bottom: 20px;
-      background: white;
-      color: black;
-      padding: 10px 20px;
-      border-radius: 20px;
-      border: none;
-      z-index: 5;
-      font-weight: bold;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <div id="launchContainer">
-    <button onclick="startCamera()">Запустить камеру</button>
-  </div>
-
-  <div id="videoContainer">
-    <div id="status">Ожидание...</div>
-    <video id="video" autoplay playsinline></video>
-    <div id="overlay-darken"></div>
-    <div id="frame"></div>
-
-    <div id="buttons">
-      <button class="btn-switch" onclick="switchCamera()"></button>
-      <button class="btn-circle" onclick="takePhoto()"></button>
-    </div>
-  </div>
-
-  <div id="previewContainer">
-    <img id="previewImage" alt="Preview" />
-    <button id="redoButton" onclick="retakePhoto()">Переделать снимок</button>
-  </div>
-
-  <script>
-    let stream;
-    let currentFacingMode = "environment";
-    const video = document.getElementById("video");
-    const frame = document.getElementById("frame");
-    const launchContainer = document.getElementById("launchContainer");
-    const videoContainer = document.getElementById("videoContainer");
-    const previewContainer = document.getElementById("previewContainer");
-    const previewImage = document.getElementById("previewImage");
-    const statusEl = document.getElementById("status");
-
-    async function startCamera(facingModeInput) {
-      const facingMode = facingModeInput || currentFacingMode || "environment";
-      if (stream) stream.getTracks().forEach(track => track.stop());
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode },
-          audio: false
-        });
-        video.srcObject = stream;
-        videoContainer.style.display = "flex";
-        launchContainer.style.display = "none";
-        previewContainer.style.display = "none";
-        statusEl.textContent = "Камера активна";
-        currentFacingMode = facingMode;
-      } catch (err) {
-        console.warn("Ошибка камеры:", err);
-        if (facingMode === "environment" && err.name === "OverconstrainedError") {
-          return startCamera("user");
-        }
-        statusEl.textContent = "Ошибка запуска камеры: " + err.message;
+  <head>
+    <meta charset="UTF-8" />
+    <title>Верификация документа</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #000;
+        color: white;
+        font-family: sans-serif;
+        height: 100%;
+        overscroll-behavior-y: none;
       }
-    }
 
-    function switchCamera() {
-      const nextMode = currentFacingMode === "user" ? "environment" : "user";
-      startCamera(nextMode);
-    }
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
 
-    function takePhoto() {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      const videoRect = video.getBoundingClientRect();
-      const frameRect = frame.getBoundingClientRect();
+      #launchContainer,
+      #videoContainer,
+      #previewContainer {
+        position: absolute;
+        inset: 0;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #000;
+      }
 
-      const scaleX = video.videoWidth / videoRect.width;
-      const scaleY = video.videoHeight / videoRect.height;
+      #launchContainer {
+        display: flex;
+      }
 
-      const cropX = (frameRect.left - videoRect.left) * scaleX;
-      const cropY = (frameRect.top - videoRect.top) * scaleY;
-      const cropWidth = frameRect.width * scaleX;
-      const cropHeight = frameRect.height * scaleY;
+      video,
+      #previewImage {
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover;
+      }
 
-      canvas.width = cropWidth;
-      canvas.height = cropHeight;
-      ctx.drawImage(video, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+      #frame {
+        position: absolute;
+        border: 2px dashed lime;
+        width: 90vw;
+        height: 60vw;
+        top: 20vh;
+        left: 5vw;
+        box-sizing: border-box;
+        pointer-events: none;
+        border-radius: 10px;
+        z-index: 3;
+      }
 
-      const imageData = canvas.toDataURL("image/jpeg");
-      previewImage.src = imageData;
+      #overlay-darken {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 2;
+        pointer-events: none;
+      }
 
-      // Показываем предпросмотр
-      videoContainer.style.display = "none";
-      previewContainer.style.display = "flex";
-      statusEl.textContent = "Документ принят на рассмотрение";
-    }
+      #overlay-darken::before {
+        content: "";
+        position: absolute;
+        top: 20vh;
+        left: 5vw;
+        width: 90vw;
+        height: 60vw;
+        background: transparent;
+        border-radius: 10px;
+        box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.8);
+      }
 
-    function retakePhoto() {
-      previewImage.src = "";
-      previewContainer.style.display = "none";
-      videoContainer.style.display = "flex";
-      statusEl.textContent = "Попробуйте снова";
-    }
-  </script>
-</body>
+      #buttons {
+        position: absolute;
+        bottom: 20px;
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        width: 100%;
+        z-index: 4;
+      }
+
+      .btn-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-image: url('data:image/svg+xml;charset=UTF-8,<svg viewBox="0 -2 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="%23000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>camera</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Icon-Set-Filled" transform="translate(-258.000000, -467.000000)" fill="%23000000"> <path d="M286,471 L283,471 L282,469 C281.411,467.837 281.104,467 280,467 L268,467 C266.896,467 266.53,467.954 266,469 L265,471 L262,471 C259.791,471 258,472.791 258,475 L258,491 C258,493.209 259.791,495 262,495 L286,495 C288.209,495 290,493.209 290,491 L290,475 C290,472.791 288.209,471 286,471 Z M274,491 C269.582,491 266,487.418 266,483 C266,478.582 269.582,475 274,475 C278.418,475 282,478.582 282,483 C282,487.418 278.418,491 274,491 Z M274,477 C270.687,477 268,479.687 268,483 C268,486.313 270.687,489 274,489 C277.313,489 280,486.313 280,483 C280,479.687 277.313,477 274,477 L274,477 Z" id="camera"> </path> </g> </g> </g></svg>');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 40px;
+        border: none;
+        cursor: pointer;
+        background-color: #fff;
+      }
+
+      .btn-switch {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-image: url('data:image/svg+xml;charset=UTF-8,<svg viewBox="0 0 48 48" version="1" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 48 48" fill="%23FFFFFF"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g fill="%23000000"> <path d="M33.9,12.1H14.2L17.6,7c0.4-0.6,1-0.9,1.7-0.9h9.6c0.7,0,1.3,0.3,1.7,0.9L33.9,12.1z"></path> <path d="M14,11H8V9.2C8,8.5,8.5,8,9.2,8h3.6C13.5,8,14,8.5,14,9.2V11z"></path> <path d="M40,42H8c-2.2,0-4-1.8-4-4V14c0-2.2,1.8-4,4-4h32c2.2,0,4,1.8,4,4v24C44,40.2,42.2,42,40,42z"></path> </g> <path fill="%23FFFFFF" d="M34,25c0-5.5-4.5-10-10-10c-2.4,0-4.6,0.8-6.3,2.2l1.2,1.6c1.4-1.1,3.1-1.8,5.1-1.8c4.4,0,8,3.6,8,8h-3.5 l4.5,5.6l4.5-5.6H34z"></path> <path fill="%23FFFFFF" d="M29.1,31.2C27.7,32.3,25.9,33,24,33c-4.4,0-8-3.6-8-8h3.5L15,19.4L10.5,25H14c0,5.5,4.5,10,10,10 c2.4,0,4.6-0.8,6.3-2.2L29.1,31.2z"></path> </g></svg>');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 36px;
+        border: none;
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        right: 50px;
+        transform: translateY(-50%);
+        background-color: #fff;
+      }
+
+      #status {
+        position: absolute;
+        top: 10px;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 5px 10px;
+        border-radius: 5px;
+        z-index: 5;
+      }
+
+      #previewImage {
+        z-index: 1;
+        object-fit: contain;
+      }
+
+      #redoButton {
+        position: absolute;
+        bottom: 20px;
+        background: white;
+        color: black;
+        padding: 10px 20px;
+        border-radius: 20px;
+        border: none;
+        z-index: 5;
+        font-weight: bold;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="launchContainer">
+      <button onclick="startCamera()">Запустить камеру</button>
+    </div>
+
+    <div id="videoContainer">
+      <div id="status">Ожидание...</div>
+      <video id="video" autoplay playsinline></video>
+      <div id="overlay-darken"></div>
+      <div id="frame"></div>
+
+      <div id="buttons">
+        <button class="btn-switch" onclick="switchCamera()"></button>
+        <button class="btn-circle" onclick="takePhoto()"></button>
+      </div>
+    </div>
+
+    <div id="previewContainer">
+      <img id="previewImage" alt="Preview" />
+      <button id="redoButton" onclick="retakePhoto()">Переделать снимок</button>
+    </div>
+
+    <script>
+      let stream;
+      let currentFacingMode = "environment";
+      const video = document.getElementById("video");
+      const frame = document.getElementById("frame");
+      const launchContainer = document.getElementById("launchContainer");
+      const videoContainer = document.getElementById("videoContainer");
+      const previewContainer = document.getElementById("previewContainer");
+      const previewImage = document.getElementById("previewImage");
+      const statusEl = document.getElementById("status");
+
+      async function startCamera(facingModeInput) {
+        const facingMode =
+          facingModeInput || currentFacingMode || "environment";
+        if (stream) stream.getTracks().forEach((track) => track.stop());
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode },
+            audio: false,
+          });
+          video.srcObject = stream;
+          videoContainer.style.display = "flex";
+          launchContainer.style.display = "none";
+          previewContainer.style.display = "none";
+          statusEl.textContent = "Камера активна";
+          currentFacingMode = facingMode;
+        } catch (err) {
+          console.warn("Ошибка камеры:", err);
+          if (
+            facingMode === "environment" &&
+            err.name === "OverconstrainedError"
+          ) {
+            return startCamera("user");
+          }
+          statusEl.textContent = "Ошибка запуска камеры: " + err.message;
+        }
+      }
+
+      function switchCamera() {
+        const nextMode = currentFacingMode === "user" ? "environment" : "user";
+        startCamera(nextMode);
+      }
+
+      function takePhoto() {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Get video and frame dimensions
+        const videoWidth = video.videoWidth;
+        const videoHeight = video.videoHeight;
+        const frameRect = frame.getBoundingClientRect();
+        const videoRect = video.getBoundingClientRect();
+
+        // Calculate the aspect ratio of the video and the frame
+        const videoAspect = videoWidth / videoHeight;
+        const frameAspect = frameRect.width / frameRect.height;
+
+        // Determine scaling to map video to display
+        let displayWidth, displayHeight, offsetX, offsetY;
+        if (videoAspect > frameAspect) {
+          // Video is wider than frame; fit height
+          displayHeight = videoRect.height;
+          displayWidth = displayHeight * videoAspect;
+          offsetX = (videoRect.width - displayWidth) / 2;
+          offsetY = 0;
+        } else {
+          // Video is taller than frame; fit width
+          displayWidth = videoRect.width;
+          displayHeight = displayWidth / videoAspect;
+          offsetX = 0;
+          offsetY = (videoRect.height - displayHeight) / 2;
+        }
+
+        // Calculate cropping coordinates in video's coordinate system
+        const scaleX = videoWidth / displayWidth;
+        const scaleY = videoHeight / displayHeight;
+
+        const cropX = (frameRect.left - videoRect.left - offsetX) * scaleX;
+        const cropY = (frameRect.top - videoRect.top - offsetY) * scaleY;
+        const cropWidth = frameRect.width * scaleX;
+        const cropHeight = frameRect.height * scaleY;
+
+        // Set canvas size to match the cropped area
+        canvas.width = cropWidth;
+        canvas.height = cropHeight;
+
+        // Draw the cropped portion of the video onto the canvas
+        ctx.drawImage(
+          video,
+          cropX,
+          cropY,
+          cropWidth,
+          cropHeight,
+          0,
+          0,
+          cropWidth,
+          cropHeight
+        );
+
+        // Generate image data
+        const imageData = canvas.toDataURL("image/jpeg");
+        previewImage.src = imageData;
+
+        // Show preview
+        videoContainer.style.display = "none";
+        previewContainer.style.display = "flex";
+        statusEl.textContent = "Документ принят на рассмотрение";
+      }
+
+      function retakePhoto() {
+        previewImage.src = "";
+        previewContainer.style.display = "none";
+        videoContainer.style.display = "flex";
+        statusEl.textContent = "Попробуйте снова";
+      }
+    </script>
+  </body>
 </html>
