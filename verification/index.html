@@ -5,25 +5,26 @@
   <title>Верификация документа</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       background: #000;
       color: white;
       font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      width: 100%;
+      height: 100dvh; /* Используем 100dvh для мобильных */
+      overflow: hidden;
     }
 
     #launchContainer,
     #videoContainer {
-      position: relative;
+      width: 100%;
+      height: 100dvh;
       display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      position: relative;
     }
 
     #launchContainer {
@@ -31,15 +32,11 @@
     }
 
     video {
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-    }
-
-    canvas {
       position: absolute;
-      top: 0;
-      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
     }
 
     #frame {
@@ -47,7 +44,7 @@
       border: 2px dashed lime;
       width: 90vw;
       height: 60vw;
-      top: 20vh;
+      top: calc(50% - 30vw);
       left: 5vw;
       box-sizing: border-box;
       pointer-events: none;
@@ -57,15 +54,17 @@
 
     #overlay-darken {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       background: rgba(0, 0, 0, 0.6);
-      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0,
-        5vw 0, 5vw calc(20vh), 95vw calc(20vh), 95vw calc(20vh + 60vw),
-        5vw calc(20vh + 60vw), 5vw calc(20vh), 0 calc(20vh));
       z-index: 2;
+      pointer-events: none;
+      clip-path: path("M0 0 H100% V100% H0 Z M5vw calc(50% - 30vw) H95vw Vcalc(50% + 30vw) H5vw Z");
+      clip-path: polygon(
+        0 0, 100% 0, 100% 100%, 0 100%, 0 0,
+        5vw 0, 5vw calc(50% - 30vw), 95vw calc(50% - 30vw),
+        95vw calc(50% + 30vw), 5vw calc(50% + 30vw), 5vw 0
+      );
     }
 
     #buttons {
