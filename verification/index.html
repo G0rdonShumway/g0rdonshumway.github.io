@@ -140,6 +140,9 @@
         padding: 5px 10px;
         border-radius: 5px;
         z-index: 5;
+        width: 70vw;
+        text-align: center;
+        line-height: 1.5;
       }
 
       #previewImage {
@@ -240,7 +243,7 @@
           videoContainer.style.display = "flex";
           launchContainer.style.display = "none";
           previewContainer.style.display = "none";
-          statusEl.textContent = "Камера активна";
+          statusEl.textContent = "Поместите документ в пределах белой рамки";
           currentFacingMode = facingMode;
 
           // Ждем, пока видео не начнет воспроизводиться, чтобы получить точные размеры
@@ -327,7 +330,6 @@
         // Показываем предпросмотр
         videoContainer.style.display = "none";
         previewContainer.style.display = "flex";
-        statusEl.textContent = "Документ принят на рассмотрение";
       }
 
       function retakePhoto() {
@@ -335,7 +337,6 @@
         downloadButton.href = "#"; // Сбрасываем ссылку для скачивания
         previewContainer.style.display = "none";
         videoContainer.style.display = "flex";
-        statusEl.textContent = "Попробуйте снова";
       }
     </script>
   </body>
