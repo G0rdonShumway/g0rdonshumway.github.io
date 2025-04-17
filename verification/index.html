@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Скан документа</title>
+  <title>Верификация документа</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       margin: 0;
@@ -13,210 +13,183 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      padding: 20px;
+      justify-content: center;
+      height: 100vh;
     }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background: #00aa00;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-bottom: 10px;
-    }
-    button:hover {
-      background: #008800;
-    }
+
+    #launchContainer,
     #videoContainer {
       position: relative;
-      width: 100%;
-      max-width: 400px;
-      aspect-ratio: 4 / 3;
-      margin-bottom: 10px;
       display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
-    video, canvas {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
+
+    #launchContainer {
+      display: flex;
+    }
+
+    video {
+      width: 100vw;
+      height: 100vh;
       object-fit: cover;
-      border-radius: 8px;
     }
-    p {
-      margin-top: 10px;
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
     }
-    img {
+
+    #frame {
+      position: absolute;
+      border: 2px dashed lime;
+      width: 80vw;
+      height: 50vh;
+      top: 25%;
+      left: 10%;
+      box-sizing: border-box;
+      pointer-events: none;
+      border-radius: 10px;
+    }
+
+    #buttons {
+      position: absolute;
+      bottom: 20px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .btn-circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-switch {
+      background: rgba(255, 255, 255, 0.7);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="black" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 5l-.71.71 2.79 2.79H3v1h14.59l-2.79 2.79.71.71L19 9z"/><path d="M4.5 19l.71-.71L2.42 15.5H21v-1H2.41l2.8-2.79L4.5 11 1 14.5z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 24px;
+      border: none;
+      cursor: pointer;
+    }
+
+    #result {
       margin-top: 20px;
       max-width: 90%;
-      border: 1px dashed #555;
-      border-radius: 8px;
+      border: 1px solid #fff;
+    }
+
+    #status {
+      position: absolute;
+      top: 10px;
+      background: rgba(0,0,0,0.5);
+      padding: 5px 10px;
+      border-radius: 5px;
     }
   </style>
 </head>
 <body>
-  <button id="startBtn">Запустить камеру</button>
-
-  <div id="videoContainer">
-    <video id="video" autoplay playsinline></video>
-    <canvas id="overlay"></canvas>
+  <div id="launchContainer">
+    <button onclick="startCamera()">Запустить камеру</button>
   </div>
 
-  <p id="status">Нажмите кнопку для начала</p>
+  <div id="videoContainer">
+    <div id="status">Ожидание...</div>
+    <video id="video" autoplay playsinline></video>
+    <canvas id="overlay"></canvas>
+    <div id="frame"></div>
 
-  <script async src="https://docs.opencv.org/4.x/opencv.js" onload="onOpenCvReady();"></script>
+    <div id="buttons">
+      <button class="btn-switch" onclick="switchCamera()"></button>
+      <button class="btn-circle" onclick="takePhoto()"></button>
+    </div>
+  </div>
+
+  <div id="result"></div>
 
   <script>
-    const startBtn = document.getElementById("startBtn");
+    let stream;
+    let currentFacingMode = "environment"; // задняя камера по умолчанию
     const video = document.getElementById("video");
-    const canvas = document.getElementById("overlay");
-    const ctx = canvas.getContext("2d");
-    const statusEl = document.getElementById("status");
+    const overlay = document.getElementById("overlay");
+    const frame = document.getElementById("frame");
+    const launchContainer = document.getElementById("launchContainer");
     const videoContainer = document.getElementById("videoContainer");
+    const statusEl = document.getElementById("status");
+    const result = document.getElementById("result");
 
-    let autoCaptured = false;
+    async function startCamera(facingModeInput) {
+        const facingMode = facingModeInput || currentFacingMode || "environment";
 
-    startBtn.addEventListener("click", async () => {
-      startBtn.style.display = "none";
-      videoContainer.style.display = "block";
-      statusEl.textContent = "Запуск камеры...";
+        if (stream) stream.getTracks().forEach(track => track.stop());
 
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        video.srcObject = stream;
-      } catch (e) {
-        statusEl.textContent = "Ошибка доступа к камере.";
-        console.error(e);
-      }
-    });
-
-    function onOpenCvReady() {
-      cv['onRuntimeInitialized'] = () => {
-        console.log('OpenCV готов');
-        video.addEventListener("loadedmetadata", () => {
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
-          drawGuide();
-          setTimeout(processFrame, 500);
-        });
-      };
-    }
-
-    function drawGuide() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.strokeStyle = "#00FF00";
-      ctx.lineWidth = 3;
-
-      const rectWidth = canvas.width * 0.8;
-      const rectHeight = rectWidth * 0.63;
-      const rectX = (canvas.width - rectWidth) / 2;
-      const rectY = (canvas.height - rectHeight) / 2;
-
-      ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
-    }
-
-    function processFrame() {
-      if (autoCaptured) return;
-
-      const tempCanvas = document.createElement("canvas");
-      tempCanvas.width = video.videoWidth;
-      tempCanvas.height = video.videoHeight;
-      const tempCtx = tempCanvas.getContext("2d");
-      tempCtx.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
-
-      const src = cv.imread(tempCanvas);
-      let gray = new cv.Mat();
-      let blur = new cv.Mat();
-      let edges = new cv.Mat();
-      let contours = new cv.MatVector();
-      let hierarchy = new cv.Mat();
-
-      cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-      cv.GaussianBlur(gray, blur, new cv.Size(5, 5), 0);
-      cv.Canny(blur, edges, 75, 200);
-      cv.findContours(edges, contours, hierarchy, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE);
-
-      let largestQuad = null;
-      let maxArea = 0;
-
-      for (let i = 0; i < contours.size(); i++) {
-        let cnt = contours.get(i);
-        let approx = new cv.Mat();
-        cv.approxPolyDP(cnt, approx, 0.02 * cv.arcLength(cnt, true), true);
-        let area = cv.contourArea(cnt);
-        if (approx.rows === 4 && area > 10000 && area > maxArea) {
-          largestQuad = approx.clone();
-          maxArea = area;
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode },
+            audio: false
+            });
+            video.srcObject = stream;
+            videoContainer.style.display = "flex";
+            launchContainer.style.display = "none";
+            statusEl.textContent = "Камера активна";
+            currentFacingMode = facingMode;
+        } catch (err) {
+            console.warn("Ошибка камеры:", err);
+            if (facingMode === "environment" && err.name === "OverconstrainedError") {
+            return startCamera("user");
+            }
+            statusEl.textContent = "Ошибка запуска камеры: " + err.message;
         }
-        approx.delete();
-      }
-
-      if (largestQuad) {
-        statusEl.textContent = "Документ найден! Обрезаем...";
-        autoCaptured = true;
-        cropDocument(src, largestQuad);
-        largestQuad.delete();
-      } else {
-        statusEl.textContent = "Ожидание документа...";
-        setTimeout(processFrame, 500);
-      }
-
-      // Очистка
-      src.delete(); gray.delete(); blur.delete(); edges.delete(); contours.delete(); hierarchy.delete();
     }
 
-    function cropDocument(src, quad) {
-      const pts = [];
-      for (let i = 0; i < 4; i++) {
-        pts.push({
-          x: quad.intAt(i, 0),
-          y: quad.intAt(i, 1)
-        });
-      }
+    function switchCamera() {
+      const nextMode = currentFacingMode === "user" ? "environment" : "user";
+      startCamera(nextMode);
+    }
 
-      // Сортировка по положению
-      pts.sort((a, b) => a.x + a.y - (b.x + b.y));
-      const [tl, tr, br, bl] = pts;
+    function takePhoto() {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
 
-      const widthA = Math.hypot(br.x - bl.x, br.y - bl.y);
-      const widthB = Math.hypot(tr.x - tl.x, tr.y - tl.y);
-      const maxWidth = Math.max(widthA, widthB);
+      // Вычисляем область обрезки по рамке
+      const videoRect = video.getBoundingClientRect();
+      const frameRect = frame.getBoundingClientRect();
 
-      const heightA = Math.hypot(tr.x - br.x, tr.y - br.y);
-      const heightB = Math.hypot(tl.x - bl.x, tl.y - bl.y);
-      const maxHeight = Math.max(heightA, heightB);
+      const scaleX = video.videoWidth / videoRect.width;
+      const scaleY = video.videoHeight / videoRect.height;
 
-      const srcTri = cv.matFromArray(4, 1, cv.CV_32FC2, [
-        tl.x, tl.y,
-        tr.x, tr.y,
-        br.x, br.y,
-        bl.x, bl.y
-      ]);
-      const dstTri = cv.matFromArray(4, 1, cv.CV_32FC2, [
-        0, 0,
-        maxWidth, 0,
-        maxWidth, maxHeight,
-        0, maxHeight
-      ]);
+      const cropX = (frameRect.left - videoRect.left) * scaleX;
+      const cropY = (frameRect.top - videoRect.top) * scaleY;
+      const cropWidth = frameRect.width * scaleX;
+      const cropHeight = frameRect.height * scaleY;
 
-      const M = cv.getPerspectiveTransform(srcTri, dstTri);
-      const dst = new cv.Mat();
-      const dsize = new cv.Size(maxWidth, maxHeight);
-      cv.warpPerspective(src, dst, M, dsize, cv.INTER_LINEAR, cv.BORDER_CONSTANT, new cv.Scalar());
+      canvas.width = cropWidth;
+      canvas.height = cropHeight;
+      ctx.drawImage(video, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
 
-      cv.imshow(canvas, dst); // Показываем в canvas
-      statusEl.textContent = "Документ обрезан!";
-
+      result.innerHTML = "";
       const img = new Image();
       img.src = canvas.toDataURL("image/jpeg");
-      document.body.appendChild(img);
-
-      // Очистка
-      srcTri.delete(); dstTri.delete(); M.delete(); dst.delete();
+      img.style.maxWidth = "100%";
+      result.appendChild(img);
     }
+
+    window.addEventListener("resize", () => {
+      overlay.width = video.offsetWidth;
+      overlay.height = video.offsetHeight;
+    });
   </script>
 </body>
 </html>
