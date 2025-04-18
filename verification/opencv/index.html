@@ -366,13 +366,10 @@
         }
 
         let src = cv.imread(canvas);
-        let color = src.clone(); // Сохраняем цветное изображение
         let gray = new cv.Mat();
         let blurred = new cv.Mat();
         let thresh = new cv.Mat();
         let dilated = new cv.Mat();
-        let mask = new cv.Mat();
-        let result = new cv.Mat();
 
         // Конвертируем в оттенки серого
         cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
@@ -384,21 +381,17 @@
           thresh,
           255,
           cv.ADAPTIVE_THRESH_GAUSSIAN_C,
-          cv.THRESH_BINARY_INV, // Инвертируем, чтобы текст был белым
-          11,
-          2
+          cv.THRESH_BINARY,
+          9, // Уменьшенный блок для большей детализации
+          3 // Увеличенная константа для контрастности
         );
         // Усиливаем текст с помощью дилатации
         let kernel = cv.Mat.ones(3, 3, cv.CV_8U);
-        cv.dilate(thresh, dilated, kernel);
-        // Создаем маску текста
-        cv.threshold(dilated, mask, 200, 255, cv.THRESH_BINARY);
+        cv.dilate(thresh, dilated, kernel, new cv.Point(-1, -1), 2); // Две итерации для утолщения текста
 
-        // Накладываем маску на цветное изображение
-        cv.bitwise_and(color, color, result, mask);
-        // Добавляем черный текст там, где маска белая
-        let blackText = new cv.Mat(color.rows, color.cols, color.type(), [0, 0, 0, 255]);
-        cv.bitwise_or(result, blackText, result, mask);
+        // Конвертируем результат в RGBA для отображения
+        let result = new cv.Mat();
+        cv.cvtColor(dilated, result, cv.COLOR_GRAY2RGBA);
 
         // Создаем новый canvas для результата
         let enhancedCanvas = document.createElement("canvas");
@@ -408,14 +401,11 @@
 
         // Очистка
         src.delete();
-        color.delete();
         gray.delete();
         blurred.delete();
         thresh.delete();
         dilated.delete();
-        mask.delete();
         result.delete();
-        blackText.delete();
         kernel.delete();
 
         console.log("Обработка изображения завершена");
