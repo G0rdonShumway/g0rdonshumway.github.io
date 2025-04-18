@@ -150,12 +150,12 @@
           );
 
           // Проверяем площадь и соотношение сторон
-          if (area > 800 && aspectRatio >= 1.0 && aspectRatio <= 3.0) {
+          if (area > 2000 && aspectRatio >= 1.0 && aspectRatio <= 3.0) {
             // Если вершин около 4 (3–6), или охватывающий прямоугольник подходит
             if (
               approx.rows >= 3 &&
               approx.rows <= 6 &&
-              area > 800
+              area > 2000
             ) {
               documentDetected = true;
               console.log(
