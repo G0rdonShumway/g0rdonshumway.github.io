@@ -324,7 +324,7 @@
 
           if (approx.rows === 4) {
             let area = cv.contourArea(contour);
-            if (area > 10000) {
+            if (area > 800) {
               documentDetected = true;
               console.log("Документ обнаружен, площадь:", area);
               break;
