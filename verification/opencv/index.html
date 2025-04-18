@@ -10,6 +10,14 @@
     <!-- Подключаем OpenCV.js -->
     <script async src="https://docs.opencv.org/4.5.5/opencv.js" onload="onOpenCvReady()"></script>
     <link rel="stylesheet" href="style.css">
+    <style>
+      /* Стиль для неактивной кнопки спуска */
+      .btn-circle.disabled {
+        background-color: #888;
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+    </style>
   </head>
   <body>
     <div id="launchContainer">
@@ -160,13 +168,13 @@
         if (videoAspect > displayAspect) {
           scaleY = video.videoHeight / videoRect.height;
           scaleX = scaleY;
-          const scaledVideoWidth = video.videoWidth / scaleX;
+          const scaledVideoWidth = videoWidth / scaleX;
           offsetX = (scaledVideoWidth - videoRect.width) / 2;
           offsetY = 0;
         } else {
           scaleX = video.videoWidth / videoRect.width;
           scaleY = scaleX;
-          const scaledVideoHeight = video.videoHeight / scaleY;
+          const scaledVideoHeight = videoHeight / scaleY;
           offsetX = 0;
           offsetY = (scaledVideoHeight - videoRect.height) / 2;
         }
@@ -178,9 +186,6 @@
         const frameTop = frameY * scaleY;
         const frameRight = (frameX + frameWidth) * scaleX;
         const frameBottom = (frameY + frameHeight) * scaleY;
-
-        // Динамический порог площади (0.5% от площади кадра)
-        const minArea = video.videoWidth * video.videoHeight * 0.005;
 
         documentDetected = false;
         for (let i = 0; i < contours.size(); i++) {
@@ -196,7 +201,7 @@
 
           // Проверяем площадь и соотношение сторон
           if (
-            area > minArea &&
+            area > 1500 &&
             aspectRatio >= 1.0 &&
             aspectRatio <= 3.0 &&
             approx.rows >= 3 &&
@@ -212,7 +217,7 @@
 
             if (isInsideFrame) {
               documentDetected = true;
-              console.log(`Документ обнаружен: площадь=${area}, minArea=${minArea}`);
+              console.log(`Документ обнаружен: площадь=${area}`);
               break;
             }
           }
