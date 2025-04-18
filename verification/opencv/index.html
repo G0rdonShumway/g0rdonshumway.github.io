@@ -10,14 +10,6 @@
     <!-- Подключаем OpenCV.js -->
     <script async src="https://docs.opencv.org/4.5.5/opencv.js" onload="onOpenCvReady()"></script>
     <link rel="stylesheet" href="style.css">
-    <style>
-      /* Стиль для неактивной кнопки спуска */
-      .btn-circle.disabled {
-        background-color: #888;
-        cursor: not-allowed;
-        opacity: 0.5;
-      }
-    </style>
   </head>
   <body>
     <div id="launchContainer">
@@ -159,6 +151,37 @@
           cv.CHAIN_APPROX_SIMPLE
         );
 
+        // Вычисляем координаты рамки #frame в пикселях видео
+        const frameRect = frame.getBoundingClientRect();
+        const videoRect = video.getBoundingClientRect();
+        const videoAspect = video.videoWidth / video.videoHeight;
+        const displayAspect = videoRect.width / videoRect.height;
+        let scaleX, scaleY, offsetX, offsetY;
+        if (videoAspect > displayAspect) {
+          scaleY = video.videoHeight / videoRect.height;
+          scaleX = scaleY;
+          const scaledVideoWidth = video.videoWidth / scaleX;
+          offsetX = (scaledVideoWidth - videoRect.width) / 2;
+          offsetY = 0;
+        } else {
+          scaleX = video.videoWidth / videoRect.width;
+          scaleY = scaleX;
+          const scaledVideoHeight = video.videoHeight / scaleY;
+          offsetX = 0;
+          offsetY = (scaledVideoHeight - videoRect.height) / 2;
+        }
+        const frameX = frameRect.left - videoRect.left + offsetX;
+        const frameY = frameRect.top - videoRect.top + offsetY;
+        const frameWidth = frameRect.width;
+        const frameHeight = frameRect.height;
+        const frameLeft = frameX * scaleX;
+        const frameTop = frameY * scaleY;
+        const frameRight = (frameX + frameWidth) * scaleX;
+        const frameBottom = (frameY + frameHeight) * scaleY;
+
+        // Динамический порог площади (0.5% от площади кадра)
+        const minArea = video.videoWidth * video.videoHeight * 0.005;
+
         documentDetected = false;
         for (let i = 0; i < contours.size(); i++) {
           let contour = contours.get(i);
@@ -171,17 +194,27 @@
           let aspectRatio = rect.size.width / rect.size.height;
           if (aspectRatio < 1) aspectRatio = 1 / aspectRatio;
 
+          // Проверяем площадь и соотношение сторон
           if (
-            area > 1500 &&
+            area > minArea &&
             aspectRatio >= 1.0 &&
             aspectRatio <= 3.0 &&
             approx.rows >= 3 &&
             approx.rows <= 6
           ) {
-            documentDetected = true;
-            console.log(`Документ обнаружен: площадь=${area}`);
-            resetInactivityTimer();
-            break;
+            // Проверяем, что контур находится внутри рамки
+            let boundRect = cv.boundingRect(contour);
+            let isInsideFrame =
+              boundRect.x >= frameLeft &&
+              boundRect.y >= frameTop &&
+              boundRect.x + boundRect.width <= frameRight &&
+              boundRect.y + boundRect.height <= frameBottom;
+
+            if (isInsideFrame) {
+              documentDetected = true;
+              console.log(`Документ обнаружен: площадь=${area}, minArea=${minArea}`);
+              break;
+            }
           }
 
           approx.delete();
@@ -214,7 +247,7 @@
 
       function takePhoto() {
         if (!documentDetected) {
-          statusEl.textContent = "Документ не обнаружен";
+          statusEl.textContent = "Документ не помещается в рамку";
           console.log("Снимок заблокирован: документ не обнаружен");
           return;
         }
@@ -241,7 +274,7 @@
           offsetX = (scaledVideoWidth - videoRect.width) / 2;
           offsetY = 0;
         } else {
-          scaleX = videoWidth / videoRect.width;
+          scaleX = video.videoWidth / videoRect.width;
           scaleY = scaleX;
           const scaledVideoHeight = videoHeight / scaleY;
           offsetX = 0;
