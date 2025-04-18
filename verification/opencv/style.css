@@ -109,6 +109,12 @@ video {
   background-color: #fff;
   border: 5px double #000;
 }
+/* Добавляем стиль для неактивной кнопки спуска */
+.btn-circle.disabled {
+  background-color: #888;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
 
 .btn-switch {
   width: 60px;
