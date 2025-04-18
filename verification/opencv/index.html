@@ -74,7 +74,7 @@
       }
 
       #frame.detected {
-        border-color: #00ff00; /* Зеленая рамка при обнаружении */
+        border-color: #00ff00;
       }
 
       #overlay-darken {
@@ -242,6 +242,7 @@
       }
 
       async function startCamera(facingModeInput) {
+        console.log("Запуск камеры с facingMode:", facingModeInput);
         const facingMode =
           facingModeInput || currentFacingMode || "environment";
         if (stream) stream.getTracks().forEach((track) => track.stop());
@@ -249,7 +250,7 @@
           stream = await navigator.mediaDevices.getUserMedia({
             video: {
               facingMode,
-              width: { ideal: 3840 }, // 4K
+              width: { ideal: 3840 },
               height: { ideal: 2160 },
             },
             audio: false,
@@ -261,7 +262,6 @@
           statusEl.textContent = "Поместите документ в пределах белой рамки";
           currentFacingMode = facingMode;
 
-          // Ждем, пока видео не начнет воспроизводиться
           await new Promise((resolve) => {
             video.onloadedmetadata = () => resolve();
           });
@@ -280,12 +280,16 @@
       }
 
       function switchCamera() {
+        console.log("Переключение камеры");
         const nextMode = currentFacingMode === "user" ? "environment" : "user";
         startCamera(nextMode);
       }
 
       function detectDocument() {
-        if (!openCvLoaded) return;
+        if (!openCvLoaded) {
+          console.log("OpenCV.js еще не загружен, пропускаем детекцию");
+          return;
+        }
 
         const canvas = document.createElement("canvas");
         canvas.width = video.videoWidth;
@@ -300,13 +304,9 @@
         let contours = new cv.MatVector();
         let hierarchy = new cv.Mat();
 
-        // Конвертируем в оттенки серого
         cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-        // Размытие для подавления шума
         cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0);
-        // Детекция краев
         cv.Canny(blurred, edges, 50, 150);
-        // Находим контуры
         cv.findContours(
           edges,
           contours,
@@ -323,10 +323,10 @@
           cv.approxPolyDP(contour, approx, 0.02 * perimeter, true);
 
           if (approx.rows === 4) {
-            // Проверяем, что контур — прямоугольник
             let area = cv.contourArea(contour);
-            if (area > 10000) { // Минимальная площадь для исключения шума
+            if (area > 10000) {
               documentDetected = true;
+              console.log("Документ обнаружен, площадь:", area);
               break;
             }
           }
@@ -334,13 +334,11 @@
           contour.delete();
         }
 
-        // Обновляем стиль рамки
         frame.classList.toggle("detected", documentDetected);
         statusEl.textContent = documentDetected
           ? "Документ обнаружен, нажмите для снимка"
           : "Поместите документ в пределах белой рамки";
 
-        // Очистка
         src.delete();
         gray.delete();
         blurred.delete();
@@ -350,6 +348,7 @@
       }
 
       function startDocumentDetection() {
+        console.log("Запуск детекции документа");
         function loop() {
           if (videoContainer.style.display === "flex") {
             detectDocument();
@@ -360,6 +359,7 @@
       }
 
       function enhanceImage(canvas) {
+        console.log("Начало обработки изображения");
         if (!openCvLoaded) {
           console.warn("OpenCV.js еще не загружен, пропускаем обработку");
           return canvas;
@@ -368,67 +368,54 @@
         let src = cv.imread(canvas);
         let gray = new cv.Mat();
         let blurred = new cv.Mat();
-        let thresh = new cv.Mat();
+        let sharpened = new cv.Mat();
         let dst = new cv.Mat();
 
-        // Конвертируем в оттенки серого
         cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-        // Подавление шума
-        cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0);
-        // Адаптивная пороговая обработка
-        cv.adaptiveThreshold(
-          blurred,
-          thresh,
-          255,
-          cv.ADAPTIVE_THRESH_GAUSSIAN_C,
-          cv.THRESH_BINARY,
-          11,
-          2
-        );
-        // Выравнивание освещения
-        cv.equalizeHist(thresh, dst);
+        cv.GaussianBlur(gray, blurred, new cv.Size(3, 3), 0);
+        cv.Laplacian(blurred, sharpened, cv.CV_8U, 1, 1, 0);
+        cv.convertScaleAbs(sharpened, sharpened, 1, 0);
+        cv.equalizeHist(sharpened, dst);
 
-        // Конвертируем обратно в цветное изображение
         let enhancedColor = new cv.Mat();
         cv.cvtColor(dst, enhancedColor, cv.COLOR_GRAY2RGBA);
 
-        // Создаем новый canvas для результата
         let enhancedCanvas = document.createElement("canvas");
         enhancedCanvas.width = canvas.width;
         enhancedCanvas.height = canvas.height;
         cv.imshow(enhancedCanvas, enhancedColor);
 
-        // Очистка
         src.delete();
         gray.delete();
         blurred.delete();
-        thresh.delete();
+        sharpened.delete();
         dst.delete();
         enhancedColor.delete();
 
+        console.log("Обработка изображения завершена");
         return enhancedCanvas;
       }
 
       function takePhoto() {
-        if (!documentDetected) {
-          statusEl.textContent = "Документ не обнаружен, попробуйте снова";
-          return;
-        }
+        console.log("Кнопка съемки нажата, documentDetected:", documentDetected);
+        // Временно убираем проверку для отладки
+        // if (!documentDetected) {
+        //   statusEl.textContent = "Документ не обнаружен, попробуйте снова";
+        //   console.log("Снимок заблокирован: документ не обнаружен");
+        //   return;
+        // }
 
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
 
-        // Получаем размеры видео и рамки
         const videoWidth = video.videoWidth;
         const videoHeight = video.videoHeight;
         const frameRect = frame.getBoundingClientRect();
         const videoRect = video.getBoundingClientRect();
 
-        // Вычисляем соотношение сторон
         const videoAspect = videoWidth / videoHeight;
         const displayAspect = videoRect.width / videoRect.height;
 
-        // Вычисляем масштабирование (с учетом object-fit: cover)
         let scaleX, scaleY, offsetX, offsetY;
         if (videoAspect > displayAspect) {
           scaleY = videoHeight / videoRect.height;
@@ -444,17 +431,14 @@
           offsetY = (scaledVideoHeight - videoRect.height) / 2;
         }
 
-        // Вычисляем координаты обрезки
         const cropX = offsetX * scaleX;
         const cropY = offsetY * scaleY;
         const cropWidth = videoRect.width * scaleX;
         const cropHeight = videoRect.height * scaleY;
 
-        // Устанавливаем размер canvas
         canvas.width = cropWidth;
         canvas.height = cropHeight;
 
-        // Рисуем обрезанную часть видео
         ctx.drawImage(
           video,
           cropX,
@@ -467,27 +451,25 @@
           cropHeight
         );
 
-        // Применяем улучшение изображения
         const enhancedCanvas = enhanceImage(canvas);
 
-        // Отображаем результат
         const imageData = enhancedCanvas.toDataURL("image/jpeg", 1.0);
         previewImage.src = imageData;
 
-        // Сохраняем как Blob
         enhancedCanvas.toBlob((blob) => {
           const url = URL.createObjectURL(blob);
           downloadButton.href = url;
           downloadButton.download = "captured-photo.jpg";
+          console.log("Blob создан, готов для скачивания");
         }, "image/jpeg", 1.0);
 
-        // Показываем предпросмотр
         videoContainer.style.display = "none";
         previewContainer.style.display = "flex";
         statusEl.textContent = "Документ принят на рассмотрение";
       }
 
       function retakePhoto() {
+        console.log("Пересъемка");
         previewImage.src = "";
         downloadButton.href = "#";
         previewContainer.style.display = "none";
