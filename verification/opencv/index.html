@@ -366,31 +366,57 @@
         }
 
         let src = cv.imread(canvas);
+        let color = src.clone(); // Сохраняем цветное изображение
         let gray = new cv.Mat();
         let blurred = new cv.Mat();
-        let sharpened = new cv.Mat();
-        let dst = new cv.Mat();
+        let thresh = new cv.Mat();
+        let dilated = new cv.Mat();
+        let mask = new cv.Mat();
+        let result = new cv.Mat();
 
+        // Конвертируем в оттенки серого
         cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-        cv.GaussianBlur(gray, blurred, new cv.Size(3, 3), 0);
-        cv.Laplacian(blurred, sharpened, cv.CV_8U, 1, 1, 0);
-        cv.convertScaleAbs(sharpened, sharpened, 1, 0);
-        cv.equalizeHist(sharpened, dst);
+        // Подавление шума
+        cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0);
+        // Адаптивная пороговая обработка для выделения текста
+        cv.adaptiveThreshold(
+          blurred,
+          thresh,
+          255,
+          cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+          cv.THRESH_BINARY_INV, // Инвертируем, чтобы текст был белым
+          11,
+          2
+        );
+        // Усиливаем текст с помощью дилатации
+        let kernel = cv.Mat.ones(3, 3, cv.CV_8U);
+        cv.dilate(thresh, dilated, kernel);
+        // Создаем маску текста
+        cv.threshold(dilated, mask, 200, 255, cv.THRESH_BINARY);
 
-        let enhancedColor = new cv.Mat();
-        cv.cvtColor(dst, enhancedColor, cv.COLOR_GRAY2RGBA);
+        // Накладываем маску на цветное изображение
+        cv.bitwise_and(color, color, result, mask);
+        // Добавляем черный текст там, где маска белая
+        let blackText = new cv.Mat(color.rows, color.cols, color.type(), [0, 0, 0, 255]);
+        cv.bitwise_or(result, blackText, result, mask);
 
+        // Создаем новый canvas для результата
         let enhancedCanvas = document.createElement("canvas");
         enhancedCanvas.width = canvas.width;
         enhancedCanvas.height = canvas.height;
-        cv.imshow(enhancedCanvas, enhancedColor);
+        cv.imshow(enhancedCanvas, result);
 
+        // Очистка
         src.delete();
+        color.delete();
         gray.delete();
         blurred.delete();
-        sharpened.delete();
-        dst.delete();
-        enhancedColor.delete();
+        thresh.delete();
+        dilated.delete();
+        mask.delete();
+        result.delete();
+        blackText.delete();
+        kernel.delete();
 
         console.log("Обработка изображения завершена");
         return enhancedCanvas;
@@ -398,12 +424,11 @@
 
       function takePhoto() {
         console.log("Кнопка съемки нажата, documentDetected:", documentDetected);
-        // Временно убираем проверку для отладки
-        // if (!documentDetected) {
-        //   statusEl.textContent = "Документ не обнаружен, попробуйте снова";
-        //   console.log("Снимок заблокирован: документ не обнаружен");
-        //   return;
-        // }
+        if (!documentDetected) {
+          statusEl.textContent = "Документ не обнаружен, попробуйте снова";
+          console.log("Снимок заблокирован: документ не обнаружен");
+          return;
+        }
 
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
