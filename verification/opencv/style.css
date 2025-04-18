@@ -1,347 +1,192 @@
-<!DOCTYPE html>
-<html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Верификация документа</title>
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    />
-    <!-- Подключаем OpenCV.js -->
-    <script async src="https://docs.opencv.org/4.5.5/opencv.js" onload="onOpenCvReady()"></script>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <div id="launchContainer">
-      <button onclick="startCamera()">Запустить камеру</button>
-    </div>
-
-    <div id="videoContainer">
-      <div id="status">Поместите документ в пределах белой рамки</div>
-      <video id="video" autoplay playsinline></video>
-      <div id="overlay-darken"></div>
-      <div id="frame"></div>
-      <div id="buttons">
-        <button class="btn-switch" onclick="switchCamera()"></button>
-        <button class="btn-circle disabled" onclick="takePhoto()"></button>
-      </div>
-    </div>
-
-    <div id="previewContainer">
-      <img id="previewImage" alt="Preview" />
-      <a id="downloadButton" href="#" download="captured-photo.jpg">Скачать фото</a>
-      <button id="redoButton" onclick="retakePhoto()">Переделать снимок</button>
-    </div>
-
-    <script>
-      let stream;
-      let currentFacingMode = "environment";
-      const video = document.getElementById("video");
-      const frame = document.getElementById("frame");
-      const launchContainer = document.getElementById("launchContainer");
-      const videoContainer = document.getElementById("videoContainer");
-      const previewContainer = document.getElementById("previewContainer");
-      const previewImage = document.getElementById("previewImage");
-      const statusEl = document.getElementById("status");
-      const downloadButton = document.getElementById("downloadButton");
-      const captureButton = document.querySelector(".btn-circle");
-      let openCvLoaded = false;
-      let documentDetected = false;
-      let inactivityTimer = null;
-      const INACTIVITY_TIMEOUT = 30000; // 30 секунд
-
-      // Сбрасываем таймер бездействия при активности
-      function resetInactivityTimer() {
-        if (inactivityTimer) clearTimeout(inactivityTimer);
-        inactivityTimer = setTimeout(stopCameraDueToInactivity, INACTIVITY_TIMEOUT);
-      }
-
-      // Останавливаем камеру и возвращаем начальный экран
-      function stopCameraDueToInactivity() {
-        if (stream) {
-          stream.getTracks().forEach((track) => track.stop());
-          stream = null;
-        }
-        videoContainer.style.display = "none";
-        previewContainer.style.display = "none";
-        launchContainer.style.display = "flex";
-        statusEl.textContent = "Камера отключена из-за бездействия";
-        documentDetected = false;
-        frame.classList.remove("detected");
-        captureButton.classList.add("disabled");
-      }
-
-      // Проверяем загрузку OpenCV.js
-      function onOpenCvReady() {
-        openCvLoaded = true;
-        console.log("OpenCV.js загружен");
-        startDocumentDetection();
-      }
-
-      async function startCamera(facingModeInput) {
-        console.log("Запуск камеры");
-        resetInactivityTimer();
-        const facingMode = facingModeInput || currentFacingMode || "environment";
-        if (stream) stream.getTracks().forEach((track) => track.stop());
-        try {
-          stream = await navigator.mediaDevices.getUserMedia({
-            video: {
-              facingMode,
-              width: { ideal: 3840 },
-              height: { ideal: 2160 },
-            },
-            audio: false,
-          });
-          video.srcObject = stream;
-          videoContainer.style.display = "flex";
-          launchContainer.style.display = "none";
-          previewContainer.style.display = "none";
-          statusEl.textContent = "Поместите документ в пределах белой рамки";
-          currentFacingMode = facingMode;
-          captureButton.classList.add("disabled");
-
-          await new Promise((resolve) => {
-            video.onloadedmetadata = () => resolve();
-          });
-
-          if (openCvLoaded) startDocumentDetection();
-        } catch (err) {
-          console.warn("Ошибка камеры:", err);
-          if (
-            facingMode === "environment" &&
-            err.name === "OverconstrainedError"
-          ) {
-            return startCamera("user");
-          }
-          statusEl.textContent = "Ошибка запуска камеры: " + err.message;
-        }
-      }
-
-      function switchCamera() {
-        console.log("Переключение камеры");
-        resetInactivityTimer();
-        const nextMode = currentFacingMode === "user" ? "environment" : "user";
-        startCamera(nextMode);
-      }
-
-      function detectDocument() {
-        if (!openCvLoaded) return;
-
-        const canvas = document.createElement("canvas");
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        let src = cv.imread(canvas);
-        let gray = new cv.Mat();
-        let blurred = new cv.Mat();
-        let edges = new cv.Mat();
-        let contours = new cv.MatVector();
-        let hierarchy = new cv.Mat();
-
-        cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-        cv.GaussianBlur(gray, blurred, new cv.Size(3, 3), 0);
-        cv.Canny(blurred, edges, 30, 100);
-        cv.findContours(
-          edges,
-          contours,
-          hierarchy,
-          cv.RETR_EXTERNAL,
-          cv.CHAIN_APPROX_SIMPLE
-        );
-
-        // Вычисляем координаты рамки #frame в пикселях видео
-        const frameRect = frame.getBoundingClientRect();
-        const videoRect = video.getBoundingClientRect();
-        const videoAspect = video.videoWidth / video.videoHeight;
-        const displayAspect = videoRect.width / videoRect.height;
-        let scaleX, scaleY, offsetX, offsetY;
-        if (videoAspect > displayAspect) {
-          scaleY = video.videoHeight / videoRect.height;
-          scaleX = scaleY;
-          const scaledVideoWidth = video.videoWidth / scaleX;
-          offsetX = (scaledVideoWidth - videoRect.width) / 2;
-          offsetY = 0;
-        } else {
-          scaleX = video.videoWidth / videoRect.width;
-          scaleY = scaleX;
-          const scaledVideoHeight = video.videoHeight / scaleY;
-          offsetX = 0;
-          offsetY = (scaledVideoHeight - videoRect.height) / 2;
-        }
-        const frameX = frameRect.left - videoRect.left + offsetX;
-        const frameY = frameRect.top - videoRect.top + offsetY;
-        const frameWidth = frameRect.width;
-        const frameHeight = frameRect.height;
-        const frameLeft = frameX * scaleX;
-        const frameTop = frameY * scaleY;
-        const frameRight = (frameX + frameWidth) * scaleX;
-        const frameBottom = (frameY + frameHeight) * scaleY;
-
-        // Динамический порог площади (0.5% от площади кадра)
-        const minArea = video.videoWidth * video.videoHeight * 0.005;
-
-        documentDetected = false;
-        for (let i = 0; i < contours.size(); i++) {
-          let contour = contours.get(i);
-          let perimeter = cv.arcLength(contour, true);
-          let approx = new cv.Mat();
-          cv.approxPolyDP(contour, approx, 0.05 * perimeter, true);
-
-          let area = cv.contourArea(contour);
-          let rect = cv.minAreaRect(contour);
-          let aspectRatio = rect.size.width / rect.size.height;
-          if (aspectRatio < 1) aspectRatio = 1 / aspectRatio;
-
-          // Проверяем площадь и соотношение сторон
-          if (
-            area > 1500 &&
-            aspectRatio >= 1.0 &&
-            aspectRatio <= 3.0 &&
-            approx.rows >= 3 &&
-            approx.rows <= 6
-          ) {
-            // Проверяем, что контур находится внутри рамки
-            let boundRect = cv.boundingRect(contour);
-            let isInsideFrame =
-              boundRect.x >= frameLeft &&
-              boundRect.y >= frameTop &&
-              boundRect.x + boundRect.width <= frameRight &&
-              boundRect.y + boundRect.height <= frameBottom;
-
-            if (isInsideFrame) {
-              documentDetected = true;
-              console.log(`Документ обнаружен: площадь=${area}, minArea=${minArea}`);
-              break;
-            }
-          }
-
-          approx.delete();
-          contour.delete();
-        }
-
-        frame.classList.toggle("detected", documentDetected);
-        captureButton.classList.toggle("disabled", !documentDetected);
-        statusEl.textContent = documentDetected
-          ? "Документ обнаружен, нажмите для снимка"
-          : "Поместите документ в пределах белой рамки";
-
-        src.delete();
-        gray.delete();
-        blurred.delete();
-        edges.delete();
-        contours.delete();
-        hierarchy.delete();
-      }
-
-      function startDocumentDetection() {
-        function loop() {
-          if (videoContainer.style.display === "flex") {
-            detectDocument();
-            requestAnimationFrame(loop);
-          }
-        }
-        requestAnimationFrame(loop);
-      }
-
-      function takePhoto() {
-        if (!documentDetected) {
-          statusEl.textContent = "Документ не помещается в рамку";
-          console.log("Снимок заблокирован: документ не обнаружен");
-          return;
-        }
-
-        console.log("Снимок");
-        resetInactivityTimer();
-
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-
-        const videoWidth = video.videoWidth;
-        const videoHeight = video.videoHeight;
-        const frameRect = frame.getBoundingClientRect();
-        const videoRect = video.getBoundingClientRect();
-
-        const videoAspect = videoWidth / videoHeight;
-        const displayAspect = videoRect.width / videoRect.height;
-
-        let scaleX, scaleY, offsetX, offsetY;
-        if (videoAspect > displayAspect) {
-          scaleY = videoHeight / videoRect.height;
-          scaleX = scaleY;
-          const scaledVideoWidth = videoWidth / scaleX;
-          offsetX = (scaledVideoWidth - videoRect.width) / 2;
-          offsetY = 0;
-        } else {
-          scaleX = video.videoWidth / videoRect.width;
-          scaleY = scaleX;
-          const scaledVideoHeight = videoHeight / scaleY;
-          offsetX = 0;
-          offsetY = (scaledVideoHeight - videoRect.height) / 2;
-        }
-
-        const cropX = offsetX * scaleX;
-        const cropY = offsetY * scaleY;
-        const cropWidth = videoRect.width * scaleX;
-        const cropHeight = videoRect.height * scaleY;
-
-        canvas.width = cropWidth;
-        canvas.height = cropHeight;
-
-        ctx.drawImage(
-          video,
-          cropX,
-          cropY,
-          cropWidth,
-          cropHeight,
-          0,
-          0,
-          cropWidth,
-          cropHeight
-        );
-
-        // Обработка пикселей: заменяем цвета темнее #555555 на #000000
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
-        for (let i = 0; i < data.length; i += 4) {
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-          if (r < 85 && g < 85 && b < 85) {
-            data[i] = 0;     // R
-            data[i + 1] = 0; // G
-            data[i + 2] = 0; // B
-            // data[i + 3] — альфа, не трогаем
-          }
-        }
-        ctx.putImageData(imageData, 0, 0);
-
-        const imageDataUrl = canvas.toDataURL("image/jpeg", 1.0);
-        previewImage.src = imageDataUrl;
-
-        canvas.toBlob((blob) => {
-          const url = URL.createObjectURL(blob);
-          downloadButton.href = url;
-          downloadButton.download = "captured-photo.jpg";
-          console.log("Фото сохранено");
-        }, "image/jpeg", 1.0);
-
-        videoContainer.style.display = "none";
-        previewContainer.style.display = "flex";
-        statusEl.textContent = "Документ принят на рассмотрение";
-      }
-
-      function retakePhoto() {
-        console.log("Пересъемка");
-        resetInactivityTimer();
-        previewImage.src = "";
-        downloadButton.href = "#";
-        previewContainer.style.display = "none";
-        videoContainer.style.display = "flex";
-        statusEl.textContent = "Поместите документ в пределах белой рамки";
-        captureButton.classList.add("disabled");
-      }
-    </script>
-  </body>
-</html>
+html,
+ body {
+   margin: 0;
+   padding: 0;
+   background: #000;
+   color: white;
+   font-family: sans-serif;
+   height: 100%;
+   overscroll-behavior-y: none;
+ }
+ 
+ body {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+ }
+ 
+ #launchContainer,
+ #videoContainer,
+ #previewContainer {
+   position: absolute;
+   inset: 0;
+   display: none;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   background: #000;
+ }
+ 
+ #launchContainer {
+   display: flex;
+ }
+ 
+ video {
+   width: 90vw;
+   height: 60vw;
+   position: absolute;
+   top: 20vh;
+   left: 5vw;
+   object-fit: cover;
+ }
+ 
+ #previewImage {
+   width: 100vw;
+   height: 100vh;
+   object-fit: contain;
+ }
+ 
+ #frame {
+   position: absolute;
+   border: 2px dashed #fff;
+   width: 90vw;
+   height: 60vw;
+   top: 20vh;
+   left: 5vw;
+   box-sizing: border-box;
+   pointer-events: none;
+   border-radius: 10px;
+   z-index: 3;
+   transition: border-color 0.3s;
+ }
+ 
+ #frame.detected {
+   border-color: #00ff00;
+ }
+ 
+ #overlay-darken {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100vw;
+   height: 100vh;
+   z-index: 2;
+   pointer-events: none;
+ }
+ 
+ #overlay-darken::before {
+   content: "";
+   position: absolute;
+   top: 20vh;
+   left: 5vw;
+   width: 90vw;
+   height: 60vw;
+   background: transparent;
+   border-radius: 10px;
+   box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.8);
+ }
+ 
+ #buttons {
+   position: absolute;
+   bottom: 20px;
+   display: flex;
+   gap: 20px;
+   justify-content: center;
+   width: 100%;
+   z-index: 4;
+ }
+ 
+ .btn-circle {
+   width: 80px;
+   height: 80px;
+   border-radius: 50%;
+   background-image: url('data:image/svg+xml;charset=UTF-8,<svg viewBox="0 -2 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="%23000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>camera</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Icon-Set-Filled" transform="translate(-258.000000, -467.000000)" fill="%23000000"> <path d="M286,471 L283,471 L282,469 C281.411,467.837 281.104,467 280,467 L268,467 C266.896,467 266.53,467.954 266,469 L265,471 L262,471 C259.791,471 258,472.791 258,475 L258,491 C258,493.209 259.791,495 262,495 L286,495 C288.209,495 290,493.209 290,491 L290,475 C290,472.791 288.209,471 286,471 Z M274,491 C269.582,491 266,487.418 266,483 C266,478.582 269.582,475 274,475 C278.418,475 282,478.582 282,483 C282,487.418 278.418,491 274,491 Z M274,477 C270.687,477 268,479.687 268,483 C268,486.313 270.687,489 274,489 C277.313,489 280,486.313 280,483 C280,479.687 277.313,477 274,477 L274,477 Z" id="camera"> </path> </g> </g> </g></svg>');
+   background-repeat: no-repeat;
+   background-position: center;
+   background-size: 50px;
+   cursor: pointer;
+   background-color: #fff;
+   border: 5px double #000;
+ }
+ /* Добавляем стиль для неактивной кнопки спуска */
+ .btn-circle.disabled {
+   background-color: #888;
+   cursor: not-allowed;
+   opacity: 0.5;
+ }
+ 
+ .btn-switch {
+   width: 60px;
+   height: 60px;
+   border-radius: 50%;
+   background-image: url('data:image/svg+xml;charset=UTF-8,<svg viewBox="0 0 48 48" version="1" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 48 48" fill="%23FFFFFF"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g fill="%23000000"> <path d="M33.9,12.1H14.2L17.6,7c0.4-0.6,1-0.9,1.7-0.9h9.6c0.7,0,1.3,0.3,1.7,0.9L33.9,12.1z"></path> <path d="M14,11H8V9.2C8,8.5,8.5,8,9.2,8h3.6C13.5,8,14,8.5,14,9.2V11z"></path> <path d="M40,42H8c-2.2,0-4-1.8-4-4V14c0-2.2,1.8-4,4-4h32c2.2,0,4,1.8,4,4v24C44,40.2,42.2,42,40,42z"></path> </g> <path fill="%23FFFFFF" d="M34,25c0-5.5-4.5-10-10-10c-2.4,0-4.6,0.8-6.3,2.2l1.2,1.6c1.4-1.1,3.1-1.8,5.1-1.8c4.4,0,8,3.6,8,8h-3.5 l4.5,5.6l4.5-5.6H34z"></path> <path fill="%23FFFFFF" d="M29.1,31.2C27.7,32.3,25.9,33,24,33c-4.4,0-8-3.6-8-8h3.5L15,19.4L10.5,25H14c0,5.5,4.5,10,10,10 c2.4,0,4.6-0.8,6.3-2.2L29.1,31.2z"></path> </g></svg>');
+   background-repeat: no-repeat;
+   background-position: center;
+   background-size: 36px;
+   border: none;
+   cursor: pointer;
+   position: absolute;
+   top: 50%;
+   right: 50px;
+   transform: translateY(-50%);
+   background-color: #fff;
+   border: 5px double #000;
+ }
+ 
+ #status {
+   position: absolute;
+   top: 10px;
+   background: rgba(0, 0, 0, 0.5);
+   padding: 5px 10px;
+   border-radius: 5px;
+   z-index: 5;
+   width: 70vw;
+   text-align: center;
+   line-height: 1.5;
+ }
+ 
+ #previewImage {
+   z-index: 1;
+   object-fit: contain;
+ }
+ 
+ #redoButton, #downloadButton {
+   position: absolute;
+   bottom: 20px;
+   background: white;
+   color: black;
+   padding: 10px 20px;
+   border-radius: 20px;
+   border: none;
+   z-index: 5;
+   font-weight: bold;
+   cursor: pointer;
+   text-decoration: none;
+ }
+ 
+ #downloadButton {
+   bottom: 80px;
+ }
+ 
+ #launchContainer button {
+   padding: 15px 30px;
+   font-size: 18px;
+   font-weight: bold;
+   color: rgb(0, 0, 0);
+   background: linear-gradient(45deg, #ff6f61, #ffcc5c);
+   border: none;
+   cursor: pointer;
+   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+   transition: transform 0.1s ease, box-shadow 0.3s ease;
+   border-radius: 10px;
+ }
+ 
+ #launchContainer button:hover {
+   transform: scale(1.05);
+   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+ }
+ 
+ #launchContainer button:active {
+   transform: scale(0.95);
+ }
