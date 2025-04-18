@@ -281,35 +281,36 @@
         // Создаем матрицу OpenCV из canvas
         let src = cv.imread(canvas);
         let dst = new cv.Mat();
+        let gray = new cv.Mat();
 
-        // Конвертируем в оттенки серого
-        cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY);
+        // Конвертируем в оттенки серого для повышения резкости
+        cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
 
-        // Применяем адаптивную пороговую обработку для улучшения текста
-        cv.adaptiveThreshold(
-          src,
-          dst,
-          255,
-          cv.ADAPTIVE_THRESH_GAUSSIAN_C,
-          cv.THRESH_BINARY,
-          11,
-          2
-        );
+        // Применяем фильтр Лапласа для повышения резкости
+        let sharpened = new cv.Mat();
+        cv.Laplacian(gray, sharpened, cv.CV_8U, 1, 1, 0);
+        cv.convertScaleAbs(sharpened, sharpened, 1, 0);
 
-        // Применяем морфологические операции для устранения мелких шумов
-        let kernel = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(3, 3));
-        cv.morphologyEx(dst, dst, cv.MORPH_CLOSE, kernel);
+        // Увеличиваем контрастность
+        let clahe = cv.createCLAHE(2.0, new cv.Size(8, 8));
+        clahe.apply(sharpened, dst);
+
+        // Конвертируем обратно в цветное изображение (копируем канал яркости в RGB)
+        let enhancedColor = new cv.Mat();
+        cv.cvtColor(dst, enhancedColor, cv.COLOR_GRAY2RGBA);
 
         // Создаем новый canvas для результата
         let enhancedCanvas = document.createElement("canvas");
         enhancedCanvas.width = canvas.width;
         enhancedCanvas.height = canvas.height;
-        cv.imshow(enhancedCanvas, dst);
+        cv.imshow(enhancedCanvas, enhancedColor);
 
         // Освобождаем память
         src.delete();
         dst.delete();
-        kernel.delete();
+        gray.delete();
+        sharpened.delete();
+        enhancedColor.delete();
 
         return enhancedCanvas;
       }
