@@ -366,32 +366,13 @@
         }
 
         let src = cv.imread(canvas);
-        let gray = new cv.Mat();
         let blurred = new cv.Mat();
-        let thresh = new cv.Mat();
-        let dilated = new cv.Mat();
-
-        // Конвертируем в оттенки серого
-        cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-        // Подавление шума
-        cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0);
-        // Адаптивная пороговая обработка для выделения текста
-        cv.adaptiveThreshold(
-          blurred,
-          thresh,
-          255,
-          cv.ADAPTIVE_THRESH_GAUSSIAN_C,
-          cv.THRESH_BINARY,
-          9, // Уменьшенный блок для большей детализации
-          3 // Увеличенная константа для контрастности
-        );
-        // Усиливаем текст с помощью дилатации
-        let kernel = cv.Mat.ones(3, 3, cv.CV_8U);
-        cv.dilate(thresh, dilated, kernel, new cv.Point(-1, -1), 2); // Две итерации для утолщения текста
-
-        // Конвертируем результат в RGBA для отображения
         let result = new cv.Mat();
-        cv.cvtColor(dilated, result, cv.COLOR_GRAY2RGBA);
+
+        // Легкое размытие для подавления шума
+        cv.GaussianBlur(src, blurred, new cv.Size(3, 3), 0);
+        // Усиливаем контраст и делаем темные области темнее
+        cv.convertScaleAbs(blurred, result, 1.5, -50); // alpha=1.5 (контраст), beta=-50 (усиливаем темные тона)
 
         // Создаем новый canvas для результата
         let enhancedCanvas = document.createElement("canvas");
@@ -401,12 +382,8 @@
 
         // Очистка
         src.delete();
-        gray.delete();
         blurred.delete();
-        thresh.delete();
-        dilated.delete();
         result.delete();
-        kernel.delete();
 
         console.log("Обработка изображения завершена");
         return enhancedCanvas;
