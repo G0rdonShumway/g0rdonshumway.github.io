@@ -304,9 +304,13 @@
         let contours = new cv.MatVector();
         let hierarchy = new cv.Mat();
 
+        // Конвертируем в оттенки серого
         cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-        cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0);
-        cv.Canny(blurred, edges, 50, 150);
+        // Размытие для подавления шума
+        cv.GaussianBlur(gray, blurred, new cv.Size(3, 3), 0);
+        // Детекция краев с более мягкими порогами
+        cv.Canny(blurred, edges, 30, 100);
+        // Находим контуры
         cv.findContours(
           edges,
           contours,
@@ -320,14 +324,25 @@
           let contour = contours.get(i);
           let perimeter = cv.arcLength(contour, true);
           let approx = new cv.Mat();
-          cv.approxPolyDP(contour, approx, 0.02 * perimeter, true);
+          cv.approxPolyDP(contour, approx, 0.03 * perimeter, true);
 
+          // Проверяем, что контур имеет 4 вершины (прямоугольник)
           if (approx.rows === 4) {
             let area = cv.contourArea(contour);
-            if (area > 800) {
-              documentDetected = true;
-              console.log("Документ обнаружен, площадь:", area);
-              break;
+            // Проверяем площадь и соотношение сторон
+            if (area > 5000) {
+              let rect = cv.minAreaRect(contour);
+              let aspectRatio = rect.size.width / rect.size.height;
+              if (aspectRatio > 1.2 && aspectRatio < 2.5) {
+                documentDetected = true;
+                console.log(
+                  "Документ обнаружен, площадь:",
+                  area,
+                  "соотношение сторон:",
+                  aspectRatio
+                );
+                break;
+              }
             }
           }
           approx.delete();
@@ -358,78 +373,13 @@
         requestAnimationFrame(loop);
       }
 
-      function enhanceImage(canvas) {
-        console.log("Начало обработки изображения");
-        if (!openCvLoaded) {
-          console.warn("OpenCV.js еще не загружен, пропускаем обработку");
-          return canvas;
-        }
-
-        let src = cv.imread(canvas);
-        let color = src.clone(); // Сохраняем цветное изображение
-        let gray = new cv.Mat();
-        let blurred = new cv.Mat();
-        let thresh = new cv.Mat();
-        let dilated = new cv.Mat();
-        let mask = new cv.Mat();
-        let result = new cv.Mat();
-
-        // Конвертируем в оттенки серого для маски текста
-        cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-        // Подавление шума
-        cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0);
-        // Адаптивная пороговая обработка с мягкими параметрами
-        cv.adaptiveThreshold(
-          blurred,
-          thresh,
-          255,
-          cv.ADAPTIVE_THRESH_GAUSSIAN_C,
-          cv.THRESH_BINARY_INV, // Инвертируем, чтобы текст был белым в маске
-          15, // Увеличенный блок для мягкой обработки
-          2 // Меньшая константа для меньшей агрессивности
-        );
-        // Минимальная дилатация для утолщения текста
-        let kernel = cv.Mat.ones(2, 2, cv.CV_8U);
-        cv.dilate(thresh, dilated, kernel, new cv.Point(-1, -1), 1); // Одна итерация
-        // Создаем маску текста
-        cv.threshold(dilated, mask, 200, 255, cv.THRESH_BINARY);
-
-        // Накладываем маску на цветное изображение
-        cv.bitwise_and(color, color, result, mask);
-        // Добавляем черный текст там, где маска белая
-        let blackText = new cv.Mat(color.rows, color.cols, color.type(), [0, 0, 0, 255]);
-        cv.bitwise_or(result, blackText, result, mask);
-
-        // Создаем новый canvas для результата
-        let enhancedCanvas = document.createElement("canvas");
-        enhancedCanvas.width = canvas.width;
-        enhancedCanvas.height = canvas.height;
-        cv.imshow(enhancedCanvas, result);
-
-        // Очистка
-        src.delete();
-        color.delete();
-        gray.delete();
-        blurred.delete();
-        thresh.delete();
-        dilated.delete();
-        mask.delete();
-        result.delete();
-        blackText.delete();
-        kernel.delete();
-
-        console.log("Обработка изображения завершена");
-        return enhancedCanvas;
-      }
-
       function takePhoto() {
         console.log("Кнопка съемки нажата, documentDetected:", documentDetected);
-        // Проверка автообнаружения отключена, так как не работает
-        // if (!documentDetected) {
-        //   statusEl.textContent = "Документ не обнаружен, попробуйте снова";
-        //   console.log("Снимок заблокирован: документ не обнаружен");
-        //   return;
-        // }
+        if (!documentDetected) {
+          statusEl.textContent = "Документ не обнаружен, попробуйте снова";
+          console.log("Снимок заблокирован: документ не обнаружен");
+          return;
+        }
 
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
@@ -477,12 +427,11 @@
           cropHeight
         );
 
-        const enhancedCanvas = enhanceImage(canvas);
-
-        const imageData = enhancedCanvas.toDataURL("image/jpeg", 1.0);
+        // Используем исходное изображение без обработки
+        const imageData = canvas.toDataURL("image/jpeg", 1.0);
         previewImage.src = imageData;
 
-        enhancedCanvas.toBlob((blob) => {
+        canvas.toBlob((blob) => {
           const url = URL.createObjectURL(blob);
           downloadButton.href = url;
           downloadButton.download = "captured-photo.jpg";
