@@ -10,14 +10,6 @@
     <!-- Подключаем OpenCV.js -->
     <script async src="https://docs.opencv.org/4.5.5/opencv.js" onload="onOpenCvReady()"></script>
     <link rel="stylesheet" href="style.css">
-    <style>
-      /* Добавляем стиль для неактивной кнопки спуска */
-      .btn-circle.disabled {
-        background-color: #888;
-        cursor: not-allowed;
-        opacity: 0.5;
-      }
-    </style>
   </head>
   <body>
     <div id="launchContainer">
@@ -25,13 +17,13 @@
     </div>
 
     <div id="videoContainer">
-      <div id="status">Поместите документ так, чтобы он занимал всю рамку</div>
+      <div id="status">Поместите документ в рамку</div>
       <video id="video" autoplay playsinline></video>
       <div id="overlay-darken"></div>
       <div id="frame"></div>
       <div id="buttons">
         <button class="btn-switch" onclick="switchCamera()"></button>
-        <button class="btn-circle" onclick="takePhoto()"></button>
+        <button class="btn-circle disabled" onclick="takePhoto()"></button>
       </div>
     </div>
 
@@ -104,8 +96,9 @@
           videoContainer.style.display = "flex";
           launchContainer.style.display = "none";
           previewContainer.style.display = "none";
-          statusEl.textContent = "Поместите документ так, чтобы он занимал всю рамку";
+          statusEl.textContent = "Поместите документ в рамку";
           currentFacingMode = facingMode;
+          captureButton.classList.add("disabled");
 
           await new Promise((resolve) => {
             video.onloadedmetadata = () => resolve();
@@ -158,21 +151,6 @@
           cv.CHAIN_APPROX_SIMPLE
         );
 
-        // Вычисляем площадь рамки #frame в пикселях видео
-        const frameRect = frame.getBoundingClientRect();
-        const videoRect = video.getBoundingClientRect();
-        const videoAspect = video.videoWidth / video.videoHeight;
-        const displayAspect = videoRect.width / videoRect.height;
-        let scaleX, scaleY;
-        if (videoAspect > displayAspect) {
-          scaleY = video.videoHeight / videoRect.height;
-          scaleX = scaleY;
-        } else {
-          scaleX = video.videoWidth / videoRect.width;
-          scaleY = scaleX;
-        }
-        const frameArea = (frameRect.width * scaleX) * (frameRect.height * scaleY);
-
         documentDetected = false;
         for (let i = 0; i < contours.size(); i++) {
           let contour = contours.get(i);
@@ -185,18 +163,15 @@
           let aspectRatio = rect.size.width / rect.size.height;
           if (aspectRatio < 1) aspectRatio = 1 / aspectRatio;
 
-          // Проверяем, что площадь составляет 90–100% от площади рамки
-          const areaRatio = area / frameArea;
           if (
-            areaRatio >= 0.8 &&
-            areaRatio <= 0.95 &&
+            area > 1500 &&
             aspectRatio >= 1.0 &&
             aspectRatio <= 3.0 &&
             approx.rows >= 3 &&
             approx.rows <= 6
           ) {
             documentDetected = true;
-            console.log(`Документ обнаружен: площадь=${area}, доля рамки=${(areaRatio * 100).toFixed(1)}%`);
+            console.log(`Документ обнаружен: площадь=${area}`);
             resetInactivityTimer();
             break;
           }
@@ -209,7 +184,7 @@
         captureButton.classList.toggle("disabled", !documentDetected);
         statusEl.textContent = documentDetected
           ? "Документ обнаружен, нажмите для снимка"
-          : "Поместите документ так, чтобы он занимал всю рамку";
+          : "Поместите документ в рамку";
 
         src.delete();
         gray.delete();
@@ -231,7 +206,7 @@
 
       function takePhoto() {
         if (!documentDetected) {
-          statusEl.textContent = "Документ должен занимать всю рамку";
+          statusEl.textContent = "Документ не обнаружен";
           return;
         }
 
@@ -246,7 +221,7 @@
         const frameRect = frame.getBoundingClientRect();
         const videoRect = video.getBoundingClientRect();
 
-        const videoAspect = videoWidth / video.videoHeight;
+        const videoAspect = videoWidth / videoHeight;
         const displayAspect = videoRect.width / videoRect.height;
 
         let scaleX, scaleY, offsetX, offsetY;
@@ -306,7 +281,7 @@
         downloadButton.href = "#";
         previewContainer.style.display = "none";
         videoContainer.style.display = "flex";
-        statusEl.textContent = "Поместите документ так, чтобы он занимал всю рамку";
+        statusEl.textContent = "Поместите документ в рамку";
         captureButton.classList.add("disabled");
       }
     </script>
