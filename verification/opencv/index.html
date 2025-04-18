@@ -180,42 +180,59 @@
 
         let src = cv.imread(canvas);
         let gray = new cv.Mat();
+        let normalized = new cv.Mat();
         let blurred = new cv.Mat();
         let binary = new cv.Mat();
+        let mask = new cv.Mat();
         let enhancedColor = new cv.Mat();
+        let whiteBg = new cv.Mat();
 
-        // Convert to grayscale
+        // Преобразование в оттенки серого
         cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
 
-        // Apply Gaussian blur to reduce noise
-        cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0);
+        // Нормализация яркости для улучшения контраста на цветном фоне
+        cv.normalize(gray, normalized, 0, 255, cv.NORM_MINMAX);
 
-        // Apply adaptive thresholding to binarize image (black text, white background)
+        // Размытие для уменьшения шума
+        cv.GaussianBlur(normalized, blurred, new cv.Size(5, 5), 0);
+
+        // Адаптивная пороговая обработка для бинаризации (текст — черный, фон — белый)
         cv.adaptiveThreshold(
           blurred,
           binary,
           255,
           cv.ADAPTIVE_THRESH_GAUSSIAN_C,
           cv.THRESH_BINARY_INV,
-          11,
-          2
+          15, // Увеличенный blockSize для цветного фона
+          3   // Увеличенный C для усиления контраста
         );
 
-        // Convert binary image back to RGBA for display
-        cv.cvtColor(binary, enhancedColor, cv.COLOR_GRAY2RGBA);
+        // Создаем маску: текст (черный) остается, фон становится белым
+        cv.cvtColor(binary, mask, cv.COLOR_GRAY2RGBA);
+        
+        // Создаем полностью белое изображение для фона
+        whiteBg.create(src.rows, src.cols, cv.CV_8UC4);
+        whiteBg.setTo([255, 255, 255, 255]); // Белый цвет в RGBA
 
-        // Create output canvas
+        // Применяем маску: сохраняем текст, заменяем фон на белый
+        cv.bitwise_and(src, mask, enhancedColor);
+        cv.bitwise_or(enhancedColor, whiteBg, enhancedColor);
+
+        // Создаем выходной холст
         let enhancedCanvas = document.createElement("canvas");
         enhancedCanvas.width = canvas.width;
         enhancedCanvas.height = canvas.height;
         cv.imshow(enhancedCanvas, enhancedColor);
 
-        // Clean up
+        // Очистка
         src.delete();
         gray.delete();
+        normalized.delete();
         blurred.delete();
         binary.delete();
+        mask.delete();
         enhancedColor.delete();
+        whiteBg.delete();
 
         console.log("Обработка изображения завершена");
         return enhancedCanvas;
