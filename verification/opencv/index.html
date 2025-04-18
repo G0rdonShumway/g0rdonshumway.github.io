@@ -10,6 +10,14 @@
     <!-- Подключаем OpenCV.js -->
     <script async src="https://docs.opencv.org/4.5.5/opencv.js" onload="onOpenCvReady()"></script>
     <link rel="stylesheet" href="style.css">
+    <style>
+      /* Добавляем стиль для неактивной кнопки спуска */
+      .btn-circle.disabled {
+        background-color: #888;
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+    </style>
   </head>
   <body>
     <div id="launchContainer">
@@ -17,7 +25,7 @@
     </div>
 
     <div id="videoContainer">
-      <div id="status">Поместите документ в пределах белой рамки</div>
+      <div id="status">Поместите документ так, чтобы он занимал всю рамку</div>
       <video id="video" autoplay playsinline></video>
       <div id="overlay-darken"></div>
       <div id="frame"></div>
@@ -44,9 +52,32 @@
       const previewImage = document.getElementById("previewImage");
       const statusEl = document.getElementById("status");
       const downloadButton = document.getElementById("downloadButton");
+      const captureButton = document.querySelector(".btn-circle");
       let openCvLoaded = false;
       let documentDetected = false;
-      const requireDetection = true; // Установите false, чтобы отключить проверку автообнаружения
+      let inactivityTimer = null;
+      const INACTIVITY_TIMEOUT = 30000; // 30 секунд
+
+      // Сбрасываем таймер бездействия при активности
+      function resetInactivityTimer() {
+        if (inactivityTimer) clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(stopCameraDueToInactivity, INACTIVITY_TIMEOUT);
+      }
+
+      // Останавливаем камеру и возвращаем начальный экран
+      function stopCameraDueToInactivity() {
+        if (stream) {
+          stream.getTracks().forEach((track) => track.stop());
+          stream = null;
+        }
+        videoContainer.style.display = "none";
+        previewContainer.style.display = "none";
+        launchContainer.style.display = "flex";
+        statusEl.textContent = "Камера отключена из-за бездействия";
+        documentDetected = false;
+        frame.classList.remove("detected");
+        captureButton.classList.add("disabled");
+      }
 
       // Проверяем загрузку OpenCV.js
       function onOpenCvReady() {
@@ -56,9 +87,9 @@
       }
 
       async function startCamera(facingModeInput) {
-        console.log("Запуск камеры с facingMode:", facingModeInput);
-        const facingMode =
-          facingModeInput || currentFacingMode || "environment";
+        console.log("Запуск камеры");
+        resetInactivityTimer();
+        const facingMode = facingModeInput || currentFacingMode || "environment";
         if (stream) stream.getTracks().forEach((track) => track.stop());
         try {
           stream = await navigator.mediaDevices.getUserMedia({
@@ -73,7 +104,7 @@
           videoContainer.style.display = "flex";
           launchContainer.style.display = "none";
           previewContainer.style.display = "none";
-          statusEl.textContent = "Поместите документ в пределах белой рамки";
+          statusEl.textContent = "Поместите документ так, чтобы он занимал всю рамку";
           currentFacingMode = facingMode;
 
           await new Promise((resolve) => {
@@ -95,15 +126,13 @@
 
       function switchCamera() {
         console.log("Переключение камеры");
+        resetInactivityTimer();
         const nextMode = currentFacingMode === "user" ? "environment" : "user";
         startCamera(nextMode);
       }
 
       function detectDocument() {
-        if (!openCvLoaded) {
-          console.log("OpenCV.js еще не загружен, пропускаем детекцию");
-          return;
-        }
+        if (!openCvLoaded) return;
 
         const canvas = document.createElement("canvas");
         canvas.width = video.videoWidth;
@@ -118,13 +147,9 @@
         let contours = new cv.MatVector();
         let hierarchy = new cv.Mat();
 
-        // Конвертируем в оттенки серого
         cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-        // Размытие для подавления шума
         cv.GaussianBlur(gray, blurred, new cv.Size(3, 3), 0);
-        // Детекция краев с мягкими порогами
         cv.Canny(blurred, edges, 30, 100);
-        // Находим контуры
         cv.findContours(
           edges,
           contours,
@@ -132,6 +157,21 @@
           cv.RETR_EXTERNAL,
           cv.CHAIN_APPROX_SIMPLE
         );
+
+        // Вычисляем площадь рамки #frame в пикселях видео
+        const frameRect = frame.getBoundingClientRect();
+        const videoRect = video.getBoundingClientRect();
+        const videoAspect = video.videoWidth / video.videoHeight;
+        const displayAspect = videoRect.width / videoRect.height;
+        let scaleX, scaleY;
+        if (videoAspect > displayAspect) {
+          scaleY = video.videoHeight / videoRect.height;
+          scaleX = scaleY;
+        } else {
+          scaleX = video.videoWidth / videoRect.width;
+          scaleY = scaleX;
+        }
+        const frameArea = (frameRect.width * scaleX) * (frameRect.height * scaleY);
 
         documentDetected = false;
         for (let i = 0; i < contours.size(); i++) {
@@ -145,28 +185,20 @@
           let aspectRatio = rect.size.width / rect.size.height;
           if (aspectRatio < 1) aspectRatio = 1 / aspectRatio;
 
-          console.log(
-            `Контур ${i}: вершин=${approx.rows}, площадь=${area}, соотношение сторон=${aspectRatio.toFixed(2)}`
-          );
-
-          // Проверяем площадь и соотношение сторон
-          if (area > 1000 && aspectRatio >= 1.0 && aspectRatio <= 3.0) {
-            // Если вершин около 4 (3–6), или охватывающий прямоугольник подходит
-            if (
-              approx.rows >= 3 &&
-              approx.rows <= 6 &&
-              area > 1000
-            ) {
-              documentDetected = true;
-              console.log(
-                `Документ обнаружен: вершин=${approx.rows}, площадь=${area}, соотношение сторон=${aspectRatio.toFixed(2)}`
-              );
-              break;
-            }
-          } else {
-            console.log(
-              `Контур отклонен: площадь=${area}, соотношение сторон=${aspectRatio.toFixed(2)}`
-            );
+          // Проверяем, что площадь составляет 90–100% от площади рамки
+          const areaRatio = area / frameArea;
+          if (
+            areaRatio >= 0.8 &&
+            areaRatio <= 0.95 &&
+            aspectRatio >= 1.0 &&
+            aspectRatio <= 3.0 &&
+            approx.rows >= 3 &&
+            approx.rows <= 6
+          ) {
+            documentDetected = true;
+            console.log(`Документ обнаружен: площадь=${area}, доля рамки=${(areaRatio * 100).toFixed(1)}%`);
+            resetInactivityTimer();
+            break;
           }
 
           approx.delete();
@@ -174,9 +206,10 @@
         }
 
         frame.classList.toggle("detected", documentDetected);
+        captureButton.classList.toggle("disabled", !documentDetected);
         statusEl.textContent = documentDetected
           ? "Документ обнаружен, нажмите для снимка"
-          : "Поместите документ в пределах белой рамки";
+          : "Поместите документ так, чтобы он занимал всю рамку";
 
         src.delete();
         gray.delete();
@@ -187,7 +220,6 @@
       }
 
       function startDocumentDetection() {
-        console.log("Запуск детекции документа");
         function loop() {
           if (videoContainer.style.display === "flex") {
             detectDocument();
@@ -198,12 +230,13 @@
       }
 
       function takePhoto() {
-        console.log("Кнопка съемки нажата, documentDetected:", documentDetected);
-        if (requireDetection && !documentDetected) {
-          statusEl.textContent = "Документ не обнаружен, попробуйте снова";
-          console.log("Снимок заблокирован: документ не обнаружен");
+        if (!documentDetected) {
+          statusEl.textContent = "Документ должен занимать всю рамку";
           return;
         }
+
+        console.log("Снимок");
+        resetInactivityTimer();
 
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
@@ -213,7 +246,7 @@
         const frameRect = frame.getBoundingClientRect();
         const videoRect = video.getBoundingClientRect();
 
-        const videoAspect = videoWidth / videoHeight;
+        const videoAspect = videoWidth / video.videoHeight;
         const displayAspect = videoRect.width / videoRect.height;
 
         let scaleX, scaleY, offsetX, offsetY;
@@ -224,7 +257,7 @@
           offsetX = (scaledVideoWidth - videoRect.width) / 2;
           offsetY = 0;
         } else {
-          scaleX = videoWidth / videoRect.width;
+          scaleX = video.videoWidth / videoRect.width;
           scaleY = scaleX;
           const scaledVideoHeight = videoHeight / scaleY;
           offsetX = 0;
@@ -251,7 +284,6 @@
           cropHeight
         );
 
-        // Используем исходное изображение без обработки
         const imageData = canvas.toDataURL("image/jpeg", 1.0);
         previewImage.src = imageData;
 
@@ -259,7 +291,7 @@
           const url = URL.createObjectURL(blob);
           downloadButton.href = url;
           downloadButton.download = "captured-photo.jpg";
-          console.log("Blob создан, готов для скачивания");
+          console.log("Фото сохранено");
         }, "image/jpeg", 1.0);
 
         videoContainer.style.display = "none";
@@ -269,11 +301,13 @@
 
       function retakePhoto() {
         console.log("Пересъемка");
+        resetInactivityTimer();
         previewImage.src = "";
         downloadButton.href = "#";
         previewContainer.style.display = "none";
         videoContainer.style.display = "flex";
-        statusEl.textContent = "Поместите документ в пределах белой рамки";
+        statusEl.textContent = "Поместите документ так, чтобы он занимал всю рамку";
+        captureButton.classList.add("disabled");
       }
     </script>
   </body>
