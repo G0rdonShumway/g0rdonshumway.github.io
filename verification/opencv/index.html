@@ -212,7 +212,7 @@
         
         // Создаем полностью белое изображение для фона
         whiteBg.create(src.rows, src.cols, cv.CV_8UC4);
-        whiteBg.setTo([255, 255, 255, 255]); // Белый цвет в RGBA
+        whiteBg.setTo([0, 0, 0, 0]); // Белый цвет в RGBA
 
         // Применяем маску: сохраняем текст, заменяем фон на белый
         cv.bitwise_and(src, mask, enhancedColor);
