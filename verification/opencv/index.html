@@ -10,14 +10,6 @@
     <!-- Подключаем OpenCV.js -->
     <script async src="https://docs.opencv.org/4.5.5/opencv.js" onload="onOpenCvReady()"></script>
     <link rel="stylesheet" href="style.css">
-    <style>
-      /* Стиль для неактивной кнопки спуска */
-      .btn-circle.disabled {
-        background-color: #888;
-        cursor: not-allowed;
-        opacity: 0.5;
-      }
-    </style>
   </head>
   <body>
     <div id="launchContainer">
@@ -31,7 +23,7 @@
       <div id="frame"></div>
       <div id="buttons">
         <button class="btn-switch" onclick="switchCamera()"></button>
-        <button class="btn-circle disabled" onclick="takePhoto()"></button>
+        <button class="btn-circle" onclick="takePhoto()"></button>
       </div>
     </div>
 
@@ -52,32 +44,8 @@
       const previewImage = document.getElementById("previewImage");
       const statusEl = document.getElementById("status");
       const downloadButton = document.getElementById("downloadButton");
-      const captureButton = document.querySelector(".btn-circle");
       let openCvLoaded = false;
       let documentDetected = false;
-      let inactivityTimer = null;
-      const INACTIVITY_TIMEOUT = 30000; // 30 секунд
-
-      // Сбрасываем таймер бездействия при активности
-      function resetInactivityTimer() {
-        if (inactivityTimer) clearTimeout(inactivityTimer);
-        inactivityTimer = setTimeout(stopCameraDueToInactivity, INACTIVITY_TIMEOUT);
-      }
-
-      // Останавливаем камеру и возвращаем начальный экран
-      function stopCameraDueToInactivity() {
-        if (stream) {
-          stream.getTracks().forEach((track) => track.stop());
-          stream = null;
-        }
-        videoContainer.style.display = "none";
-        previewContainer.style.display = "none";
-        launchContainer.style.display = "flex";
-        statusEl.textContent = "Камера отключена из-за бездействия";
-        documentDetected = false;
-        frame.classList.remove("detected");
-        captureButton.classList.add("disabled");
-      }
 
       // Проверяем загрузку OpenCV.js
       function onOpenCvReady() {
@@ -87,9 +55,9 @@
       }
 
       async function startCamera(facingModeInput) {
-        console.log("Запуск камеры");
-        resetInactivityTimer();
-        const facingMode = facingModeInput || currentFacingMode || "environment";
+        console.log("Запуск камеры с facingMode:", facingModeInput);
+        const facingMode =
+          facingModeInput || currentFacingMode || "environment";
         if (stream) stream.getTracks().forEach((track) => track.stop());
         try {
           stream = await navigator.mediaDevices.getUserMedia({
@@ -106,7 +74,6 @@
           previewContainer.style.display = "none";
           statusEl.textContent = "Поместите документ в пределах белой рамки";
           currentFacingMode = facingMode;
-          captureButton.classList.add("disabled");
 
           await new Promise((resolve) => {
             video.onloadedmetadata = () => resolve();
@@ -127,13 +94,15 @@
 
       function switchCamera() {
         console.log("Переключение камеры");
-        resetInactivityTimer();
         const nextMode = currentFacingMode === "user" ? "environment" : "user";
         startCamera(nextMode);
       }
 
       function detectDocument() {
-        if (!openCvLoaded) return;
+        if (!openCvLoaded) {
+          console.log("OpenCV.js еще не загружен, пропускаем детекцию");
+          return;
+        }
 
         const canvas = document.createElement("canvas");
         canvas.width = video.videoWidth;
@@ -149,8 +118,8 @@
         let hierarchy = new cv.Mat();
 
         cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-        cv.GaussianBlur(gray, blurred, new cv.Size(3, 3), 0);
-        cv.Canny(blurred, edges, 30, 100);
+        cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0);
+        cv.Canny(blurred, edges, 50, 150);
         cv.findContours(
           edges,
           contours,
@@ -159,56 +128,26 @@
           cv.CHAIN_APPROX_SIMPLE
         );
 
-        // Вычисляем координаты рамки #frame в пикселях видео
-        const frameRect = frame.getBoundingClientRect();
-        const videoRect = video.getBoundingClientRect();
-        const videoAspect = video.videoWidth / video.videoHeight;
-        const displayAspect = videoRect.width / videoRect.height;
-        let scaleX, scaleY, offsetX, offsetY;
-        if (videoAspect > displayAspect) {
-          scaleY = video.videoHeight / videoRect.height;
-          scaleX = scaleY;
-          const scaledVideoWidth = video.videoWidth / scaleX;
-          offsetX = (scaledVideoWidth - videoRect.width) / 2;
-          offsetY = 0;
-        } else {
-          scaleX = video.videoWidth / videoRect.width;
-          scaleY = scaleX;
-          const scaledVideoHeight = video.videoHeight / scaleY;
-          offsetX = 0;
-          offsetY = (scaledVideoHeight - videoRect.height) / 2;
-        }
-        const frameX = frameRect.left - videoRect.left + offsetX;
-        const frameY = frameRect.top - videoRect.top + offsetY;
-        const frameWidth = frameRect.width;
-        const frameHeight = frameRect.height;
-        const frameLeft = frameX * scaleX;
-        const frameTop = frameY * scaleY;
-        const frameRight = (frameX + frameWidth) * scaleX;
-        const frameBottom = (frameY + frameHeight) * scaleY;
-
         documentDetected = false;
         for (let i = 0; i < contours.size(); i++) {
           let contour = contours.get(i);
-          // Проверяем, что контур находится внутри рамки
-          let boundRect = cv.boundingRect(contour);
-          let isInsideFrame =
-            boundRect.x >= frameLeft &&
-            boundRect.y >= frameTop &&
-            boundRect.x + boundRect.width <= frameRight &&
-            boundRect.y + boundRect.height <= frameBottom;
+          let perimeter = cv.arcLength(contour, true);
+          let approx = new cv.Mat();
+          cv.approxPolyDP(contour, approx, 0.02 * perimeter, true);
 
-          if (isInsideFrame) {
-            documentDetected = true;
-            console.log("Контур обнаружен внутри рамки");
-            contour.delete();
-            break;
+          if (approx.rows === 4) {
+            let area = cv.contourArea(contour);
+            if (area > 10000) {
+              documentDetected = true;
+              console.log("Документ обнаружен, площадь:", area);
+              break;
+            }
           }
+          approx.delete();
           contour.delete();
         }
 
         frame.classList.toggle("detected", documentDetected);
-        captureButton.classList.toggle("disabled", !documentDetected);
         statusEl.textContent = documentDetected
           ? "Документ обнаружен, нажмите для снимка"
           : "Поместите документ в пределах белой рамки";
@@ -222,6 +161,7 @@
       }
 
       function startDocumentDetection() {
+        console.log("Запуск детекции документа");
         function loop() {
           if (videoContainer.style.display === "flex") {
             detectDocument();
@@ -231,15 +171,64 @@
         requestAnimationFrame(loop);
       }
 
-      function takePhoto() {
-        if (!documentDetected) {
-          statusEl.textContent = "Документ не помещается в рамку";
-          console.log("Снимок заблокирован: документ не обнаружен");
-          return;
+      function enhanceImage(canvas) {
+        console.log("Начало обработки изображения");
+        if (!openCvLoaded) {
+          console.warn("OpenCV.js еще не загружен, пропускаем обработку");
+          return canvas;
         }
 
-        console.log("Снимок");
-        resetInactivityTimer();
+        let src = cv.imread(canvas);
+        let gray = new cv.Mat();
+        let blurred = new cv.Mat();
+        let binary = new cv.Mat();
+        let enhancedColor = new cv.Mat();
+
+        // Convert to grayscale
+        cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+
+        // Apply Gaussian blur to reduce noise
+        cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0);
+
+        // Apply adaptive thresholding to binarize image (black text, white background)
+        cv.adaptiveThreshold(
+          blurred,
+          binary,
+          255,
+          cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+          cv.THRESH_BINARY_INV,
+          11,
+          2
+        );
+
+        // Convert binary image back to RGBA for display
+        cv.cvtColor(binary, enhancedColor, cv.COLOR_GRAY2RGBA);
+
+        // Create output canvas
+        let enhancedCanvas = document.createElement("canvas");
+        enhancedCanvas.width = canvas.width;
+        enhancedCanvas.height = canvas.height;
+        cv.imshow(enhancedCanvas, enhancedColor);
+
+        // Clean up
+        src.delete();
+        gray.delete();
+        blurred.delete();
+        binary.delete();
+        enhancedColor.delete();
+
+        console.log("Обработка изображения завершена");
+        return enhancedCanvas;
+      }
+
+      function takePhoto() {
+        console.log("Кнопка съемки нажата, documentDetected:", documentDetected);
+        // Временно убираем проверку для отладки
+        // if (!documentDetected) {
+        //   statusEl.textContent = "Документ не обнаружен, попробуйте снова";
+        //   console.log("Снимок заблокирован: документ не обнаружен");
+        //   return;
+        // }
 
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
@@ -260,7 +249,7 @@
           offsetX = (scaledVideoWidth - videoRect.width) / 2;
           offsetY = 0;
         } else {
-          scaleX = video.videoWidth / videoRect.width;
+          scaleX = videoWidth / videoRect.width;
           scaleY = scaleX;
           const scaledVideoHeight = videoHeight / scaleY;
           offsetX = 0;
@@ -287,30 +276,16 @@
           cropHeight
         );
 
-        // Обработка пикселей: заменяем цвета темнее #555555 на #000000
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
-        for (let i = 0; i < data.length; i += 4) {
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-          if (r < 85 && g < 85 && b < 85) {
-            data[i] = 0;     // R
-            data[i + 1] = 0; // G
-            data[i + 2] = 0; // B
-            // data[i + 3] — альфа, не трогаем
-          }
-        }
-        ctx.putImageData(imageData, 0, 0);
+        const enhancedCanvas = enhanceImage(canvas);
 
-        const imageDataUrl = canvas.toDataURL("image/jpeg", 1.0);
-        previewImage.src = imageDataUrl;
+        const imageData = enhancedCanvas.toDataURL("image/jpeg", 1.0);
+        previewImage.src = imageData;
 
-        canvas.toBlob((blob) => {
+        enhancedCanvas.toBlob((blob) => {
           const url = URL.createObjectURL(blob);
           downloadButton.href = url;
           downloadButton.download = "captured-photo.jpg";
-          console.log("Фото сохранено");
+          console.log("Blob создан, готов для скачивания");
         }, "image/jpeg", 1.0);
 
         videoContainer.style.display = "none";
@@ -320,13 +295,11 @@
 
       function retakePhoto() {
         console.log("Пересъемка");
-        resetInactivityTimer();
         previewImage.src = "";
         downloadButton.href = "#";
         previewContainer.style.display = "none";
         videoContainer.style.display = "flex";
         statusEl.textContent = "Поместите документ в пределах белой рамки";
-        captureButton.classList.add("disabled");
       }
     </script>
   </body>
