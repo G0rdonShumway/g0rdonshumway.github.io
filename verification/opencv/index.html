@@ -10,6 +10,14 @@
     <!-- Подключаем OpenCV.js -->
     <script async src="https://docs.opencv.org/4.5.5/opencv.js" onload="onOpenCvReady()"></script>
     <link rel="stylesheet" href="style.css">
+    <style>
+      /* Стиль для неактивной кнопки спуска */
+      .btn-circle.disabled {
+        background-color: #888;
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+    </style>
   </head>
   <body>
     <div id="launchContainer">
@@ -17,7 +25,7 @@
     </div>
 
     <div id="videoContainer">
-      <div id="status">Поместите документ в рамку</div>
+      <div id="status">Поместите документ в пределах белой рамки</div>
       <video id="video" autoplay playsinline></video>
       <div id="overlay-darken"></div>
       <div id="frame"></div>
@@ -96,7 +104,7 @@
           videoContainer.style.display = "flex";
           launchContainer.style.display = "none";
           previewContainer.style.display = "none";
-          statusEl.textContent = "Поместите документ в рамку";
+          statusEl.textContent = "Поместите документ в пределах белой рамки";
           currentFacingMode = facingMode;
           captureButton.classList.add("disabled");
 
@@ -184,7 +192,7 @@
         captureButton.classList.toggle("disabled", !documentDetected);
         statusEl.textContent = documentDetected
           ? "Документ обнаружен, нажмите для снимка"
-          : "Поместите документ в рамку";
+          : "Поместите документ в пределах белой рамки";
 
         src.delete();
         gray.delete();
@@ -207,6 +215,7 @@
       function takePhoto() {
         if (!documentDetected) {
           statusEl.textContent = "Документ не обнаружен";
+          console.log("Снимок заблокирован: документ не обнаружен");
           return;
         }
 
@@ -232,7 +241,7 @@
           offsetX = (scaledVideoWidth - videoRect.width) / 2;
           offsetY = 0;
         } else {
-          scaleX = video.videoWidth / videoRect.width;
+          scaleX = videoWidth / videoRect.width;
           scaleY = scaleX;
           const scaledVideoHeight = videoHeight / scaleY;
           offsetX = 0;
@@ -281,7 +290,7 @@
         downloadButton.href = "#";
         previewContainer.style.display = "none";
         videoContainer.style.display = "flex";
-        statusEl.textContent = "Поместите документ в рамку";
+        statusEl.textContent = "Поместите документ в пределах белой рамки";
         captureButton.classList.add("disabled");
       }
     </script>
