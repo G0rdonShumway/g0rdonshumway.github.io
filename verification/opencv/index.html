@@ -194,7 +194,7 @@
       <button onclick="startCamera()">Запустить камеру</button>
     </div>
 
-    <div id="videoContainer">
+    <div id="video  id="videoContainer">
       <div id="status">Ожидание...</div>
       <video id="video" autoplay playsinline></video>
       <div id="overlay-darken"></div>
@@ -280,10 +280,10 @@
 
         // Создаем матрицу OpenCV из canvas
         let src = cv.imread(canvas);
-        let dst = new cv.Mat();
         let gray = new cv.Mat();
+        let dst = new cv.Mat();
 
-        // Конвертируем в оттенки серого для повышения резкости
+        // Конвертируем в оттенки серого для обработки
         cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
 
         // Применяем фильтр Лапласа для повышения резкости
@@ -291,11 +291,10 @@
         cv.Laplacian(gray, sharpened, cv.CV_8U, 1, 1, 0);
         cv.convertScaleAbs(sharpened, sharpened, 1, 0);
 
-        // Увеличиваем контрастность
-        let clahe = cv.createCLAHE(2.0, new cv.Size(8, 8));
-        clahe.apply(sharpened, dst);
+        // Увеличиваем контрастность через гистограммную эквализацию
+        cv.equalizeHist(sharpened, dst);
 
-        // Конвертируем обратно в цветное изображение (копируем канал яркости в RGB)
+        // Конвертируем обратно в цветное изображение
         let enhancedColor = new cv.Mat();
         cv.cvtColor(dst, enhancedColor, cv.COLOR_GRAY2RGBA);
 
@@ -307,9 +306,9 @@
 
         // Освобождаем память
         src.delete();
-        dst.delete();
         gray.delete();
         sharpened.delete();
+        dst.delete();
         enhancedColor.delete();
 
         return enhancedCanvas;
