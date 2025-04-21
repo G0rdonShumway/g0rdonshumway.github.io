@@ -33,5 +33,24 @@
     
   </head>
   <body>
+
+    <div id="custom-push-popup">
+      <p>Получать бонусы и акции первым?</p>
+      <button onclick="subscribeToPush()">Разрешить уведомления</button>
+      <button onclick="closePushPopup()">Позже</button>
+    </div>
+
+    <script>
+      function subscribeToPush() {
+        OneSignal.push(function() {
+          OneSignal.registerForPushNotifications(); // вызывает системное окно браузера
+        });
+        closePushPopup();
+      }
+      
+      function closePushPopup() {
+        document.getElementById("custom-push-popup").style.display = "none";
+      }
+    </script>
   </body>
 </html>
