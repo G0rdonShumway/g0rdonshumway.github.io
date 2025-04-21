@@ -17,16 +17,17 @@
   const POPUP_DELAY_DAYS = 3;
   const STORAGE_KEY = 'pushPromptDismissedAt';
 
-  // Проверка срока "не показывать"
   function shouldShowPopup() {
     const dismissedAt = localStorage.getItem(STORAGE_KEY);
-    if (!dismissedAt) return true;
+    if (!dismissedAt) {
+      return true; // Если пользователь еще не нажимал "Позже"
+    }
 
     const dismissedDate = new Date(dismissedAt);
     const now = new Date();
     const diffInDays = (now - dismissedDate) / (1000 * 60 * 60 * 24);
 
-    return diffInDays >= POPUP_DELAY_DAYS;
+    return diffInDays >= POPUP_DELAY_DAYS; // Показывать, если прошло достаточно времени
   }
 
   window.OneSignal = window.OneSignal || [];
@@ -35,7 +36,7 @@
       appId: "3b26e8a7-23f8-4642-9fe7-87b053763586", // Замените на ваш фактический App ID OneSignal
       notifyButton: { enable: false },
       promptOptions: { slidedown: { enabled: false } }
-    }).then(() => { // Выполнить код после инициализации OneSignal
+    }).then(() => {
       // Только если пользователь не подписан и не нажимал "позже" недавно
       OneSignal.isPushNotificationsEnabled().then(function (isEnabled) {
         if (!isEnabled && shouldShowPopup()) {
