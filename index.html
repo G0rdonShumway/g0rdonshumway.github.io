@@ -13,30 +13,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
-          appId: "e6f6749e-b3c7-4737-92ba-05df00d65cd7",
-          safari_web_id: "web.onesignal.auto.00b75e31-4d41-4106-ab79-a5c68121f393",
-          notifyButton: {
-            enable: true,
-          },
-        });
-      });
-    </script>
+<script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+<script>
+  window.OneSignal = window.OneSignal || [];
+  OneSignal.push(function() {
+    OneSignal.init({
+      appId: "3b26e8a7-23f8-4642-9fe7-87b053763586", 
+      notifyButton: {
+        enable: false // отключить стандартную иконку
+      },
+      promptOptions: {
+        slidedown: {
+          enabled: false // не использовать стандартное всплывающее окно
+        }
+      }
+    });
+  });
+</script>
     
   </head>
   <body>
- <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
-<script>
-  kofiWidgetOverlay.draw('g0rdonshumway', {
-    'type': 'floating-chat',
-    'floating-chat.donateButton.text': 'Donate',
-    'floating-chat.donateButton.background-color': '#00b9fe',
-    'floating-chat.donateButton.text-color': '#fff'
-  });
-</script>
   </body>
 </html>
