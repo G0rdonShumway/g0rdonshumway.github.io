@@ -13,49 +13,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
-<script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
-<script>
-  window.OneSignal = window.OneSignal || [];
-  OneSignal.push(function () {
-    OneSignal.init({
-      appId: "3b26e8a7-23f8-4642-9fe7-87b053763586", // Замените на ваш фактический App ID OneSignal
-      notifyButton: { enable: false } // Отключаем стандартную кнопку подписки OneSignal (если используется)
-    });
-  });
-</script>
-
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "3b26e8a7-23f8-4642-9fe7-87b053763586", // Замените на ваш фактический App ID OneSignal
+          notifyButton: { enable: false } // Отключаем стандартную кнопку подписки OneSignal (если используется)
+        });
+      });
+    </script>
   </head>
   <body>
-
-<style>
-  /* Стили для вашей ссылки или элемента */
-  #custom-prompt-link {
-    /* Ваши стили */
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-</style>
-
-<div class='onesignal-customlink-container'></div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const customPromptLink = document.getElementById('custom-prompt-link');
-    if (customPromptLink) {
-      customPromptLink.addEventListener('click', function(event) {
-        event.preventDefault();
-        OneSignal.registerForPushNotifications();
-      });
-      // Показываем контейнер после загрузки страницы
-      document.querySelector('.onesignal-customlink-container').style.display = 'block';
-    }
-  });
-</script>
-
+    <div class='onesignal-customlink-container'></div>
   </body>
 </html>
