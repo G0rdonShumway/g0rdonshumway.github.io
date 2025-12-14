@@ -10,18 +10,25 @@
     <meta http-equiv="Cache-Control" content="no-cache" />
     <meta http-equiv="Cache-Control" content="private" />
     <title>Test</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
-          appId: "3b26e8a7-23f8-4642-9fe7-87b053763586",
-        });
-      });
-    </script>
+    <style>
+      html, body {
+            width: 100%;
+    min-height: 100%;
+      }
+      body {
+            background-color: #0f0f0f;
+      }
+      body::after {
+            content: "";
+    display: block;
+    background-image: url(/img/tile.png);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+      }
+    </style>
   </head>
   <body>
     
