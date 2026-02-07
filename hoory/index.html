@@ -9,6 +9,157 @@
   </head>
   <body>
     <script>if(!window._teletypeWidget){window._teletypeWidget = window._teletypeWidget || {};!function(){var t = document.getElementsByTagName("app-teletype-root");if (t.length > 0 && _teletypeWidget.init)return;var d = new Date().getTime();var n = document.createElement("script"),c = document.getElementsByTagName("script")[0];n.id = "teletype-widget-embed",n.src = "https://widget.teletype.app/init.js?_=" + d,n.async = !0,n.setAttribute("data-embed-version", "0.1");c.parentNode.insertBefore(n, c);}();document.addEventListener("teletype.ready", function(){console.log("Teletype ready")});window.teletypeExternalId = "3jwsTYtZGxbczN6MxT2keWU-OY6ezZEHtQNPW8CBasZ2Q4-EiklzyhOlKVcGFFP6";}</script>
+    <script>
+      (() => {
+    var styles = `
+        .widgetEBS { box-sizing: border-box; width: 60px; height: 60px; border-radius: 50%; background-color: #0f0f0f; position: fixed; bottom: 60px; right: 30px; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 100; } 
+        .widgetBorderEBS, .widgetTextEBS { box-sizing: border-box; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; border-radius: 50%; z-index: 100; } 
+        .widgetBorderEBS { border: 1px solid #FFDE99; } 
+        .widgetTextEBS { display: flex; justify-content: center; align-items: center; } 
+        .widgetImageEBS { box-sizing: border-box; width: 62px; } 
+        .widgetContainerEBS { box-sizing: border-box; display: block; opacity: 0; gap: 10px; flex-direction: column; position: fixed; bottom: 160px; right: 38px; transform: translateY(100%); z-index: 100; transition: transform 0.4s ease-out, opacity 0.3s ease-out; pointer-events: none; } 
+        .widgetContainerEBS.activeEBS { display: flex; opacity: 1; bottom: 134px; transform: translateY(0); transition: all 0.5s ease-in; pointer-events: auto; } 
+        .widgetButtonEBS { box-sizing: border-box; width: 44px; height: 44px; display: block; margin-top: -30px; transition: all 0.5s ease-in; border-radius: 50%; overflow: hidden; cursor: pointer; } 
+        .widgetContainerEBS.activeEBS .widgetButtonEBS { margin-top: 0; } 
+        .widgetButtonHooryEBS { display: flex; background: #d3ae5d; } 
+        .widgetButtonImageEBS { width: 44px; height: 44px; } 
+        .widgetButtonImageEBS.widgetButtonHooryImageEBS { margin: auto; } 
+        @keyframes custom-ebs-rotate { 0% { transform: translate(-50%, -50%) rotate(0deg); } 10% { transform: translate(-50%, -50%) rotate(30deg); } 20% { transform: translate(-50%, -50%) rotate(-30deg); } 30% { transform: translate(-50%, -50%) rotate(30deg); } 40% { transform: translate(-50%, -50%) rotate(-30deg); } 100% { transform: translate(-50%, -50%) rotate(0deg); } } 
+        @keyframes custom-ebs-wave { to { transform: translate(-50%, -50%) scale(1.3); } } 
+        @keyframes hoory-rotate { 0% { transform: rotate(0deg); } 10% { transform: rotate(30deg); } 20% { transform: rotate(-30deg); } 30% { transform: rotate(30deg); } 40% { transform: rotate(-30deg); } 100% { transform: rotate(0deg); } } 
+        button.woot-widget-bubble.woot-elements--left { bottom: 60px; transform: scale(1); width: 60px; height: 60px; left: 30px; z-index: 6 !important; } 
+        button.woot-widget-bubble.woot-elements--left:hover { animation: hoory-rotate 1s linear 3; } 
+        .woot-widget-holder.hoory-widget.woot-elements--left { bottom: 125px; } 
+        .woot--bubble-holder, .woot-hidden.woot--bubble-holder.woot-mini { display: none !important; } 
+        @media only screen and (min-width: 667px) { .woot-widget-holder.woot-elements--right, .woot-widget-holder.woot-elements--left { right: 100px !important; left: unset !important; } }
+        .widgetEBS:hover .widgetBorderEBS {animation: custom-ebs-wave 1s ease-in 3}
+        .widgetEBS:hover .widgetTextEBS {animation: custom-ebs-rotate 1s linear 3}
+        .widgetButtonEBS:hover {transform: scale(1.2)}
+        div#teletype-iframes-container {
+            display: none !important;
+        }
+    `;
+  
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = styles;
+    document.head.appendChild(styleSheet);
+  
+    const getCurrentURLEBS = () => window.location.href;
+  
+    const detectMob = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent);
+  
+    const widgetEBS = document.createElement("div");
+    widgetEBS.innerHTML = `
+      <div class="widgetBorderEBS"></div>
+      <a class="widgetTextEBS">
+        <img src="https://ecl4apps.com/media/moyocomlogo.png" class="widgetImageEBS">
+      </a>
+    `;
+    widgetEBS.classList.add("widgetEBS");
+  
+    const widgetContainerEBS = document.createElement("div");
+    widgetContainerEBS.classList.add("widgetContainerEBS");
+  
+    widgetContainerEBS.innerHTML = `
+      <a class="widgetButtonEBS" title="WhatsApp" href="https://ecl4apps.com/wa_ke_com" target="_blank">
+        <img src="https://i.imgur.com/wfD2zT6.png" class="widgetButtonImageEBS">
+      </a>
+      <a class="widgetButtonEBS" id="my-custom-chat-button" title="Hoory">
+        <img src="https://i.imgur.com/sQikkmF.png" class="widgetButtonImageEBS">
+      </a>
+      <a class="widgetButtonEBS" title="Telegram" target="_blank" href="https://t.me/Moyo_LiveSupport_bot">
+        <img src="https://i.imgur.com/PLew6Kg.png" class="widgetButtonImageEBS">
+      </a>
+    `;
+  
+    document.body.appendChild(widgetEBS);
+    document.body.appendChild(widgetContainerEBS);
+  
+    const [widgetButtonWhatsAppEBS, widgetButtonHooryEBS, widgetButtonTelegramEBS] = widgetContainerEBS.getElementsByTagName("a");
+    const widgetImageEBS = widgetEBS.querySelector(".widgetImageEBS");
 
+        // Функция-переключатель
+function toggleTeletypeChat() {
+    if (typeof Teletype !== 'undefined') {
+        if (Teletype.isOpened()) {
+            Teletype.close();
+        } else {
+            Teletype.open();
+        }
+    } else {
+        console.warn('Виджет Teletype еще не загружен');
+    }
+}
+
+// Привязка к вашей кнопке (по ID)
+document.getElementById('my-custom-chat-button').addEventListener('click', function(e) {
+    e.preventDefault();
+    toggleTeletypeChat();
+});
+        
+    window.toggleHooryChat = () => {
+      const widgetButtonHooryImageEBS = widgetButtonHooryEBS.querySelector("img");
+      const isHooryOpen = widgetButtonHooryEBS.classList.toggle("showHoory");
+    
+      widgetButtonHooryImageEBS.setAttribute(
+        "src",
+        isHooryOpen
+          ? "https://cmsbetconstruct.com/storage/medias/betsunrise/media_1868048_9e3446e73ce2862354a4180c826874d1.png"
+          : "https://i.imgur.com/sQikkmF.png"
+      );
+    
+      window.$hoory.toggle(isHooryOpen ? "open" : "close");
+    
+      if (isHooryOpen && detectMob()) {
+        widgetEBS.classList.toggle("activeEBS");
+        widgetImageEBS.src =
+          "https://cmsbetconstruct.com/storage/medias/betsunrise/media_1868048_3a65a0b08ac6b4cd405f0c2969516c02.gif";
+        widgetContainerEBS.classList.toggle("activeEBS");
+    
+        // Закрываем Hoory на мобильных
+        widgetButtonHooryEBS.classList.remove("showHoory");
+        widgetButtonHooryImageEBS.setAttribute("src", "https://i.imgur.com/sQikkmF.png");
+      }
+    };
+
+    widgetEBS.addEventListener("click", () => {
+      widgetEBS.classList.toggle("activeEBS");
+      widgetImageEBS.src = widgetEBS.classList.contains("activeEBS")
+        ? "https://cmsbetconstruct.com/storage/medias/moyobet-18754737/media_18754737_ad47187b67e84167837b4063c39b5b7e.png"
+        : "https://ecl4apps.com/media/moyocomlogo.png";
+      widgetContainerEBS.classList.toggle("activeEBS");
+    });
+  
+    const updateWidgetVisibility = () => {
+      const shouldHide = detectMob() && (getCurrentURLEBS().includes("/LaunchGame") || getCurrentURLEBS().includes("/game-view"));
+      widgetEBS.style.display = shouldHide ? "none" : "block";
+    };
+    
+    updateWidgetVisibility();
+    
+    const observer = new MutationObserver(updateWidgetVisibility);
+    observer.observe(document.body, { childList: true, subtree: true });
+    
+    window.addEventListener("popstate", updateWidgetVisibility);
+    window.addEventListener("pushState", updateWidgetVisibility);
+    window.addEventListener("replaceState", updateWidgetVisibility);
+    
+    (function(d,t) {
+        var BASE_URL="https://app.hoory.com";
+        var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+        g.src=BASE_URL+"/packs/js/sdk.js";
+        g.defer = true;
+        g.async = true;
+        s.parentNode.insertBefore(g,s);
+        g.onload=function(){
+          window.hoorySDK.run({
+            websiteToken: 'awkk9jdPdUii9bVykCLBBgoV',
+            baseUrl: BASE_URL
+          })
+        }
+    })(document,"script");
+})();
+    </script>
   </body>
 </html>
