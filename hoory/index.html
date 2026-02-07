@@ -14,8 +14,16 @@
     <script>
 (() => {
     var styles = `
-        /* Скрываем стандартную кнопку Teletype */
-        .teletype-button, app-teletype-root .teletype-bubble { display: none !important; }
+        /* Скрываем стандартную кнопку Teletype более агрессивно */
+        #teletype-iframes-container, 
+        .teletype-button, 
+        app-teletype-root .teletype-bubble,
+        [id^="teletype-widget"] .teletype-bubble { 
+            display: none !important; 
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
 
         .widgetEBS { box-sizing: border-box; width: 60px; height: 60px; border-radius: 50%; background-color: #0f0f0f; position: fixed; bottom: 60px; right: 30px; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 100; } 
         .widgetBorderEBS, .widgetTextEBS { box-sizing: border-box; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; border-radius: 50%; z-index: 100; } 
@@ -75,28 +83,35 @@
     const widgetButtonTeletypeEBS = widgetContainerEBS.querySelector(".widgetButtonTeletypeEBS");
     const widgetImageEBS = widgetEBS.querySelector(".widgetImageEBS");
       
-    // Логика переключения Teletype
+    // Логика переключения Teletype с проверкой готовности
     window.toggleTeletypeChat = () => {
-      if (typeof Teletype === 'undefined') {
-          console.warn("Teletype API not ready");
-          return;
-      }
+      // Пытаемся найти объект Teletype в window
+      const teletypeAPI = window.Teletype;
 
-      if (Teletype.isOpened()) {
-          Teletype.close();
+      if (teletypeAPI && typeof teletypeAPI.open === 'function') {
+          if (teletypeAPI.isOpened()) {
+              teletypeAPI.close();
+          } else {
+              teletypeAPI.open();
+          }
       } else {
-          Teletype.open();
+          // Если Teletype еще не инициализирован, попробуем через их внутренний объект если он есть
+          console.warn("Teletype API is not yet available in window.Teletype");
+          // Резервный метод: эмуляция клика по скрытой кнопке если она есть в DOM
+          const nativeButton = document.querySelector('.teletype-button') || document.querySelector('.teletype-bubble');
+          if (nativeButton) {
+              nativeButton.click();
+          }
       }
     };
 
-    // Слушатели событий Teletype для обновления иконок кастомной кнопки
+    // Слушатели событий Teletype
     document.addEventListener("teletype.open", () => {
         const img = widgetButtonTeletypeEBS.querySelector("img");
         widgetButtonTeletypeEBS.classList.add("showTeletype");
         img.setAttribute("src", "https://cmsbetconstruct.com/storage/medias/betsunrise/media_1868048_9e3446e73ce2862354a4180c826874d1.png");
         
         if (detectMob()) {
-            // Закрываем меню при открытии чата на мобилках
             widgetEBS.classList.remove("activeEBS");
             widgetContainerEBS.classList.remove("activeEBS");
             widgetImageEBS.src = "https://ecl4apps.com/media/moyocomlogo.png";
